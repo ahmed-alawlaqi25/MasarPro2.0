@@ -1,15 +1,22 @@
 import React from 'react'
-import { useTranslation } from 'react-i18next'
 import Hero from '../components/Hero';
 import Feature from '../components/Feature';
+import Testimonial from '../components/Testimonial';
+import CTA from '../components/CTA';
+import Footer from '../components/Footer';
+
 
 const Home = () => {
-
     return (
-            <>
-            <Hero />
-
-            </>
+        <>
+            <div className='flex flex-col gap-20'>
+                <Hero />
+                <Feature/>
+                <Testimonial/>
+                <CTA/>
+                <Footer/>
+            </div>
+        </>
     )
 }
 

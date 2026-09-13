@@ -7,9 +7,10 @@ import { initReactI18next } from "react-i18next";
 const resources = {
   en: {
     translation: {
-      welcomeMessage: "Welcome to React and react-i18next",
-      banner: "AI Feature Added",
-      bannerSpan: "New",
+
+      //Hero
+
+
       main:"Home",
       feature:"Feature",
       Blog:"Blog",
@@ -19,7 +20,7 @@ const resources = {
       betterFutureBadge:"Your first step towards better opportunities 🚀 ",
       heroTitle:"Your job search",
       heroSpan:"in one place",
-      heroSupTitle:"Track applications, manage interviews, and build better resumes with MasarPro — so you can apply smarter and land opportunities faster.",
+      heroSupTitle:"Track applications, manage interviews, and build better resumes with MasarPro so you can apply smarter and land opportunities faster.",
       viewFeaturesBtn:"Explore Features",
       fromApplication:"From Application",
       toJobOffer:"To Job Offer",
@@ -38,10 +39,40 @@ const resources = {
       withBetterOrganization:"With Greater Organization",
       suitableForEveryone:"Suitable for Everyone",
       fromGraduatesToExperts:"From Fresh Graduates to Experts",
+
+      //Feature
+
+      featuresSectionTitle:"✨ Features designed to simplify your journey",
+      allTheToolsYouNeed:"All the tools you need",
+      inOnePlace:"In One Place",
+      featuresSectionSubtitle:"Track your applications, build your resume, and organize your interviews with ease using tools designed to help you advance with speed and confidence",
+      jobTrackingTitle:"Job Tracking",
+      jobTrackingDesc:"Organize applications, statuses, and notes in a single dashboard",
+      resumeBuilderTitle:"Resume Builder",
+      resumeBuilderDesc:"Create a professional resume tailored for every opportunity",
+      interviewOrganizerTitle:"Interview Organizer",
+      interviewOrganizerDesc:"Schedule appointments, set reminders, and prepare for every interview",
+
+      //
+
+      testimonialsTitle: "Testimonials",
+      testimonialsSubTitle: "We have collected some testimonials from our users. They are real people who have used our product",
+
+      //CTA
+
+      startYourJourneyTitle: "Start your journey",
+      readyToOrganizeTitle: "Ready to organize your job search?",
+      startYourJourneyDesc: "Track applications, build better resumes, and stay focused on your next opportunity.",
+
+      //Footer 
+
+      copyrightNotice:"Copyright © " + new Date().getFullYear() + " MasarPro.app. All rights reservered.",
     }
   },
   ar: {
     translation: {
+      //Hero
+
       welcomeMessage: "هلا بيك في رياكت",
       banner: "ميزة الذكاء الاصطناعي  ",
       bannerSpan: "جديدة",
@@ -54,7 +85,7 @@ const resources = {
       betterFutureBadge:"خطوتك الأولى نحو فرص أفضل🚀",
       heroTitle:"كل بحثك عن وظيفة في",
       heroSpan:"مكان واحد", 
-      heroSupTitle:"تابع طلباتك، نظم مقابلاتك، وأنشئ سيرة ذاتية أفضل مع MasarPro — لتتقدم بذكاء وتزيد فرصك في الحصول على الوظيفة.",
+      heroSupTitle:"تابع طلباتك، نظم مقابلاتك، وأنشئ سيرة ذاتية أفضل مع MasarPro  لتتقدم بذكاء وتزيد فرصك في الحصول على الوظيفة.",
       viewFeaturesBtn:"استعرض المزايا",
       fromApplication:"من التقديم",
       toJobOffer:"إلى العرض الوظيفي ",
@@ -73,6 +104,34 @@ const resources = {
       withBetterOrganization:"مع تنظيم أكبر ",
       suitableForEveryone:" مناسب للجميع ",
       fromGraduatesToExperts:" من حديثي التخرج إلى الخبراء ",
+
+      //Feature
+
+      featuresSectionTitle:"  مزايا مصممة لتسهّل رحلتك ✨",
+      allTheToolsYouNeed:"  كل الأدوات التي تحتاجها ",
+      inOnePlace:"في مكان واحد ",
+      featuresSectionSubtitle:" تابع طلباتك، ابنِ سيرتك الذاتية، ونظّم مقابلاتك بسهولة مع أدوات تساعدك على التقدّم بثقة وسرعة. ",
+      jobTrackingTitle:"تتبع الوظائف",
+      jobTrackingDesc:"نظّم الطلبات، الحالات، والملاحظات في لوحة واحدة.",
+      resumeBuilderTitle:"منشئ السيرة الذاتية",
+      resumeBuilderDesc:"أنشئ سيرة ذاتية احترافية ومخصّصة لكل فرصة.",
+      interviewOrganizerTitle:"تنظيم المقابلات",
+      interviewOrganizerDesc:"رتّب المواعيد والتذكيرات واستعد لكل مقابلة.",
+
+      //Testimonials
+
+      testimonialsTitle: "آراء العملاء",
+      testimonialsSubTitle: "لقد جمعنا بعض الآراء من مستخدمينا. هم أشخاص حقيقيون قاموا باستخدام منتجنا.",
+
+      //CTA
+
+      startYourJourneyTitle: "ابدأ رحلتك",
+      readyToOrganizeTitle: "هل أنت مستعد لتنظيم بحثك الوظيفي؟",
+      startYourJourneyDesc: "تتبع طلباتك، أنشئ سيراً ذاتية أفضل، وصبّ تركيزك على فرصتك القادمة.",
+
+       //Footer 
+
+      copyrightNotice: "جميع الحقوق محفوظة © " + new Date().getFullYear() + " MasarPro.app",      
     }
   }
 };

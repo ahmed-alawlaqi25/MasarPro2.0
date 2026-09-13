@@ -16,13 +16,10 @@ const Hero = () => {
         newLanguage === "ar" ? "rtl" : "ltr";
 
       document.documentElement.lang = newLanguage;
-
      };
 
   return (
-    <section
-      className="relative min-h-screen overflow-hidden bg-white text-[#07133f]"
-    >
+    <section className="relative min-h-screen overflow-hidden bg-white text-[#07133f]">
       {/* NAVBAR */}
       <nav className="relative z-50 w-full border-b border-slate-200 bg-white">
         <div className="mx-auto flex max-w-[1450px] items-center justify-between px-5 py-4 md:px-10 lg:px-16">
@@ -91,7 +88,7 @@ const Hero = () => {
             <a href="#">{t('feature')}</a>
             <a href="#">{t('Blog')}</a>
             <a href="#">{t('contact')}</a>
-            <button className="rounded-lg border border-[#0b86c6] px-30 py-2 font-medium transition hover:bg-sky-50">
+            <button className="rounded-lg border border-[#0b86c6] px-10 py-2 font-medium transition hover:bg-sky-50">
               {t('loginMain')}
             </button>
           </div>
@@ -122,8 +119,7 @@ const Hero = () => {
         <div className="mt-6 flex flex-wrap items-center justify-center gap-4">
           <button className="flex items-center gap-3 rounded-xl bg-linear-to-l from-[#0574ca] to-[#0bafa9] px-8 py-3.5 font-semibold text-white shadow-lg shadow-cyan-100 transition hover:-translate-y-0.5">
            {t("startNow")}
-           {document.documentElement.dir === "rtl" ? <ChevronLeft />: "" }
-           {document.documentElement.dir === "ltr" ? <ChevronRight />: "" }
+           {i18n.language === "ar" ? <ChevronLeft /> : <ChevronRight />}
           </button>
 
           <button className="flex items-center gap-3 rounded-xl border border-[#82bddd] bg-white px-8 py-3.5 font-semibold text-[#13214e] transition hover:bg-sky-50">
