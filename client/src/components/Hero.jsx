@@ -48,7 +48,7 @@ const Hero = () => {
               {t('contact')}
             </a>
              <button onClick={changeLanguage} className="flex items-center gap-2 text-[#050040] hover:text-[#0fc2b3] transition cursor-pointer">
-                <Languages className="w-5 h-5" />
+                <Languages className="w-5 h-5"/>
                 <span>{i18n.language === "ar" ? "EN" : "AR"}</span>
               </button>
           </div>
@@ -61,7 +61,7 @@ const Hero = () => {
 
             <button className="flex items-center gap-3 rounded-lg bg-linear-to-l from-[#0874c9] to-[#0eb0b2] px-7 py-3 font-medium text-white transition hover:opacity-90">
              {t('startNow')}
-              <span className="text-xl">←</span>
+              <span className="text-xl">{i18n.language === "ar" ? <ChevronLeft /> : <ChevronRight />}</span>
             </button>
           </div>
 
@@ -88,6 +88,10 @@ const Hero = () => {
             <a href="#">{t('feature')}</a>
             <a href="#">{t('Blog')}</a>
             <a href="#">{t('contact')}</a>
+              <button onClick={changeLanguage} className="flex items-center gap-2 text-[#050040] hover:text-[#0fc2b3] transition cursor-pointer">
+                <Languages className="w-5 h-5" />
+                <span>{i18n.language === "ar" ? "EN" : "AR"}</span>
+              </button>
             <button className="rounded-lg border border-[#0b86c6] px-10 py-2 font-medium transition hover:bg-sky-50">
               {t('loginMain')}
             </button>
