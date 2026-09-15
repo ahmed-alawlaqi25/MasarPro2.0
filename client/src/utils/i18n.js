@@ -67,6 +67,10 @@ const resources = {
       //Footer 
 
       copyrightNotice:"Copyright © " + new Date().getFullYear() + " MasarPro.app. All rights reservered.",
+
+      // App
+
+      jobTracker: "Job Tracker"
     }
   },
   ar: {
@@ -132,6 +136,10 @@ const resources = {
        //Footer 
 
       copyrightNotice: "جميع الحقوق محفوظة © " + new Date().getFullYear() + " MasarPro.app",      
+
+      //App
+
+      jobTracker: "متتبع الوظائف"
     }
   }
 };

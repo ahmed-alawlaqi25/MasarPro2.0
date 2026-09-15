@@ -1,7 +1,7 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-
+import { Link } from "react-router";
 
 
 
@@ -30,13 +30,12 @@ const CTA = () => {
         {t('startYourJourneyDesc')}
         </p>
         </div>
+        
+        <Link to="/login?state=register" className="flex shrink-0 items-center gap-3 rounded-xl bg-linear-to-r from-[#0fc2b3] to-[#114f83] px-7 py-3.5 font-medium text-white shadow-lg shadow-cyan-100 transition hover:-translate-y-0.5 hover:opacity-95">
 
-        <a
-        href="#"
-        className="flex shrink-0 items-center gap-3 rounded-xl bg-linear-to-r from-[#0fc2b3] to-[#114f83] px-7 py-3.5 font-medium text-white shadow-lg shadow-cyan-100 transition hover:-translate-y-0.5 hover:opacity-95"
-        >
+        {document.documentElement.dir == "rtl" ? <ChevronRight /> : <ChevronLeft />}
         <span>{t('startNow')}</span>
-
+        
         <svg
         xmlns="http://www.w3.org/2000/svg"
         width="20"
@@ -48,9 +47,10 @@ const CTA = () => {
         strokeLinecap="round"
         strokeLinejoin="round"
         >
-        {document.documentElement.dir == "rtl" ? <ChevronLeft /> : <ChevronRight />}
+        
         </svg>
-        </a>
+        </Link>
+
         </div>
         </div>
         </div>

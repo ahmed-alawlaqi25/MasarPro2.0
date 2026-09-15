@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ChevronLeft, ChevronRight, Feather, Languages, MoveDownLeft, MoveLeft, MoveRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Feather, Languages, Menu, MoveDownLeft, X,} from "lucide-react";
+import { Link } from "react-router";
+
 
 const Hero = () => {
     const [mobileOpen, setMobileOpen] = useState(false);
@@ -28,49 +30,51 @@ const Hero = () => {
           <a href="/" className="flex items-center">
             <img
               src="/logoNoText.png"
-              alt="MasarPro"
+              alt="MasarPro Logo"
               className="w-[170px] object-contain"
             />
           </a>
 
           {/* Desktop menu */}
           <div className="hidden items-center gap-9 text-sm font-medium md:flex">
-            <a href="#" className="rounded-full bg-[#e6f6fa] px-5 py-2 text-[#087ca8]">
+            <a href="/" className="rounded-full bg-[#e6f6fa] px-5 py-2 text-[#087ca8]">
               {t('main')}
             </a>
-            <a href="#" className="transition hover:text-[#0fae9d]">
+            <a href="#features" className="transition hover:text-[#0fae9d]">
               {t('feature')}
             </a>
-            <a href="#" className="transition hover:text-[#0fae9d]">
+            <a href="/blog" className="transition hover:text-[#0fae9d]">
               {t('Blog')}
             </a>
-            <a href="#" className="transition hover:text-[#0fae9d]">
+            <a href="/contact" className="transition hover:text-[#0fae9d]">
               {t('contact')}
             </a>
-             <button onClick={changeLanguage} className="flex items-center gap-2 text-[#050040] hover:text-[#0fc2b3] transition cursor-pointer">
-                <Languages className="w-5 h-5"/>
+             <button onClick={changeLanguage} className="flex items-center text-[#050040] hover:text-[#0fc2b3] transition cursor-pointer">
+                <Languages />
                 <span>{i18n.language === "ar" ? "EN" : "AR"}</span>
               </button>
           </div>
 
           {/* Desktop buttons */}
           <div className="hidden items-center gap-4 md:flex">
-            <button className="rounded-lg border border-[#0b86c6] px-7 py-3 font-medium transition hover:bg-sky-50">
+            <Link to="/login?state=login" className="rounded-lg border border-[#0b86c6] px-7 py-3 font-medium transition hover:bg-sky-50">
               {t('loginMain')}
-            </button>
+            </Link>
 
-            <button className="flex items-center gap-3 rounded-lg bg-linear-to-l from-[#0874c9] to-[#0eb0b2] px-7 py-3 font-medium text-white transition hover:opacity-90">
+            <Link to="/login?state=register" className="flex items-center gap-3 rounded-lg bg-linear-to-l from-[#0874c9] to-[#0eb0b2] px-7 py-3 font-medium text-white transition hover:opacity-90">
+            {i18n.language === "en" ? <ChevronLeft /> : <ChevronRight /> }
              {t('startNow')}
-              <span className="text-xl">{i18n.language === "ar" ? <ChevronLeft /> : <ChevronRight />}</span>
-            </button>
+            <span className="text-xl"></span>
+
+            </Link>
           </div>
 
           {/* Mobile */}
           <button
             onClick={() => setMobileOpen(true)}
-            className="rounded-lg bg-[#07133f] p-2 text-white md:hidden"
+            className="rounded-lg  p-2 text-[#07133f] md:hidden hover:text-[#0fae9d]"
           >
-            ☰
+            <Menu />
           </button>
         </div>
 
@@ -81,20 +85,20 @@ const Hero = () => {
               onClick={() => setMobileOpen(false)}
               className="absolute left-6 top-6 text-3xl"
             >
-              ×
+              <X className="hover:text-[#0fae9d]"/>
             </button>
 
-            <a href="#">{t('main')}</a>
-            <a href="#">{t('feature')}</a>
-            <a href="#">{t('Blog')}</a>
-            <a href="#">{t('contact')}</a>
-              <button onClick={changeLanguage} className="flex items-center gap-2 text-[#050040] hover:text-[#0fc2b3] transition cursor-pointer">
-                <Languages className="w-5 h-5" />
+            <a className="hover:text-[#0fae9d]" href="/">{t('main')}</a>
+            <a className="hover:text-[#0fae9d]" href="#features">{t('feature')}</a>
+            <a className="hover:text-[#0fae9d]" href="/blog">{t('Blog')}</a>
+            <a className="hover:text-[#0fae9d]" href="/contact">{t('contact')}</a>
+              <button onClick={changeLanguage} className="flex items-center text-[#050040] hover:text-[#0fc2b3] transition cursor-pointer">
+                <Languages />
                 <span>{i18n.language === "ar" ? "EN" : "AR"}</span>
               </button>
-            <button className="rounded-lg border border-[#0b86c6] px-10 py-2 font-medium transition hover:bg-sky-50">
+            <Link to="/login?state=login" className="rounded-lg border border-[#0b86c6] px-10 py-2 font-medium transition hover:bg-sky-50">
               {t('loginMain')}
-            </button>
+            </Link>
           </div>
         )}
       </nav>
@@ -121,15 +125,16 @@ const Hero = () => {
         </p>
         {/* Buttons */}
         <div className="mt-6 flex flex-wrap items-center justify-center gap-4">
-          <button className="flex items-center gap-3 rounded-xl bg-linear-to-l from-[#0574ca] to-[#0bafa9] px-8 py-3.5 font-semibold text-white shadow-lg shadow-cyan-100 transition hover:-translate-y-0.5">
+          <Link to="/login?state=register" className="flex items-center gap-3 rounded-xl bg-linear-to-l from-[#0574ca] to-[#0bafa9] px-8 py-3.5 font-semibold text-white shadow-lg shadow-cyan-100 transition hover:-translate-y-0.5">
+            {i18n.language === "ar" ? <ChevronRight /> : <ChevronLeft />}
            {t("startNow")}
-           {i18n.language === "ar" ? <ChevronLeft /> : <ChevronRight />}
-          </button>
+          </Link>
 
-          <button className="flex items-center gap-3 rounded-xl border border-[#82bddd] bg-white px-8 py-3.5 font-semibold text-[#13214e] transition hover:bg-sky-50">
-            {t('viewFeaturesBtn')}
+          <a href="#features" className="flex items-center gap-3 rounded-xl border border-[#82bddd] bg-white px-8 py-3.5 font-semibold text-[#13214e] transition hover:bg-sky-50">
             <Feather />
-          </button>
+            {t('viewFeaturesBtn')}
+            
+          </a>
         </div>
 
         {/* LEFT NOTE */}

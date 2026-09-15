@@ -8,7 +8,7 @@ const Feature = () => {
     const {t} = useTranslation();
 
     return (
-    <section
+    <section id='features'
         dir="rtl"
         className="relative overflow-hidden bg-white px-4 py-20"
     >
