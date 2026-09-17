@@ -10,10 +10,10 @@ const Feature = () => {
     return (
     <section id='features'
         dir="rtl"
-        className="relative overflow-hidden bg-white px-4 py-20"
+        className="relative overflow-hidden bg-[#f4f9fc] px-4 py-8"
     >
       {/* Background glow */}
-        <div className="pointer-events-none absolute left-1/2 top-[55%] h-[240px] w-[120%] -translate-x-1/2 rounded-[50%] bg-[#36d6d0] opacity-20 blur-[100px]" />
+        <div className="pointer-events-none absolute left-1/2 top-[55%] h-[240px] w-[120%] -translate-x-1/2 rounded-[50%] " />
 
         <div className="relative z-10 mx-auto flex max-w-6xl flex-col items-center text-center">
         {/* Badge */}

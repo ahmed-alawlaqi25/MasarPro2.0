@@ -26,7 +26,6 @@ const App = () => {
           <Route path="login" element={<Login />} />
           <Route path="confirm-email" element={<Confirmemail />} />
           <Route path="contact" element={<Contact />} />
-          <Route path="blog" element={<Blog />} />
           <Route path="preview/:resumeLink" element={<Preview />}/>
           <Route path="preview/:resumeLink" element={<Preview />}/>
         </Route>
@@ -36,6 +35,7 @@ const App = () => {
           <Route path="callback" element={<Callback />} />
           <Route path="job-tracker" element={<JobTracker />} />
           <Route path="resume-builde" element={<ResumeBuilder/>}/>
+          <Route path="blog" element={<Blog />} />
           <Route path="builder/:resumeID" element={<Builder />} />
           <Route path="settings" element={<Settings />} />
         </Route>

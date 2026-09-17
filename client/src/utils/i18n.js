@@ -12,7 +12,7 @@ const resources = {
 
 
       main:"Home",
-      feature:"Feature",
+      feature:"Features",
       Blog:"Blog",
       contact:"Contact Us",
       loginMain:"Sign In",
@@ -68,16 +68,31 @@ const resources = {
 
       copyrightNotice:"Copyright © " + new Date().getFullYear() + " MasarPro.app. All rights reservered.",
 
+      //Login
+
+      signInButton: "Please sign in to continue",
+      loginTitle: "Login",
+      signUpTitle: "Sign up",
+      alreadyHaveAccount: "Already have an account?",
+      dontHaveAccount: "Don't have an account?",
+      emailLabel: "Email",
+      nameLabel: "Name",
+      clickHereLink: "click here",
+
       // App
 
-      jobTracker: "Job Tracker"
+      jobTracker: "Job Tracker",
+      welcomeMessage: "Welcome",
+      readyForNewOpportunities: "Ready for new opportunities",
+
+
     }
   },
   ar: {
     translation: {
       //Hero
 
-      welcomeMessage: "هلا بيك في رياكت",
+
       banner: "ميزة الذكاء الاصطناعي  ",
       bannerSpan: "جديدة",
       main: "الرئيسية",
@@ -137,9 +152,24 @@ const resources = {
 
       copyrightNotice: "جميع الحقوق محفوظة © " + new Date().getFullYear() + " MasarPro.app",      
 
+      //Login
+
+      signInButton: "يرجى تسجيل الدخول للمتابعة",
+      loginTitle: "تسجيل الدخول",
+      signUpTitle: "إنشاء حساب",
+      alreadyHaveAccount: "لديك حساب بالفعل؟",
+      dontHaveAccount: "ليس لديك حساب؟",
+      emailLabel: "البريد الإلكتروني",
+      nameLabel: "الاسم",
+      clickHereLink: "انقر هنا",
+
       //App
 
-      jobTracker: "متتبع الوظائف"
+      jobTracker: "متتبع الوظائف",
+
+      welcomeMessage: "مرحباً",
+      readyForNewOpportunities: "مستعد لفرص جديدة",
+
     }
   }
 };

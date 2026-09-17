@@ -1,5 +1,6 @@
 import { User2, Mail } from 'lucide-react';
 import React from 'react'
+import { useTranslation } from 'react-i18next';
 import { Link} from "react-router";
 
 const Login = () => {
@@ -18,6 +19,7 @@ const Login = () => {
         e.preventDefault()
 
     }
+    const {t} = useTranslation();
 
     const handleChange = (e) => {
         const { name, value } = e.target
@@ -39,22 +41,22 @@ const Login = () => {
                       className="w-[170px] object-contain"
                     />
                   </Link>
-                  <h1 className="text-gray-900 text-3xl mt-6 font-medium">{state === "login" ? "Login" : "Sign up"}</h1>
-                  <p className="text-gray-500 text-sm mt-2">Please sign in to continue</p>
+                  <h1 className="text-gray-900 text-3xl mt-6 font-medium">{state === "login" ? `${t('loginTitle')}` : `${t('signUpTitle')}` }</h1>
+                  <p className="text-gray-500 text-sm mt-2">{t('signInButton')}</p>
                   {state !== "login" && (
                       <div className="flex items-center mt-6 w-full bg-white border border-gray-300/80 h-12 rounded-full overflow-hidden pl-6 gap-2">
-                          <User2 size={16} color='#6B7280'/>
-                          <input type="text" name="name" placeholder="Name" className="border-none outline-none ring-0" value={formData.name} onChange={handleChange} required />
+                          <User2 size={16} color='#6B7280' className='mr-2'/>
+                          <input type="text" name="name" placeholder={t('nameLabel')} className="border-none outline-none ring-0" value={formData.name} onChange={handleChange} required />
                       </div>
                   )}
                   <div className="flex items-center w-full mt-4 bg-white border border-gray-300/80 h-12 rounded-full overflow-hidden pl-6 gap-2">
-                      <Mail size={16} color='#6B7280'/>
-                      <input type="email" name="email" placeholder="Email id" className="border-none outline-none ring-0" value={formData.email} onChange={handleChange} required />
+                      <Mail size={16} color='#6B7280' className='mr-2'/>
+                      <input type="email" name="email" placeholder={t('emailLabel')} className="border-none outline-none ring-0" value={formData.email} onChange={handleChange} required />
                   </div>
                   <button type="submit" className="mt-2 w-full h-11 rounded-full text-white bg-linear-to-r from-[#0fc2b3] to-[#114f83] hover:opacity-90 transition-opacity">
-                      {state === "login" ? "Login" : "Sign up"}
+                      {state === "login" ? `${t('loginTitle')}` : `${t('signUpTitle')}`}
                   </button>
-                  <p onClick={() => setState(prev => prev === "login" ? "register" : "login")} className="text-gray-500 text-sm mt-3 mb-11">{state === "login" ? "Don't have an account?" : "Already have an account?"} <a href={`login?state=${state}`} className="text-indigo-500 hover:underline">click here</a></p>
+                  <p onClick={() => setState(prev => prev === "login" ? "register" : "login")} className="text-gray-500 text-sm mt-3 mb-11">{state === "login" ? `${t('dontHaveAccount')}` : `${t('alreadyHaveAccount')}`} <a href={`login?state=${state}`} className="text-indigo-500 hover:underline">{t('clickHereLink')}</a></p>
               </form>
             </div>
     )

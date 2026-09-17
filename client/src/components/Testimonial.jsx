@@ -45,7 +45,7 @@ const Testimonial = () => {
     ];
 
     return (
-        <section >
+        <section className='bg-[#f4f9fc]'>
         <h1 className="text-center text-4xl font-bold text-gray-900">{t('testimonialsTitle')}</h1>
         <p className="text-center text-gray-500">
             {t('testimonialsSubTitle')}
@@ -64,7 +64,7 @@ const Testimonial = () => {
                         </span>
                     )}
 
-                    <div className="flex flex-col items-center justify-center p-8 text-center">
+                    <div className="flex flex-col items-center bg-white justify-center p-8 text-center">
                         <div className="mb-4 text-gray-500">
                             <h3 className="text-lg font-semibold text-gray-900">Very easy to integrate</h3>
                             <p className="my-4 text-sm line-clamp-3">{testimonial.message}</p>

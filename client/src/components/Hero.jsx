@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ChevronLeft, ChevronRight, Feather, Languages, Menu, MoveDownLeft, X,} from "lucide-react";
-import { Link } from "react-router";
+import { Link, NavLink } from "react-router";
+
 
 
 const Hero = () => {
@@ -20,8 +21,10 @@ const Hero = () => {
       document.documentElement.lang = newLanguage;
      };
 
+     
+
   return (
-    <section className="relative min-h-screen overflow-hidden bg-white text-[#07133f]">
+    <section className="relative min-h-screen overflow-hidden bg-[#f4f9fc] text-[#07133f]">
       {/* NAVBAR */}
       <nav className="relative z-50 w-full border-b border-slate-200 bg-white">
         <div className="mx-auto flex max-w-[1450px] items-center justify-between px-5 py-4 md:px-10 lg:px-16">
@@ -37,14 +40,11 @@ const Hero = () => {
 
           {/* Desktop menu */}
           <div className="hidden items-center gap-9 text-sm font-medium md:flex">
-            <a href="/" className="rounded-full bg-[#e6f6fa] px-5 py-2 text-[#087ca8]">
+            <a href="/" className="rounded-full bg-[#e8f7f5] px-4 py-1.5 text-sm font-medium text-[#0b9f91]">
               {t('main')}
             </a>
-            <a href="#features" className="transition hover:text-[#0fae9d]">
+            <a href="/#features" className="transition hover:text-[#0fae9d]">
               {t('feature')}
-            </a>
-            <a href="/blog" className="transition hover:text-[#0fae9d]">
-              {t('Blog')}
             </a>
             <a href="/contact" className="transition hover:text-[#0fae9d]">
               {t('contact')}
@@ -62,20 +62,23 @@ const Hero = () => {
             </Link>
 
             <Link to="/login?state=register" className="flex items-center gap-3 rounded-lg bg-linear-to-l from-[#0874c9] to-[#0eb0b2] px-7 py-3 font-medium text-white transition hover:opacity-90">
-            {i18n.language === "en" ? <ChevronLeft /> : <ChevronRight /> }
+            
              {t('startNow')}
+            
             <span className="text-xl"></span>
 
             </Link>
           </div>
 
           {/* Mobile */}
+          
           <button
             onClick={() => setMobileOpen(true)}
             className="rounded-lg  p-2 text-[#07133f] md:hidden hover:text-[#0fae9d]"
           >
             <Menu />
           </button>
+          
         </div>
 
         {/* Mobile menu */}
@@ -88,9 +91,8 @@ const Hero = () => {
               <X className="hover:text-[#0fae9d]"/>
             </button>
 
-            <a className="hover:text-[#0fae9d]" href="/">{t('main')}</a>
+            <a className="rounded-full bg-[#e8f7f5] px-8 py-2 text-sm font-medium text-[#0b9f91]" href="/">{t('main')}</a>
             <a className="hover:text-[#0fae9d]" href="#features">{t('feature')}</a>
-            <a className="hover:text-[#0fae9d]" href="/blog">{t('Blog')}</a>
             <a className="hover:text-[#0fae9d]" href="/contact">{t('contact')}</a>
               <button onClick={changeLanguage} className="flex items-center text-[#050040] hover:text-[#0fc2b3] transition cursor-pointer">
                 <Languages />
@@ -126,8 +128,9 @@ const Hero = () => {
         {/* Buttons */}
         <div className="mt-6 flex flex-wrap items-center justify-center gap-4">
           <Link to="/login?state=register" className="flex items-center gap-3 rounded-xl bg-linear-to-l from-[#0574ca] to-[#0bafa9] px-8 py-3.5 font-semibold text-white shadow-lg shadow-cyan-100 transition hover:-translate-y-0.5">
-            {i18n.language === "ar" ? <ChevronRight /> : <ChevronLeft />}
+            
            {t("startNow")}
+           {i18n.language === "ar" ? <ChevronLeft /> : <ChevronRight />}
           </Link>
 
           <a href="#features" className="flex items-center gap-3 rounded-xl border border-[#82bddd] bg-white px-8 py-3.5 font-semibold text-[#13214e] transition hover:bg-sky-50">
