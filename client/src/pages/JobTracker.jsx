@@ -1,9 +1,22 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Card from '../components/Card'
 import {  CircleCheckBig, FileText, Heart, Send, UserRoundGroup, Plus } from 'lucide-react';
 import KanbanBoard from '../components/KanbanBoard'
 
+
 const JobTracker = () => {
+
+  const [jobs, setJobs] = useState([
+    { id: crypto.randomUUID(), columnId: "wishlist" }
+  ]);
+
+  const addJob = () => {
+    setJobs((jobs) => [
+      ...jobs,
+      { id: crypto.randomUUID(), columnId: "wishlist" },
+    ]);
+  };
+
   return (
     <section className='bg-[#f4f9fc] h-screen '>
       <div className='px-5  md:px-10  pt-4'>
@@ -11,7 +24,7 @@ const JobTracker = () => {
           <div>
             <h1 className='text-4xl font-bold'>Job-Tracker</h1>
           </div>
-            <button className=" flex items-center gap-3 rounded-lg bg-linear-to-l from-[#0874c9] to-[#0eb0b2] px-10   text-white transition hover:opacity-90">
+            <button onClick={addJob} className=" flex items-center gap-3 rounded-lg bg-linear-to-l from-[#0874c9] to-[#0eb0b2] px-10   text-white transition hover:opacity-90">
                 <Plus /><p>Add New Job </p>
             </button>
           </div>
@@ -21,10 +34,10 @@ const JobTracker = () => {
           <Card icon = {<Send />} text= "Applied" bgColor="blue" textColor="blue"/>
           <Card icon = {<UserRoundGroup />} text= "Interview" bgColor="orange" textColor="orange"/>
           <Card icon = {<FileText />} text= "Offer" bgColor="violet" textColor="violet"/>
-          <Card icon = {<CircleCheckBig />} text= "Accept" bgColor="green" textColor="green"/>
+          <Card icon = {<CircleCheckBig />} text= "Accept" bgColor="green" textColor="green" />
         </div>
       </div>
-      <KanbanBoard />
+      <KanbanBoard jobs={jobs} setJobs={setJobs} />
     </section>
   )
 }

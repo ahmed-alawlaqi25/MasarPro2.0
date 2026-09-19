@@ -1,9 +1,9 @@
 import React from 'react'
 
-const Application = () => {
+const JobApplication = () => {
   return (
     <div><h1>Application</h1></div>
   )
 }
 
-export default Application
+export default JobApplication
