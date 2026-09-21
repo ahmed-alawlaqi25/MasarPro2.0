@@ -13,6 +13,7 @@ import Preview from './pages/Preview'
 import Blog from './pages/Blog'
 import Builder from './pages/Builder'
 import Confirmemail from './pages/Confirmemail'
+import { AuthProvider } from './components/AuthContext'
 
 
 const App = () => {
@@ -29,14 +30,22 @@ const App = () => {
           <Route path="callback" element={<Callback />} />
         </Route>
 
-        <Route element={<Dashboard />}>
-          <Route path="job-tracker/:applicationID" element={<JobApplication />} />
-          <Route path="job-tracker" element={<JobTracker />} />
-          <Route path="resume-builde" element={<ResumeBuilder/>}/>
-          <Route path="blog" element={<Blog />} />
-          <Route path="builder/:resumeID" element={<Builder />} />
-          <Route path="settings" element={<Settings />} />
-        </Route>
+        
+          <Route
+            element={
+              <AuthProvider>
+              <Dashboard />
+              </AuthProvider>
+            }
+          >
+            <Route path="job-tracker/:applicationID" element={<JobApplication />} />
+            <Route path="job-tracker" element={<JobTracker />} />
+            <Route path="resume-builde" element={<ResumeBuilder/>}/>
+            <Route path="blog" element={<Blog />} />
+            <Route path="resume-builde/:resumeID" element={<Builder />} />
+            <Route path="settings" element={<Settings />} />
+          </Route>
+
       </Routes>
     </>
     

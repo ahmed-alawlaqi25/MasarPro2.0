@@ -1,25 +1,39 @@
-import { FileUser,  Menu, Newspaper, Settings, SquareKanban, X} from "lucide-react";
+import { FileUser,  Menu, Newspaper, Settings, SquareKanban, X,  LogOut} from "lucide-react";
 import React, { useState } from "react";
 import { useTranslation } from 'react-i18next';
-import { Link, NavLink } from "react-router";
+import { Link, NavLink, useNavigate } from "react-router";
+import { supabase } from '../lib/supabase'
+import { useAuth } from "./AuthContext";
 
 
 const Navbar = () => {
 
     const [mobileOpen, setMobileOpen] = useState(false);
+    const navigate = useNavigate()
+    const handleSignOut = async () => {
+    const { error } = await supabase.auth.signOut()
 
+    if (error) {
+        console.error(error.message)
+        return
+    }
+      navigate('/login', { replace: true })
+    }
     const { t  } = useTranslation();
 
-    const userName = "Ahmed"
+
     
     const getLinkClass = ({ isActive }) =>
     `flex item-center gap-1 transition hover:text-[#278d8a] ${
       isActive
         ? 'bg-[#e7f5f5] text-[#278d8a] font-bold px-4 py-2 rounded-md'
-        : 'text-gray-500 hover:text-[#278d8a]'
+        : 'text-gray-500 hover:text-[#278d8a] '
     }`;
 
+    
+    const {profile, loading } = useAuth()
     const ProfileGreeting = () => (
+        
         <Link
             to="/profile"
             className="flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-50"
@@ -28,7 +42,7 @@ const Navbar = () => {
 
             <div className="text-right leading-tight">
             <p className="text-sm font-bold text-slate-800">
-                {t('welcomeMessage')} {userName}
+                {t('welcomeMessage')} {profile?.name}
             </p>
 
             <p className="text-xs text-slate-400">
@@ -37,11 +51,13 @@ const Navbar = () => {
             </div>
                         <img
             src="/Ahmed_Profile_pic3 (4).png"
-            alt= {userName}
+            alt= {profile?.name}
             className="h-11 w-11 rounded-full object-cover"
             />
         </Link>
     );
+
+    
 
     return (
         <nav className="relative z-50 w-full bg-white border-b border-slate-200">
@@ -57,7 +73,7 @@ const Navbar = () => {
 
             {/* Desktop menu */}
             <div className="hidden items-center gap-9 text-sm font-bold text-gray-500 font-bold md:flex">
-                <NavLink to="/job-tracker" className={getLinkClass}>
+                <NavLink to="/job-tracker" className={getLinkClass} >
                 <SquareKanban /> {t('jobTracker')}
                 </NavLink>
                 <NavLink to="/resume-builde" className={getLinkClass}>
@@ -69,6 +85,15 @@ const Navbar = () => {
                 <NavLink to="/settings" className={getLinkClass}>
                 <Settings />{t('settings')}
                 </NavLink>
+                <button
+                    type="button"
+                    onClick={handleSignOut}
+                    className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-bold  hover:text-red-600 cursor-pointer"
+                    >
+                    <LogOut size={18} />
+                    Sign out
+                </button>
+                
             </div>
 
             {/* Desktop buttons */}
@@ -107,6 +132,14 @@ const Navbar = () => {
                 <NavLink to="/settings" className={getLinkClass}>
                 <Settings />{t('settings')}
                 </NavLink>
+                <button
+                    type="button"
+                    onClick={handleSignOut}
+                    className="flex items-center gap-2 text-gray-500 font-bold rounded-lg px-4 py-2 text-sm  hover:text-red-600 cursor-pointer"
+                    >
+                    <LogOut size={18} />
+                    Sign out
+                </button>
             </div>
             )}
         </nav>

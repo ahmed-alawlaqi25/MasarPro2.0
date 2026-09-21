@@ -1,8 +1,8 @@
-import React from "react";
 import { DragDropProvider } from "@dnd-kit/react";
 import JobApllicationsCard from "./JobApllicationsCard";
 import JobColumns from "./JobColumns";
 import {CircleCheckBig, FileText, Heart, Send, UserRoundGroup, } from "lucide-react";
+
 
 const KanbanBoard = ({ jobs, setJobs }) => {
   const renderJobs = (columnId) =>
@@ -30,28 +30,28 @@ setJobs((currentJobs) =>
 );
   };
   return (
-    <div className="flex gap-4 mx-10 mt-6">
+    <div className="gap-4 mx-10 mt-6  md:grid md:grid-cols-2 lg:grid-cols-5 sm:flex-col ">  
       <DragDropProvider onDragEnd={handleDragEnd}>
         <JobColumns
           id="wishlist"
           bgColor="gray"
           borderColor="gray"
+          ringColor="gray"
           textBgColor="gray"
           text="Wish List"
           textColor="gray"
-          icon={<Heart fill="currentColor" />}
-        >
+          icon={<Heart fill="currentColor" />}>
           {renderJobs("wishlist")}
         </JobColumns>
     <JobColumns
       id="applied"
       bgColor="blue"
       borderColor="blue"
+      ringColor="blue"
       textBgColor="blue"
       textColor="blue"
       text="Applied"
-      icon={<Send />}
-    >
+      icon={<Send />}>
       {renderJobs("applied")}
     </JobColumns>
 
@@ -59,11 +59,11 @@ setJobs((currentJobs) =>
       id="interview"
       bgColor="orange"
       borderColor="orange"
+      ringColor="orange"
       textBgColor="orange"
       textColor="orange"
       text="Interview"
-      icon={<UserRoundGroup />}
-    >
+      icon={<UserRoundGroup />}>
       {renderJobs("interview")}
     </JobColumns>
 
@@ -71,11 +71,11 @@ setJobs((currentJobs) =>
       id="offer"
       bgColor="violet"
       borderColor="violet"
+      ringColor="violet"
       textBgColor="violet"
       textColor="violet"
       text="Offer"
-      icon={<FileText />}
-    >
+      icon={<FileText />}>
       {renderJobs("offer")}
     </JobColumns>
 
@@ -83,11 +83,11 @@ setJobs((currentJobs) =>
       id="accepted"
       bgColor="green"
       borderColor="green"
+      ringColor="green"
       textBgColor="green"
       textColor="green"
       text="Accept"
-      icon={<CircleCheckBig />}
-    >
+      icon={<CircleCheckBig />}>
       {renderJobs("accepted")}
     </JobColumns>
   </DragDropProvider>

@@ -1,15 +1,25 @@
-import React from 'react'
 import {useDraggable} from '@dnd-kit/react';
 import { CalendarDays } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 
-const JobApllicationsCard = () => {
 
-  const {ref} = useDraggable({
-    id: 'draggable',
+const JobApllicationsCard = ({ id }) => {
+
+  const navigate = useNavigate();
+  const {ref, isDragging} = useDraggable({
+    id,
   });
   return (
-    <div href={"job-tracker/23"} ref={ref} className="w-full max-w-[340px] rounded-2xl border border-slate-200 bg-white p-3 ml-2 mt-4 shadow-[0_3px_14px_rgba(15,23,42,0.08)]"> 
+    <div
+      onClick={() => navigate(id)}
+      ref={ref}
+      className={`relative box-border mt-4 w-[98%] touch-none select-none rounded-2xl border border-slate-200 bg-white p-3 transition-[opacity,box-shadow,scale] duration-150 ${
+        isDragging
+          ? 'z-50 cursor-grabbing scale-[1.02] opacity-70 shadow-2xl ring-2 ring-sky-400'
+          : 'cursor-grab shadow-[0_3px_14px_rgba(15,23,42,0.08)]'
+      }`}
+    > 
       <div className="flex items-start gap-4">
         <div className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-white shadow-[0_1px_5px_rgba(15,23,42,0.12)] ring-1 ring-slate-100">
         {/* //logo// */}
