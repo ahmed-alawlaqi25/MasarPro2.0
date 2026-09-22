@@ -1,8 +1,11 @@
 import { X } from "lucide-react";
 import { useState } from "react";
 import { supabase } from '../lib/supabase'
+import { useJob } from './JopContext';
+
 
 const JobApplicationForm = ({ onClose }) => {
+  const { refreshJobs } = useJob();
   const [formData, setFormData] = useState({
     company_name: "",
     job_title: "",
@@ -45,14 +48,18 @@ const handleSubmit = async (event) => {
     return;
   }
 
+  await refreshJobs();
   onClose();
 };
+
+
   
   const inputStyles =
     "w-full rounded-lg border border-slate-300 bg-white px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100";
 
   return (
   <div
+
     onMouseDown={onClose}
     className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 p-4">
     <div

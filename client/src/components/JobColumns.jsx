@@ -52,7 +52,7 @@ const JobColumns = ({id, children,bgColor, borderColor, text, icon, textBgColor,
 
      <div
        ref={ref}
-       className={`overflow-y-auto pb-2 transition-[transform,box-shadow] duration-200 west-out sm:h-[12rem] md:h-[22rem] lg:h-142 ${colors[bgColor]} border-t-2 ${borderColors[borderColor]} rounded-lg shadow-[0_8px_24px_rgba(31,52,85,0.06),inset_0_0_0_1px_rgba(220,227,237,0.35)] ${
+       className={`overflow-y-auto pb-2 transition-[transform,box-shadow] duration-200 west-out sm:h-[12rem] md:h-[22rem] lg:h-136 ${colors[bgColor]} border-t-2 ${borderColors[borderColor]} rounded-lg shadow-[0_8px_24px_rgba(31,52,85,0.06),inset_0_0_0_1px_rgba(220,227,237,0.35)] ${
          isDropTarget ? `scale-[1.01] ring-2 ${ringColors[ringColor]} border-t-1 ` : ''
        }`}
      >

@@ -14,6 +14,7 @@ import Blog from './pages/Blog'
 import Builder from './pages/Builder'
 import Confirmemail from './pages/Confirmemail'
 import { AuthProvider } from './components/AuthContext'
+import { JobProvider } from './components/JopContext'
 
 
 const App = () => {
@@ -33,8 +34,10 @@ const App = () => {
         
           <Route
             element={
-              <AuthProvider>
-              <Dashboard />
+               <AuthProvider>
+                <JobProvider>
+                  <Dashboard />
+                </JobProvider>
               </AuthProvider>
             }
           >

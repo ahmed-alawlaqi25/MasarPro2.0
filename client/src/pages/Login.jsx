@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useEffect, useState } from "react";
 import { useTranslation } from 'react-i18next';
-import { Link} from "react-router";
+import { Link, Navigate} from "react-router";
 import { supabase } from '../lib/supabase'
 import { User2, Mail} from 'lucide-react'
+
 
 const Login = () => {
 
@@ -45,6 +46,31 @@ const Login = () => {
         const { name, value } = e.target
         setFormData(prev => ({ ...prev, [name]: value }))
     }
+
+
+    const [session, setSession] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+    const {
+        data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, nextSession) => {
+        setSession(nextSession);
+        setLoading(false);
+    });
+
+    return () => subscription.unsubscribe();
+    }, []);
+
+    if (loading) {
+    return <p>Loading...</p>;
+    }
+
+    if (session) {
+    return <Navigate to="/job-tracker" replace />;
+    }
+
+
 
     return (
             <div className='flex items-center justify-center min-h-screen bg-gray-50'>

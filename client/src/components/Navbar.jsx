@@ -1,5 +1,5 @@
 import { FileUser,  Menu, Newspaper, Settings, SquareKanban, X,  LogOut} from "lucide-react";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useTranslation } from 'react-i18next';
 import { Link, NavLink, useNavigate } from "react-router";
 import { supabase } from '../lib/supabase'
@@ -24,21 +24,20 @@ const Navbar = () => {
 
     
     const getLinkClass = ({ isActive }) =>
-    `flex item-center gap-1 transition hover:text-[#278d8a] ${
+    `flex items-center gap-1 rounded-md px-4 py-2 font-bold transition-colors duration-200 hover:bg-[#e7f5f5] hover:text-[#278d8a] ${
       isActive
-        ? 'bg-[#e7f5f5] text-[#278d8a] font-bold px-4 py-2 rounded-md'
-        : 'text-gray-500 hover:text-[#278d8a] '
+        ? 'bg-[#e7f5f5] text-[#278d8a]'
+        : 'text-gray-500'
     }`;
 
     
-    const {profile, loading } = useAuth()
+    const {profile } = useAuth()
     const ProfileGreeting = () => (
         
         <Link
             to="/profile"
             className="flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-50"
         >
-
 
             <div className="text-right leading-tight">
             <p className="text-sm font-bold text-slate-800">
@@ -67,12 +66,12 @@ const Navbar = () => {
                 <img
                 src="/logoNoText.png"
                 alt="MasarPro Logo"
-                className="w-[220px] object-contain"
+                className="w-54 object-contain"
                 />
             </a>
 
             {/* Desktop menu */}
-            <div className="hidden items-center gap-9 text-sm font-bold text-gray-500 font-bold md:flex">
+            <div className="hidden items-center gap-4 text-sm  text-gray-500 font-bold md:flex">
                 <NavLink to="/job-tracker" className={getLinkClass} >
                 <SquareKanban /> {t('jobTracker')}
                 </NavLink>
@@ -88,7 +87,7 @@ const Navbar = () => {
                 <button
                     type="button"
                     onClick={handleSignOut}
-                    className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-bold  hover:text-red-600 cursor-pointer"
+                    className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-bold text-gray-500 transition-colors duration-200 hover:bg-rose-50 hover:text-red-600 cursor-pointer"
                     >
                     <LogOut size={18} />
                     Sign out
@@ -135,11 +134,12 @@ const Navbar = () => {
                 <button
                     type="button"
                     onClick={handleSignOut}
-                    className="flex items-center gap-2 text-gray-500 font-bold rounded-lg px-4 py-2 text-sm  hover:text-red-600 cursor-pointer"
+                    className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-bold text-gray-500 transition-colors duration-200 hover:bg-rose-50 hover:text-red-600 cursor-pointer"
                     >
                     <LogOut size={18} />
                     Sign out
                 </button>
+                
             </div>
             )}
         </nav>

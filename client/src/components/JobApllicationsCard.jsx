@@ -1,18 +1,24 @@
-import {useDraggable} from '@dnd-kit/react';
-import { CalendarDays } from 'lucide-react';
+import {useSortable} from '@dnd-kit/react/sortable';
+import { CalendarDays, ArrowUpRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 
 
-const JobApllicationsCard = ({ id }) => {
+
+
+
+
+const JobApllicationsCard = ({ id, job, index }) => {
 
   const navigate = useNavigate();
-  const {ref, isDragging} = useDraggable({
+  const {ref, isDragging} = useSortable({
     id,
+    index,
+    group: job.status,
   });
   return (
     <div
-      onClick={() => navigate(id)}
+      
       ref={ref}
       className={`relative box-border mt-4 w-[98%] touch-none select-none rounded-2xl border border-slate-200 bg-white p-3 transition-[opacity,box-shadow,scale] duration-150 ${
         isDragging
@@ -28,21 +34,31 @@ const JobApllicationsCard = ({ id }) => {
         <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0">
-              <h3 className="truncate text-[15px] font-bold leading-5 text-slate-900">
-                Senior DevOps Engineer
+              <h3 title={job.job_title} className="truncate text-[15px] font-bold leading-5 text-black">
+                {job.job_title || 'Job title not provided'}
               </h3>
-              <p className="mt-1 text-sm font-medium text-slate-500">Google</p>
+              <p title={job.company_name} className="truncate text-sm mt-1 leading-4 text-slate-500">
+                {job.company_name}
+              </p>
             </div>
 
+            <div className="flex shrink-0 items-center gap-1">
             <button
               type="button"
-              aria-label="Save job"
-              className="-mr-1 -mt-1 grid h-9 w-9 shrink-0 place-items-center rounded-lg text-slate-500 transition hover:bg-slate-100 hover:text-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+              aria-label={`Open application for ${job.company_name}`}
+              title="Open application"
+              onPointerDown={(event) => event.stopPropagation()}
+              onKeyDown={(event) => event.stopPropagation()}
+              onClick={(event) => {
+                event.stopPropagation();
+                navigate(`/job-tracker/${id}`);
+              }}
+              className="grid h-9 w-9 shrink-0 cursor-pointer place-items-center rounded-lg text-slate-500 transition-colors duration-200 hover:bg-[#e7f5f5] hover:text-[#278d8a] focus-visible:outline-2 focus-visible:outline-[#278d8a]"
             >
-
+              <ArrowUpRight size={18} />
             </button>
+            </div>
           </div>
-
           <div className="mt-3 flex items-center gap-1.5 text-sm text-slate-500">
             <svg
               aria-hidden="true"
@@ -52,6 +68,7 @@ const JobApllicationsCard = ({ id }) => {
               stroke="currentColor"
               strokeWidth="1.8"
             >
+              
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -59,11 +76,13 @@ const JobApllicationsCard = ({ id }) => {
               />
               <circle cx="12" cy="10.5" r="2.25" />
             </svg>
-            <span >Jeddah, Saudi Arabia</span>
+            
+            <span className="min-w-0 break-words">{job.location || 'Location not provided'}</span>
           </div>
 
           <p  className=" flex items-center gap-1 mt-2 text-sm text-slate-400">
-          <CalendarDays width="16" /><span> 2026-07-15</span>
+          <CalendarDays width="16" className="shrink-0" />
+          <span>{job.created_at ? String(job.created_at).slice(0, 10) : 'Date not provided'}</span>
           </p>
         </div>
       </div>

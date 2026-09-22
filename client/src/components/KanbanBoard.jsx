@@ -1,37 +1,153 @@
-import { DragDropProvider } from "@dnd-kit/react";
+import { DragDropProvider, useDroppable } from "@dnd-kit/react";
+import { isSortable } from "@dnd-kit/react/sortable";
+import { useRef, useState } from "react";
+import { supabase } from "../lib/supabase";
+import { useAuth } from "./AuthContext";
 import JobApllicationsCard from "./JobApllicationsCard";
 import JobColumns from "./JobColumns";
-import {CircleCheckBig, FileText, Heart, Send, UserRoundGroup, } from "lucide-react";
+import {CircleCheckBig, FileText, Heart, Send, UserRoundGroup, Trash2 } from "lucide-react";
+
+const DELETE_ZONE = "delete-job-zone";
+
+const DeleteJobZone = () => {
+  const { ref, isDropTarget } = useDroppable({ id: DELETE_ZONE });
+  return (
+    <div
+      ref={ref}
+      className={`flex min-h-24 w-full flex-col items-center justify-center gap-1 rounded-lg border-2 border-dashed p-3 text-center transition-colors duration-200 md:col-start-2 lg:col-start-5 ${
+        isDropTarget
+          ? 'border-red-400 bg-red-100 text-red-700 ring-2 ring-red-200'
+          : 'border-slate-300 bg-white/40 text-slate-500'
+      }`}
+    >
+      <Trash2 size={20} aria-hidden="true" />
+      <span className="text-sm font-semibold">Delete application</span>
+      <span className="text-xs">Drop here to permanently delete</span>
+    </div>
+  );
+};
 
 
-const KanbanBoard = ({ jobs, setJobs }) => {
+const KanbanBoard = ({ jobs, setJobs, searchQuery = '' }) => {
+  const query = searchQuery.trim().toLowerCase();
+  const matchesSearch = (job) => [job.company_name, job.job_title]
+    .some((value) => String(value ?? '').toLowerCase().includes(query));
+  const { session } = useAuth();
+  const pendingJobs = useRef(new Set());
+  const [saveError, setSaveError] = useState(null);
+  const handleDragOver = (event) => {
+    const { source, target } = event.operation;
+    // React owns cross-column mounting. Prevent the sorting plugin from
+    // reparenting a card DOM node before React removes the old component.
+    if (isSortable(source) && isSortable(target) && source.group !== target.group) {
+      event.preventDefault();
+    }
+  };
   const renderJobs = (columnId) =>
     jobs
-      .filter((job) => job.columnId === columnId)
-      .map((job) => (
+      .filter((job) => job.status === columnId)
+      .filter(matchesSearch)
+      .map((job, index) => (
         <JobApllicationsCard
           key={job.id}
           id={job.id}
+          job={job}
+          index={index}
         />
       ));
-  const handleDragEnd = (event) => {
+  const handleDragEnd = async (event) => {
     if (event.canceled) return;
-const jobId = event.operation.source?.id;
-const targetColumnId = event.operation.target?.id;
+    const { source, target } = event.operation;
+    if (!source || !target) return;
+    const jobId = source.id;
+    const targetColumnId = isSortable(target) ? target.group : target.id;
+    const userId = session?.user?.id;
+    const job = jobs.find((item) => item.id === jobId);
+    const statuses = ["wishlist", "applied", "interview", "offer", "accepted"];
 
-if (!jobId || !targetColumnId) return;
+    if (!job || (!statuses.includes(targetColumnId) && targetColumnId !== DELETE_ZONE)) return;
+    if (pendingJobs.current.has(jobId)) return;
+    if (!userId) {
+      setSaveError("Please sign in before moving an application.");
+      return;
+    }
 
-setJobs((currentJobs) =>
-  currentJobs.map((job) =>
-    job.id === jobId
-      ? { ...job, columnId: targetColumnId }
-      : job
-  )
-);
+    if (targetColumnId === DELETE_ZONE) {
+      pendingJobs.current.add(jobId);
+      setSaveError(null);
+      try {
+        const { data, error } = await supabase
+          .from("jobs")
+          .delete()
+          .eq("job_id", jobId)
+          .eq("user_id", userId)
+          .select("job_id")
+          .single();
+        if (error) throw error;
+        if (!data) throw new Error("The deletion was not confirmed.");
+        setJobs((currentJobs) => currentJobs.filter((item) => item.id !== jobId));
+      } catch (error) {
+        setSaveError(`Unable to delete the application: ${error.message || "Please try again."}`);
+      } finally {
+        pendingJobs.current.delete(jobId);
+      }
+      return;
+    }
+
+    const previousStatus = job.status;
+    const previousIndex = jobs.filter((item) => item.status === previousStatus).findIndex((item) => item.id === jobId);
+    let targetIndex = isSortable(target) && isSortable(source)
+      ? previousStatus === targetColumnId ? source.index : target.index
+      : jobs.filter((item) => item.status === targetColumnId && item.id !== jobId).length;
+    if (query && isSortable(target)) {
+      const siblings = jobs.filter((item) => item.status === targetColumnId && item.id !== jobId);
+      const nextVisible = siblings.filter(matchesSearch)[targetIndex];
+      targetIndex = nextVisible ? siblings.findIndex((item) => item.id === nextVisible.id) : siblings.length;
+    }
+    const moveJob = (currentJobs, status, index) => {
+      const movedJob = currentJobs.find((item) => item.id === jobId);
+      if (!movedJob) return currentJobs;
+      const remaining = currentJobs.filter((item) => item.id !== jobId);
+      const siblings = remaining.filter((item) => item.status === status);
+      const nextSibling = siblings[index];
+      const insertionIndex = nextSibling
+        ? remaining.findIndex((item) => item.id === nextSibling.id)
+        : siblings.length
+          ? remaining.findIndex((item) => item.id === siblings[siblings.length - 1].id) + 1
+          : remaining.length;
+      remaining.splice(insertionIndex, 0, { ...movedJob, status });
+      return remaining;
+    };
+    setJobs((currentJobs) => moveJob(currentJobs, targetColumnId, targetIndex));
+    if (previousStatus === targetColumnId) return;
+    pendingJobs.current.add(jobId);
+    setSaveError(null);
+
+    try {
+      const { data, error } = await supabase
+        .from("jobs")
+        .update({ status: targetColumnId })
+        .eq("job_id", jobId)
+        .eq("user_id", userId)
+        .select("job_id, status")
+        .single();
+
+      if (error) throw error;
+      if (!data || data.status !== targetColumnId) {
+        throw new Error("The new status was not confirmed.");
+      }
+    } catch (error) {
+      setJobs((currentJobs) => moveJob(currentJobs, previousStatus, previousIndex));
+      setSaveError(`Unable to save the move: ${error.message || "Please try again."}`);
+    } finally {
+      pendingJobs.current.delete(jobId);
+    }
   };
   return (
-    <div className="gap-4 mx-10 mt-6  md:grid md:grid-cols-2 lg:grid-cols-5 sm:flex-col ">  
-      <DragDropProvider onDragEnd={handleDragEnd}>
+    <>
+    {saveError && <p role="alert" className="mx-10 mt-4 text-red-600">{saveError}</p>}
+    <div className="grid grid-cols-1 gap-4 mx-10 mt-6 pb-4 md:grid-cols-2 lg:grid-cols-5">  
+      <DragDropProvider onDragOver={handleDragOver} onDragEnd={handleDragEnd}>
         <JobColumns
           id="wishlist"
           bgColor="gray"
@@ -90,8 +206,10 @@ setJobs((currentJobs) =>
       icon={<CircleCheckBig />}>
       {renderJobs("accepted")}
     </JobColumns>
+    <DeleteJobZone />
   </DragDropProvider>
 </div>
+    </>
   );
 };
 export default KanbanBoard;
