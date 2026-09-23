@@ -73,7 +73,7 @@ const Login = () => {
 
 
     return (
-            <div className='flex items-center justify-center min-h-screen bg-gray-50'>
+            <div className='flex items-center justify-center min-h-screen bg-[#f4f9fc]'>
 
             <div 
                 className="pointer-events-none absolute inset-0 bg-gradient-to-t from-sky-600/30 via-sky-500/10 to-transparent via-50%" 

@@ -11,6 +11,7 @@ import { useJob } from '../components/JopContext';
 
 const JobTracker = () => {
 
+
   const { jobs, setJobs, loading, error } = useJob();
 
     const getJobCount = (columnId) =>
@@ -21,7 +22,6 @@ const JobTracker = () => {
 
   return (
     <section className='bg-[#f4f9fc]'>
-      
       <div className='px-5  md:px-10  pt-4'>
         <div className='flex justify-between mt-4'>
           <div>

@@ -5,7 +5,7 @@ import { supabase } from "../lib/supabase";
 import { useAuth } from "./AuthContext";
 import JobApllicationsCard from "./JobApllicationsCard";
 import JobColumns from "./JobColumns";
-import {CircleCheckBig, FileText, Heart, Send, UserRoundGroup, Trash2 } from "lucide-react";
+import {CircleCheckBig, FileText, Heart, Send, UserRoundGroup, Trash2, Trophy } from "lucide-react";
 
 const DELETE_ZONE = "delete-job-zone";
 
@@ -44,6 +44,8 @@ const KanbanBoard = ({ jobs, setJobs, searchQuery = '' }) => {
       event.preventDefault();
     }
   };
+
+  
   const renderJobs = (columnId) =>
     jobs
       .filter((job) => job.status === columnId)
@@ -204,6 +206,12 @@ const KanbanBoard = ({ jobs, setJobs, searchQuery = '' }) => {
       textBgColor="green"
       textColor="green"
       text="Accept"
+      footer={jobs.some((job) => job.status === "accepted") ? (
+        <div className="flex flex-col items-center gap-2 text-green-700">
+          <Trophy size={38} className="text-amber-500" aria-hidden="true" />
+          <p className="text-sm font-bold">Congrats! You got the job!</p>
+        </div>
+      ) : null}
       icon={<CircleCheckBig />}>
       {renderJobs("accepted")}
     </JobColumns>

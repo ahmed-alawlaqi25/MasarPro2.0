@@ -21,8 +21,9 @@ const App = () => {
 
   return (
     <>
+    
       <Routes>
-        <Route element={<PublicLayout />}>
+        <Route element={<AuthProvider><PublicLayout /></AuthProvider>}>
           <Route path="/" element={<Home />} />
           <Route path="login" element={<Login />} />
           <Route path="confirm-email" element={<Confirmemail />} />
@@ -34,7 +35,7 @@ const App = () => {
         
           <Route
             element={
-               <AuthProvider>
+              <AuthProvider>
                 <JobProvider>
                   <Dashboard />
                 </JobProvider>
