@@ -33,7 +33,12 @@ const Callback = () => {
     return <p>{error}</p>
   }
 
-  return <p>Signing you in...</p>
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-[#f4f9fc]">
+    <div className="h-12 w-12 animate-spin rounded-full border-4 border-slate-200 border-t-[#07133f]" />
+    </div>
+
+  )  
 }
 
 export default Callback
