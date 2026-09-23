@@ -35,7 +35,7 @@ const Navbar = () => {
     const ProfileGreeting = () => (
         
         <Link
-            to="/profile"
+            to="/settings"
             className="flex items-center gap-3 rounded-lg px-3 py-2 transition hover:bg-slate-50"
         >
 

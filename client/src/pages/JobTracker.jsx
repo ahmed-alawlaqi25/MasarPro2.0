@@ -65,8 +65,6 @@ const JobTracker = () => {
       {isFormOpen && (
         <JobApplicationForm onClose={() => setIsFormOpen(false)} />
         )}
-
-
     </section>
   )
 }

@@ -226,7 +226,7 @@ const handleSubmit = async (event) => {
           <div className="flex justify-end md:col-span-2">
             <button
               type="submit"
-              className="rounded-lg bg-blue-600 px-6 py-3 font-semibold text-white transition hover:bg-blue-700"
+              className="rounded-lg cursor-pointer bg-linear-to-l from-[#0874c9] to-[#0eb0b2] px-6 py-3 font-semibold text-white transition hover:bg-blue-700"
             >
               Save Application
             </button>

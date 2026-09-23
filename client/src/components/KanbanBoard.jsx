@@ -11,10 +11,11 @@ const DELETE_ZONE = "delete-job-zone";
 
 const DeleteJobZone = () => {
   const { ref, isDropTarget } = useDroppable({ id: DELETE_ZONE });
+
   return (
     <div
       ref={ref}
-      className={`flex min-h-24 w-full flex-col items-center justify-center gap-1 rounded-lg border-2 border-dashed p-3 text-center transition-colors duration-200 md:col-start-2 lg:col-start-5 ${
+      className={`flex min-h-24 w-full flex-col items-center gap-1 rounded-lg border-2 border-dashed p-3 text-center transition-colors duration-200 md:col-start-2 lg:col-start-5 ${
         isDropTarget
           ? 'border-red-400 bg-red-100 text-red-700 ring-2 ring-red-200'
           : 'border-slate-300 bg-white/40 text-slate-500'
@@ -206,10 +207,23 @@ const KanbanBoard = ({ jobs, setJobs, searchQuery = '' }) => {
       icon={<CircleCheckBig />}>
       {renderJobs("accepted")}
     </JobColumns>
-    <DeleteJobZone />
+      
+      <div className="hidden items-center justify-center lg:flex lg:col-start-3">
+        <p className="text-lg text-slate-500">
+          — Every Step is closeist better future — 
+        </p>
+      </div>
+      <DeleteJobZone />
+      
+
+      
+
   </DragDropProvider>
 </div>
     </>
   );
 };
 export default KanbanBoard;
+
+
+

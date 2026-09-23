@@ -10,6 +10,16 @@ import { useNavigate } from 'react-router-dom';
 
 const JobApllicationsCard = ({ id, job, index }) => {
 
+
+  function CompanyLogo({ job }) {
+  return (
+    <img
+      src={`https://img.logo.dev/name/${encodeURIComponent(job.company_name)}?token=${import.meta.env.VITE_LOGO_DEV_KEY}`}
+      alt={`${job.company_name} logo`}
+    />
+  );
+}
+
   const navigate = useNavigate();
   const {ref, isDragging} = useSortable({
     id,
@@ -28,7 +38,7 @@ const JobApllicationsCard = ({ id, job, index }) => {
     > 
       <div className="flex items-start gap-4">
         <div className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-white shadow-[0_1px_5px_rgba(15,23,42,0.12)] ring-1 ring-slate-100">
-        {/* //logo// */}
+        <CompanyLogo job={job} />
         </div>
 
         <div className="min-w-0 flex-1">
