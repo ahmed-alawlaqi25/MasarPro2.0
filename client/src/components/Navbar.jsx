@@ -84,15 +84,6 @@ const Navbar = () => {
                 <NavLink to="/settings" className={getLinkClass}>
                 <Settings />{t('settings')}
                 </NavLink>
-                <button
-                    type="button"
-                    onClick={handleSignOut}
-                    className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-bold text-gray-500 transition-colors duration-200 hover:bg-rose-50 hover:text-red-600 cursor-pointer"
-                    >
-                    <LogOut size={18} />
-                    Sign out
-                </button>
-                
             </div>
 
             {/* Desktop buttons */}
