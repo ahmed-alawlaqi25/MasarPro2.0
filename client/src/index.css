@@ -1,1 +1,9 @@
 @import "tailwindcss";
+
+html[lang="en"] {
+  font-family: "Inter", "Noto Sans Arabic", sans-serif;
+}
+
+html[lang="ar"] {
+  font-family: "Noto Sans Arabic", "Inter", sans-serif;
+}

@@ -79,13 +79,76 @@ const resources = {
       nameLabel: "Name",
       clickHereLink: "click here",
 
-      // App
+      // App - Tracker
 
       jobTracker: "Job Tracker",
       welcomeMessage: "Welcome",
       readyForNewOpportunities: "Ready for new opportunities",
+      addNewJobButton: "Add New Job",
+      trackApplicationsDescription: "Track every job application in one place,",
+      wishListStatus: "Wish List",
+      appliedStatus: "Applied",
+      interviewStatus: "Interview",
+      offerStatus: "Offer",
+      acceptStatus: "Accept",
+      searchCompanyOrJobTitlePlaceholder: "Search company or job title...",
+      deleteApplicationTitle: "Delete application",
+      dropToPermanentlyDelete: "Drop here to permanently delete",
+      congratsGotJobTitle: "Congrats! You got the job!",
+      inspirationalQuote: "Every step you take brings you closer to a better future.",
+      loadingApplications: "Loading applications...",
+      unableToLoadApplications: "Unable to load applications:",
+
+      //Job Form
+
+      addJobApplicationTitle: "Add Job Application",
+      enterJobApplicationDetailsSubtitle: "Enter the job application details below.",
+      jobTitleLabel: "Job title",
+      companyNamePlaceholder: "Example: Google",
+      jobTitlePlaceholder: "Example: Software Engineer",
+      statusLabel: "Status",
+      locationPlaceholder: "Example: Riyadh", 
+      addNotesLabel: "Add notes about the job",
+      saveApplicationButton: "Save Application",
 
 
+      //Job Application
+
+      backToJobTracker: "Back to Job Tracker",
+      applicationDetailsTitle: "Application details",
+      companyNameLabel: "Company name",
+      locationLabel: "Location",
+      applicationDateLabel: "Application date",
+      jobLinkLabel: "Job Link",
+      jobDescriptionLabel: "Job description",
+      noJobDescriptionAdded: "No job description added.",
+      applicationStatusLabel: "Application status",
+      resumeTitle: "Resume",
+      noResumeAttached: "No resume attached.",
+      notesTitle: "Notes",
+      notesSaved: "Notes saved",
+      unsavedChanges: "Unsaved changes",
+      addNotesPlaceholder: "Add your notes about this application...",
+      savingNotes: "Saving...",
+      saveNotesButton: "Save notes",
+      deleteApplicationButton: "Delete Application",
+      deleteButton: "Delete",
+      deletingApplication: "Deleting...",
+      savingStatus: "Saving status...",
+      
+
+      //Settings 
+      settingsTitle: "Settings",
+      manageAccountDescription: "Manage your account and personal information.",
+      accountInformation: "Account Information",
+      emailLabel: "Email",
+      joinedDate: "Date Joined",
+      languageLabel: "Language",
+      dangerZoneTitle: "Danger Zone",
+      deleteAccountWarning: "Deleting your account will permanently delete your data.",
+      deleteAccountButton: "Delete Account",
+      deleteAccountUnavailable: "Account deletion is currently unavailable.",
+      signOutButton: "Sign out",
     }
   },
   ar: {
@@ -163,22 +226,100 @@ const resources = {
       nameLabel: "الاسم",
       clickHereLink: "انقر هنا",
 
-      //App
-
+      //App Tracker
       jobTracker: "متتبع الوظائف",
-
       welcomeMessage: "مرحباً",
       readyForNewOpportunities: "مستعد لفرص جديدة",
+      addNewJobButton: "إضافة وظيفة جديدة",
+      trackApplicationsDescription: "تتبع كل طلبات التوظيف في مكان واحد،",
+      wishListStatus: "قائمة الأمنيات ",
+      appliedStatus: "تم التقديم",
+      interviewStatus: "مقابلة",
+      offerStatus: "عرض عمل",
+      acceptStatus: "قبول",
+      searchCompanyOrJobTitlePlaceholder: "البحث عن شركة أو مسمى وظيفي...",
+      deleteApplicationTitle: "حذف الطلب",
+      dropToPermanentlyDelete: "إسقاط هنا للحذف النهائي",
+      inspirationalQuote: "كل خطوة تتخذها تقربك أكثر من مستقبل أفضل",
+      loadingApplications: "جاري تحميل الطلبات...",
+      unableToLoadApplications: "تعذر تحميل الطلبات:",
 
+      //job Form 
+      addJobApplicationTitle: "إضافة طلب وظيفة",
+      enterJobApplicationDetailsSubtitle: "أدخل تفاصيل طلب الوظيفة أدناه.",
+      companyNamePlaceholder: "مثال: أرامكو",
+      jobTitlePlaceholder: "مثال: مهندس برمجيات",
+      locationPlaceholder: "مثال: الرياض",
+      statusLabel: "الحالة",
+      addNotesLabel: "أضف ملاحظات حول الوظيفة",
+      saveApplicationButton: "حفظ الطلب",
+
+      //Job Application
+
+      backToJobTracker: "العودة إلى متتبع الوظائف",
+      applicationDetailsTitle: "تفاصيل الطلب",
+      companyNameLabel: "اسم الشركة",
+      locationLabel: "الموقع",
+      applicationDateLabel: "تاريخ التقديم",
+      jobLinkLabel: "رابط الوظيفة",
+      jobDescriptionLabel: "الوصف الوظيفي",
+      noJobDescriptionAdded: "لم يتم إضافة وصف وظيفي.",
+      applicationStatusLabel: "حالة الطلب",
+      resumeTitle: "السيرة الذاتية",
+      noResumeAttached: "لا يوجد سيرة ذاتية مرفقة.",
+      notesTitle: "ملاحظات",
+      notesSaved: "تم حفظ الملاحظات",
+      unsavedChanges: "تغييرات غير محفوظة",
+      addNotesPlaceholder: "أضف ملاحظاتك حول هذا الطلب...",
+      savingNotes: "جاري الحفظ...",
+      saveNotesButton: "حفظ الملاحظات",
+      deleteApplicationButton: "حذف الطلب",
+      deletingApplication: "جاري الحذف...",
+      deleteButton: "حذف",
+      savingStatus: "جاري حفظ الحالة...",
+      congratsGotJobTitle: "تهانينا! على الحصول على الوظيفة!",
+      jobTitleLabel: "المسمى الوظيفي",
+
+      // Settings
+      settingsTitle: "الإعدادات",
+      manageAccountDescription: "إدارة حسابك ومعلوماتك الشخصية.",
+      accountInformation: "معلومات الحساب",
+      emailLabel: "البريد الإلكتروني",
+      joinedDate: "تاريخ الانضمام",
+      languageLabel: "اللغة",
+      dangerZoneTitle: "منطقة الخطر",
+      deleteAccountWarning: "سيؤدي حذف الحساب إلى حذف بياناتك بشكل نهائي.",
+      deleteAccountButton: "حذف الحساب",
+      deleteAccountUnavailable: "حذف الحساب غير متاح حالياً",
+      signOutButton: "تسجيل الخروج",
+      
     }
   }
 };
+
+let savedLanguage = 'en';
+try {
+  const stored = localStorage.getItem('masarpro-language');
+  if (stored === 'en' || stored === 'ar') savedLanguage = stored;
+} catch { /* Browser storage is optional. */ }
+
+const syncLanguage = (language) => {
+  const selected = language.startsWith('ar') ? 'ar' : 'en';
+  document.documentElement.lang = selected;
+  document.documentElement.dir = selected === 'ar' ? 'rtl' : 'ltr';
+  try {
+    localStorage.setItem('masarpro-language', selected);
+  } catch { /* Direction switching still works without storage. */ }
+};
+
+syncLanguage(savedLanguage);
+i18n.on('languageChanged', syncLanguage);
 
 i18n
   .use(initReactI18next) // passes i18n down to react-i18next
   .init({
     resources,
-    lng: "er", // language to use, more information here: https://www.i18next.com/overview/configuration-options#languages-namespaces-resources
+    lng: savedLanguage,
     fallbackLng: "en",
     // you can use the i18n.changeLanguage function to change the language manually: https://www.i18next.com/overview/api#changelanguage
     // if you're using a language detector, do not define the lng option

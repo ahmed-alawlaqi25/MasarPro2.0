@@ -24,9 +24,9 @@ const Navbar = () => {
 
     
     const getLinkClass = ({ isActive }) =>
-    `flex items-center gap-1 rounded-md px-4 py-2 font-bold transition-colors duration-200 hover:bg-[#e7f5f5] hover:text-[#278d8a] ${
+    `flex items-center gap-1 rounded-md px-4 py-2 font-bold transition-colors duration-200 hover:border border-teal-300 hover:bg-[#e7f5f5] hover:text-[#278d8a] ${
       isActive
-        ? 'bg-[#e7f5f5] text-[#278d8a]'
+        ? 'bg-[#e7f5f5] text-[#278d8a] '
         : 'text-gray-500'
     }`;
 
@@ -59,7 +59,7 @@ const Navbar = () => {
     
 
     return (
-        <nav className="relative z-50 w-full bg-white border-b border-slate-200">
+        <nav className="relative z-50 w-full bg-white border-b  border-slate-200">
             <div className="mx-auto flex  items-center justify-between px-5  md:px-10 lg:px-16">
             {/* Logo */}
             <a href="/" className="flex items-center">
@@ -71,7 +71,7 @@ const Navbar = () => {
             </a>
 
             {/* Desktop menu */}
-            <div className="hidden items-center gap-4 text-sm  text-gray-500 font-bold md:flex">
+            <div className="hidden items-center gap-4 text-sm   text-gray-500 font-bold md:flex">
                 <NavLink to="/job-tracker" className={getLinkClass} >
                 <SquareKanban /> {t('jobTracker')}
                 </NavLink>
@@ -82,7 +82,7 @@ const Navbar = () => {
                 <Newspaper />{t('Blog')}
                 </NavLink>
                 <NavLink to="/settings" className={getLinkClass}>
-                <Settings />{t('settings')}
+                <Settings />{t('settingsTitle')}
                 </NavLink>
             </div>
 
@@ -94,7 +94,7 @@ const Navbar = () => {
             {/* Mobile */}
             <button
                 onClick={() => setMobileOpen(true)}
-                className="rounded-lg  p-2 text-[#07133f] md:hidden hover:text-[#0fae9d]"
+                className="rounded-lg  p-2 text-[#07133f] md:hidden  hover:text-[#0fae9d]"
             >
                 <Menu />
             </button>

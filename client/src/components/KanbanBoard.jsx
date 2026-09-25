@@ -1,17 +1,22 @@
 import { DragDropProvider, useDroppable } from "@dnd-kit/react";
 import { isSortable } from "@dnd-kit/react/sortable";
-import { useRef, useState } from "react";
+import { useRef, useState, } from "react";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "./AuthContext";
 import JobApllicationsCard from "./JobApllicationsCard";
 import JobColumns from "./JobColumns";
 import {CircleCheckBig, FileText, Heart, Send, UserRoundGroup, Trash2, Trophy } from "lucide-react";
+import { useTranslation } from "react-i18next";
+
 
 const DELETE_ZONE = "delete-job-zone";
 
+
+
 const DeleteJobZone = () => {
   const { ref, isDropTarget } = useDroppable({ id: DELETE_ZONE });
-
+  
+  const {t} = useTranslation()
   return (
     <div
       ref={ref}
@@ -22,14 +27,18 @@ const DeleteJobZone = () => {
       }`}
     >
       <Trash2 size={20} aria-hidden="true" />
-      <span className="text-sm font-semibold">Delete application</span>
-      <span className="text-xs">Drop here to permanently delete</span>
+      <span className="text-sm font-semibold">{t('deleteApplicationTitle')}</span>
+      <span className="text-xs">{t('dropToPermanentlyDelete')}</span>
     </div>
   );
 };
 
 
 const KanbanBoard = ({ jobs, setJobs, searchQuery = '' }) => {
+
+  const {t} = useTranslation()
+
+
   const query = searchQuery.trim().toLowerCase();
   const matchesSearch = (job) => [job.company_name, job.job_title]
     .some((value) => String(value ?? '').toLowerCase().includes(query));
@@ -38,8 +47,6 @@ const KanbanBoard = ({ jobs, setJobs, searchQuery = '' }) => {
   const [saveError, setSaveError] = useState(null);
   const handleDragOver = (event) => {
     const { source, target } = event.operation;
-    // React owns cross-column mounting. Prevent the sorting plugin from
-    // reparenting a card DOM node before React removes the old component.
     if (isSortable(source) && isSortable(target) && source.group !== target.group) {
       event.preventDefault();
     }
@@ -157,7 +164,7 @@ const KanbanBoard = ({ jobs, setJobs, searchQuery = '' }) => {
           borderColor="gray"
           ringColor="gray"
           textBgColor="gray"
-          text="Wish List"
+          text={t('wishListStatus')}
           textColor="gray"
           icon={<Heart fill="currentColor" />}>
           {renderJobs("wishlist")}
@@ -169,7 +176,7 @@ const KanbanBoard = ({ jobs, setJobs, searchQuery = '' }) => {
       ringColor="blue"
       textBgColor="blue"
       textColor="blue"
-      text="Applied"
+      text={t('appliedStatus')}
       icon={<Send />}>
       {renderJobs("applied")}
     </JobColumns>
@@ -181,7 +188,7 @@ const KanbanBoard = ({ jobs, setJobs, searchQuery = '' }) => {
       ringColor="orange"
       textBgColor="orange"
       textColor="orange"
-      text="Interview"
+      text={t('interviewStatus')}
       icon={<UserRoundGroup />}>
       {renderJobs("interview")}
     </JobColumns>
@@ -193,7 +200,7 @@ const KanbanBoard = ({ jobs, setJobs, searchQuery = '' }) => {
       ringColor="violet"
       textBgColor="violet"
       textColor="violet"
-      text="Offer"
+      text={t('offerStatus')}
       icon={<FileText />}>
       {renderJobs("offer")}
     </JobColumns>
@@ -205,11 +212,11 @@ const KanbanBoard = ({ jobs, setJobs, searchQuery = '' }) => {
       ringColor="green"
       textBgColor="green"
       textColor="green"
-      text="Accept"
+      text={t('acceptStatus')}
       footer={jobs.some((job) => job.status === "accepted") ? (
         <div className="flex flex-col items-center gap-2 text-green-700">
           <Trophy size={38} className="text-amber-500" aria-hidden="true" />
-          <p className="text-sm font-bold">Congrats! You got the job!</p>
+          <p className="text-sm font-bold">{t('congratsGotJobTitle')}</p>
         </div>
       ) : null}
       icon={<CircleCheckBig />}>
@@ -217,8 +224,8 @@ const KanbanBoard = ({ jobs, setJobs, searchQuery = '' }) => {
     </JobColumns>
       
       <div className="hidden items-center justify-center lg:flex lg:col-start-3">
-        <p className="text-lg text-slate-500">
-          — Every Step is closeist better future — 
+        <p className="text-md whitespace-nowrap text-slate-500">
+          {t('inspirationalQuote')}
         </p>
       </div>
       <DeleteJobZone />

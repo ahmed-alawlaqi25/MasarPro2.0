@@ -2,10 +2,14 @@ import { X } from "lucide-react";
 import { useState } from "react";
 import { supabase } from '../lib/supabase'
 import { useJob } from './JopContext';
+import { useTranslation } from "react-i18next";
 
 
 const JobApplicationForm = ({ onClose }) => {
   const { refreshJobs } = useJob();
+
+  const {t} = useTranslation()
+
   const [formData, setFormData] = useState({
     company_name: "",
     job_title: "",
@@ -75,11 +79,11 @@ const handleSubmit = async (event) => {
 
       <div className="mb-7 pr-12">
         <h1 className="text-2xl font-bold text-slate-900">
-          Add Job Application
+          {t('addJobApplicationTitle')}
         </h1>
 
         <p className="mt-1 text-sm text-slate-500">
-          Enter the job application details below.
+          {t('enterJobApplicationDetailsSubtitle')}
         </p>
       </div>
 
@@ -89,7 +93,7 @@ const handleSubmit = async (event) => {
               htmlFor="company_name"
               className="mb-2 block text-sm font-semibold text-slate-700"
             >
-              Company name
+              {t('companyNameLabel')}
             </label>
 
             <input
@@ -98,7 +102,7 @@ const handleSubmit = async (event) => {
               type="text"
               value={formData.company_name}
               onChange={handleChange}
-              placeholder="Example: Google"
+              placeholder={t("companyNamePlaceholder")}
               className={inputStyles}
               required
             />
@@ -109,7 +113,7 @@ const handleSubmit = async (event) => {
               htmlFor="job_title"
               className="mb-2 block text-sm font-semibold text-slate-700"
             >
-              Job title
+              {t('jobTitleLabel')}
             </label>
 
             <input
@@ -118,7 +122,7 @@ const handleSubmit = async (event) => {
               type="text"
               value={formData.job_title}
               onChange={handleChange}
-              placeholder="Example: Software Engineer"
+              placeholder={t('jobTitlePlaceholder')}
               className={inputStyles}
               required
             />
@@ -129,7 +133,7 @@ const handleSubmit = async (event) => {
               htmlFor="location"
               className="mb-2 block text-sm font-semibold text-slate-700"
             >
-              Location
+              {t('locationLabel')}
             </label>
 
             <input
@@ -138,7 +142,7 @@ const handleSubmit = async (event) => {
               type="text"
               value={formData.location}
               onChange={handleChange}
-              placeholder="Example: Riyadh"
+              placeholder={t('locationPlaceholder')}
               className={inputStyles}
             />
           </div>
@@ -148,7 +152,7 @@ const handleSubmit = async (event) => {
               htmlFor="status"
               className="mb-2 block text-sm font-semibold text-slate-700"
             >
-              Status
+              {t('statusLabel')}
             </label>
 
             <select
@@ -158,11 +162,11 @@ const handleSubmit = async (event) => {
               onChange={handleChange}
               className={inputStyles}
             >
-              <option value="wishlist">Wish List</option>
-              <option value="applied">Applied</option>
-              <option value="interview">Interview</option>
-              <option value="offer">Offer</option>
-              <option value="accepted">Accepted</option>
+              <option value="wishlist">{t('wishListStatus')}</option>
+              <option value="applied">{t('appliedStatus')}</option>
+              <option value="interview">{t('interviewStatus')}</option>
+              <option value="offer">{t('offerStatus')}</option>
+              <option value="accepted">{t('acceptStatus')}</option>
             </select>
           </div>
 
@@ -171,7 +175,7 @@ const handleSubmit = async (event) => {
               htmlFor="created_at"
               className="mb-2 block text-sm font-semibold text-slate-700"
             >
-              Application date
+              {t('applicationDateLabel')}
             </label>
 
             <input
@@ -190,7 +194,7 @@ const handleSubmit = async (event) => {
               htmlFor="job_url"
               className="mb-2 block text-sm font-semibold text-slate-700"
             >
-              Job link
+              {t('jobLinkLabel')}
             </label>
 
             <input
@@ -209,7 +213,7 @@ const handleSubmit = async (event) => {
               htmlFor="notes"
               className="mb-2 block text-sm font-semibold text-slate-700"
             >
-              Notes
+              {t('notesTitle')}
             </label>
 
             <textarea
@@ -217,7 +221,7 @@ const handleSubmit = async (event) => {
               name="notes"
               value={formData.notes}
               onChange={handleChange}
-              placeholder="Add notes about the job"
+              placeholder={t('addNotesLabel')}
               rows="5"
               className={`${inputStyles} resize-none`}
             />
@@ -228,7 +232,7 @@ const handleSubmit = async (event) => {
               type="submit"
               className="rounded-lg cursor-pointer bg-linear-to-l from-[#0874c9] to-[#0eb0b2] px-6 py-3 font-semibold text-white transition hover:bg-blue-700"
             >
-              Save Application
+              {t('saveApplicationButton')}
             </button>
           </div>
       </form>
