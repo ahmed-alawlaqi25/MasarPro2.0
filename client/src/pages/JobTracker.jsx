@@ -4,6 +4,7 @@ import {  CircleCheckBig, FileText, Heart, Send, UserRoundGroup, Plus, Search, X
 import KanbanBoard from '../components/KanbanBoard'
 import JobApplicationForm from '../components/JobApplicationForm';
 import { useJob } from '../components/JopContext';
+import { useTranslation } from 'react-i18next';
 
 
 
@@ -11,6 +12,7 @@ import { useJob } from '../components/JopContext';
 
 const JobTracker = () => {
 
+  const {t} = useTranslation()
 
   const { jobs, setJobs, loading, error } = useJob();
 
@@ -23,30 +25,30 @@ const JobTracker = () => {
   return (
     <section className='bg-[#f4f9fc]'>
       <div className='px-5  md:px-10  pt-4'>
-        <div className='flex justify-between mt-4'>
+        <div className='flex justify-between mt-2'>
           <div>
-            <h1 className='text-4xl font-bold'>Job-Tracker</h1>
+            <h1 className='text-4xl font-bold mb-2'>{t('jobTracker')}</h1>
           </div>
             <button
               onClick={() => setIsFormOpen(true)}
               className="flex items-center gap-3 rounded-lg bg-linear-to-l from-[#0874c9] to-[#0eb0b2] px-10 text-white transition hover:opacity-90">
               <Plus />
-              <p>Add New Job</p>
+              <p>{t('addNewJobButton')}</p>
             </button>
           </div>
-              <small className='text-slate-600 '>Tracker every job application in one place, </small>
+              <small className='text-slate-500 mr-4 '>{t('trackApplicationsDescription')}</small>
         <div className='flex flex-wrap items-center gap-3 mt-3'>
-          <Card icon = {<Heart fill="currentColor"/>} count={getJobCount("wishlist")} text="Wish List" bgColor="gray"  textColor="gray"/>
-          <Card icon = {<Send />} count={getJobCount("applied")} text="Applied" bgColor="blue" textColor="blue"/> 
-          <Card icon = {<UserRoundGroup />}count={getJobCount("interview")} text="Interview" bgColor="orange" textColor="orange"/>
-          <Card icon = {<FileText />}count={getJobCount("offer")} text="Offer" bgColor="violet" textColor="violet"/>
-          <Card icon = {<CircleCheckBig />}count={getJobCount("accepted")} text="Accept" bgColor="green" textColor="green" />
-          <div className="relative mt-2 w-full md:ml-auto md:w-80">
-            <Search size={18} aria-hidden="true" className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+          <Card icon = {<Heart fill="currentColor"/>} count={getJobCount("wishlist")} text={t('wishListStatus')} bgColor="gray"  textColor="gray"/>
+          <Card icon = {<Send />} count={getJobCount("applied")} text={t('appliedStatus')} bgColor="blue" textColor="blue"/> 
+          <Card icon = {<UserRoundGroup />}count={getJobCount("interview")} text={t('interviewStatus')} bgColor="orange" textColor="orange"/>
+          <Card icon = {<FileText />}count={getJobCount("offer")} text={t('offerStatus')} bgColor="violet" textColor="violet"/>
+          <Card icon = {<CircleCheckBig />}count={getJobCount("accepted")} text={t('acceptStatus')} bgColor="green" textColor="green" />
+          <div className="relative flex mt-2 w-full md:ml-auto md:w-80">
+            <Search size={18} aria-hidden="true" className="pointer-events-none absolute mr-2 ml-2 top-1/2 -translate-y-1/2 text-slate-400" />
             <input
               type="search"
               aria-label="Search applications by company or job title"
-              placeholder="Search company or job title..."
+              placeholder={t('searchCompanyOrJobTitlePlaceholder')}
               value={searchQuery}
               onChange={(event) => setSearchQuery(event.target.value)}
               className="h-[60px] w-full rounded-2xl border border-slate-200 bg-white pl-11 pr-11 text-sm text-slate-700 outline-none transition focus:border-teal-400 focus:ring-2 focus:ring-teal-100 [&::-webkit-search-cancel-button]:appearance-none"
@@ -59,8 +61,8 @@ const JobTracker = () => {
           </div>
         </div>
       </div>
-      {loading && <p className="mx-10 mt-4" role="status">Loading applications...</p>}
-      {error && <p className="mx-10 mt-4 text-red-600" role="alert">Unable to load applications: {error}</p>}
+      {loading && <p className="mx-10 mt-4" role="status">{t('loadingApplications')}</p>}
+      {error && <p className="mx-10 mt-4 text-red-600" role="alert">{t('unableToLoadApplications')}{error}</p>}
       <KanbanBoard jobs={jobs} setJobs={setJobs} searchQuery={searchQuery} />
       {isFormOpen && (
         <JobApplicationForm onClose={() => setIsFormOpen(false)} />

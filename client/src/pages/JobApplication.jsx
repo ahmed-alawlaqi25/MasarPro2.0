@@ -4,6 +4,7 @@ import { Building2, FileText, MapPin, CalendarDays, BriefcaseBusiness, UserRound
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../components/AuthContext';
 import { useJob } from '../components/JopContext';
+import { useTranslation } from 'react-i18next';
 
 const statuses = ['wishlist', 'applied', 'interview', 'offer', 'accepted'];
 const statusLabels = ['Wish List', 'Applied', 'Interview', 'Offer', 'Accepted'];
@@ -26,6 +27,7 @@ const JobDetails = ({ applicationID, userId }) => {
   const [pending, setPending] = useState('');
   const [saved, setSaved] = useState(false);
   const busy = useRef(false);
+  const {t} = useTranslation()
 
   useEffect(() => {
     let active = true;
@@ -115,27 +117,27 @@ const JobDetails = ({ applicationID, userId }) => {
   return (
     <section className="bg-[#f4f9fc] px-4 py-6 text-[#0c1945] sm:px-8 lg:py-8">
       <div className="mx-auto max-w-[1280px] rounded-3xl border border-[#e3edfa] bg-white/85 p-4 shadow-[0_8px_32px_rgba(31,52,85,0.035)] sm:p-5">
-        <Link to="/job-tracker" className="mb-5 inline-flex items-center gap-2 text-sm text-slate-500 hover:text-teal-700"><ArrowLeft size={16} />Back to Job Tracker</Link>
+        <Link to="/job-tracker" className="mb-5 inline-flex items-center gap-2 text-sm text-slate-500 hover:text-teal-700"><ArrowLeft size={16} />{t('backToJobTracker')}</Link>
         <header className="mb-4">
-          <span className="inline-flex items-center gap-2 rounded-lg bg-[#e7f5f5] px-3 py-2 text-sm font-semibold text-[#009d96]"><FileText size={18} />Application details</span>
-          <h1 dir="auto" className="mt-2 break-words text-xl font-bold sm:text-2xl">{job.job_title || 'Untitled application'}</h1>
+          <span className="inline-flex items-center gap-2 rounded-lg bg-[#e7f5f5] px-3 py-2 text-sm font-semibold text-[#009d96]"><FileText size={18} />{t('applicationDetailsTitle')}</span>
+          <h1 className="mt-2 break-words text-xl font-bold sm:text-2xl">{job.job_title || 'Untitled application'}</h1>
         </header>
 
         <div className="grid gap-4 lg:grid-cols-[1.15fr_1fr]">
           <div className="flex min-w-0 flex-col gap-4">
             <section className={panel} aria-label="Company details">
-              <div className="grid gap-4 sm:grid-cols-2">
-                <dl className="min-w-0 space-y-5 border-b border-[#e3edfa] pb-4  text-sm text-[#596b94] sm:border-b-0 sm:border-r sm:pr-4 sm:pb-0">
-                  <div><dt className="flex gap-2 mt-5 "><Building2 size={18} />Company name</dt></div>
-                  <div><dt className="flex gap-2 "><MapPin size={18} />Location</dt></div>
-                  <div><dt className="flex gap-2"><CalendarDays size={18} />Application date</dt></div>
-                  <div><dt className="flex gap-2"><Link2 size={18} />Job Link</dt></div>
+              <div className="grid gap-4 sm:grid-cols-2 ">
+                <dl className="min-w-0  space-y-5 border-b border-[#e3edfa] pb-4 text-sm text-[#596b94] sm:border-b-0 sm:border-r sm:pr-4 sm:pb-0">
+                  <div><dt className="flex gap-2 mt-5 "><Building2 size={18} />{t('companyNameLabel')}</dt></div>
+                  <div><dt className="flex gap-2 "><MapPin size={18} />{t('locationLabel')}</dt></div>
+                  <div><dt className="flex gap-2"><CalendarDays size={18} />{t('applicationDateLabel')}</dt></div>
+                  <div><dt className="flex gap-2"><Link2 size={18} />{t('jobLinkLabel')}</dt></div>
                 </dl>
                 <div className="flex min-w-0 items-start gap-3 sm:pl-2">
                   <div className="min-w-0 pt-1">
                     <div className='flex flex-row justify-between items-center'>
                       <p className=" text-lg font-bold mr-auto">{job.company_name || 'Company not provided'}</p>
-                      <div aria-hidden="true" className="grid lg:ml-[13rem] md:ml-[13rem] sm:ml-[10rem] h-12 w-12 shrink-0 place-items-center rounded-full bg-[#e9f6f8] text-2xl font-bold text-teal-600">
+                                              <div aria-hidden="true" className="grid  h-12 w-12 shrink-0 place-items-center rounded-full bg-[#e9f6f8] text-2xl font-bold text-teal-600">
                           <CompanyLogo job={job} />
                         </div>
                     </div>
@@ -149,37 +151,37 @@ const JobDetails = ({ applicationID, userId }) => {
               </div>
             </section>
             <section className={panel + ' flex-1'}>
-              <h2 className="mb-5 flex items-center gap-3 text-lg font-bold"><FileText size={23} className="text-teal-500" />Job description</h2>
-              <p dir="auto" className="whitespace-pre-wrap break-words text-sm leading-6 text-[#596b94]">{description || 'No job description added.'}</p>
+              <h2 className="mb-5 flex items-center gap-3 text-lg font-bold"><FileText size={23} className="text-teal-500" />{t('jobDescriptionLabel')}</h2>
+              <p dir="auto" className="whitespace-pre-wrap break-words text-sm leading-6 text-[#596b94]">{description || `${t('noJobDescriptionAdded')}` }</p>
             </section>
           </div>
 
           <section className={panel + ' flex min-w-0 flex-col'}>
-            <label htmlFor="application-status" className="mb-4 flex items-center gap-3 text-lg font-bold"><BriefcaseBusiness size={23} className="text-teal-500" />Application status</label>
+            <label htmlFor="application-status" className="mb-4 flex items-center gap-3 text-lg font-bold"><BriefcaseBusiness size={23} className="text-teal-500" />{t('applicationStatusLabel')}</label>
             <select id="application-status" value={status} disabled={Boolean(pending)} onChange={(event) => updateJob({ status: event.target.value }, 'status')} className="w-full rounded-lg border border-[#dce7f7] bg-[#fafcff] px-4 py-3 text-sm outline-none focus:border-teal-400 focus:ring-2 focus:ring-teal-100 disabled:opacity-60">
               {!statuses.includes(status) && <option value={status}>{job.status || 'Select status'}</option>}
               {statuses.map((value, index) => <option key={value} value={value}>{statusLabels[index]}</option>)}
             </select>
-            {pending === 'status' && <p role="status" className="mt-2 text-sm text-teal-700">Saving status...</p>}
+            {pending === 'status' && <p role="status" className="mt-2 text-sm text-teal-700">{t('savingStatus')}</p>}
             <div className="my-6 border-t border-[#e3edfa]" />
-            <h2 className="mb-4 flex items-center gap-3 text-lg font-bold"><UserRound size={23} className="text-teal-500" />Resume</h2>
+            <h2 className="mb-4 flex items-center gap-3 text-lg font-bold"><UserRound size={23} className="text-teal-500" />{t('resumeTitle')}</h2>
             <div className="flex items-center justify-between gap-3 rounded-lg border border-[#dce7f7] bg-[#fafcff] p-4 text-sm">
-              <span className="text-[#596b94]">No resume attached.</span>
+              <span className="text-[#596b94]">{t('noResumeAttached')}</span>
             </div>
 
             <form className="mt-7 flex flex-1 flex-col" onSubmit={(event) => { event.preventDefault(); updateJob({ notes }, 'notes'); }}>
-              <label htmlFor="application-notes" className="mb-4 flex items-center gap-3 text-lg font-bold"><StickyNote size={23} className="text-teal-500" />Notes</label>
-              <textarea id="application-notes" dir="auto" value={notes} disabled={Boolean(pending)} onChange={(event) => { setNotes(event.target.value); setSaved(false); }} placeholder="Add your notes about this application..." rows={5} className="min-h-32 w-full flex-1 resize-y rounded-lg border border-[#dce7f7] bg-[#fafcff] p-4 text-sm leading-6 outline-none focus:border-teal-400 focus:ring-2 focus:ring-teal-100 disabled:opacity-60" />
+              <label htmlFor="application-notes" className="mb-4 flex items-center gap-3 text-lg font-bold"><StickyNote size={23} className="text-teal-500" />{t('notesTitle')}</label>
+              <textarea id="application-notes" value={notes} disabled={Boolean(pending)} onChange={(event) => { setNotes(event.target.value); setSaved(false); }} placeholder={t('addNotesPlaceholder')} rows={5} className="min-h-32 w-full flex-1 resize-y rounded-lg border border-[#dce7f7] bg-[#fafcff] p-4 text-sm leading-6 outline-none focus:border-teal-400 focus:ring-2 focus:ring-teal-100 disabled:opacity-60" />
               <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
-                <span role="status" className="text-xs text-teal-700">{saved ? 'Notes saved' : dirty ? 'Unsaved changes' : ''}</span>
-                <button type="submit" disabled={!dirty || Boolean(pending)} className="inline-flex items-center gap-2 rounded-lg bg-teal-600 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-700 disabled:cursor-not-allowed disabled:opacity-40"><Check size={16} />{pending === 'notes' ? 'Saving...' : 'Save notes'}</button>
+                <span role="status" className="text-xs text-teal-700">{saved ? `${t('notesSaved')}` : dirty ? `${t('unsavedChanges')}` : ''}</span>
+                <button type="submit" disabled={!dirty || Boolean(pending)} className="inline-flex items-center gap-2 rounded-lg bg-teal-600 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-700 disabled:cursor-not-allowed disabled:opacity-40"><Check size={16} />{pending === `${t('notesTitle')}` ? `${t('savingNotes')}` : `${t('saveNotesButton')}`}</button>
               </div>
             </form>
           </section>
         </div>
         {error && <p role="alert" className="mt-5 rounded-lg bg-red-50 p-3 text-sm text-red-700">{error}</p>}
         <footer className="mt-6 flex justify-start">
-          <button type="button" disabled={Boolean(pending)} onClick={deleteJob} className="inline-flex items-center gap-2 rounded-lg border border-red-200 bg-red-50/40 px-5 py-3 text-sm font-semibold text-red-600 hover:bg-red-100 disabled:opacity-50"><Trash2 size={18} />{pending === 'delete' ? 'Deleting...' : 'Delete application'}</button>
+          <button type="button" disabled={Boolean(pending)} onClick={deleteJob} className="inline-flex items-center gap-2 rounded-lg border border-red-200 bg-red-50/40 px-5 py-3 text-sm font-semibold text-red-600 hover:bg-red-100 disabled:opacity-50"><Trash2 size={18} />{pending === `${t('deleteButton')}` ? `${t('deletingApplication')}` : `${t('deleteApplicationButton')}` }</button>
         </footer>
       </div>
     </section>

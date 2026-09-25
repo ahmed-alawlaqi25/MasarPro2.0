@@ -99,10 +99,10 @@ const Login = () => {
                     <Mail size={16} color='#6B7280' className='mr-2'/>
                     <input type="email" name="email" placeholder={t('emailLabel')} className="border-none outline-none ring-0" value={formData.email} onChange={handleChange} required />
                 </div>
-                <button type="submit" className="mt-2 w-full h-11 rounded-full text-white bg-linear-to-r from-[#0fc2b3] to-[#114f83] hover:opacity-90 transition-opacity">
+                <button type="submit" className="cursor-pointer mt-2 w-full h-11 rounded-full text-white bg-linear-to-r from-[#0fc2b3] to-[#114f83] hover:opacity-90 transition-opacity">
                     {state === "login" ? `${t('loginTitle')}` : `${t('signUpTitle')}`}
                 </button>
-                <p onClick={() => setState(prev => prev === "login" ? "register" : "login")} className="text-gray-500 text-sm mt-3 mb-11">{state === "login" ? `${t('dontHaveAccount')}` : `${t('alreadyHaveAccount')}`} <a href={`login?state=${state}`} className="text-indigo-500 hover:underline">{t('clickHereLink')}</a></p>
+                <p onClick={() => setState(prev => prev === "login" ? "register" : "login")} className="text-gray-500  text-sm mt-3 mb-11">{state === "login" ? `${t('dontHaveAccount')}` : `${t('alreadyHaveAccount')}`} <a href={`login?state=${state}`} className="text-indigo-500 hover:underline">{t('clickHereLink')}</a></p>
             </form>
             </div>
     )
