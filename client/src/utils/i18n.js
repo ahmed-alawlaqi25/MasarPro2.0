@@ -78,6 +78,10 @@ const resources = {
       emailLabel: "Email",
       nameLabel: "Name",
       clickHereLink: "click here",
+      verifyEmailTitle: "Please verify your email",
+      verifyEmailSubtitle: "You're almost there! We sent an email to",
+      verifyEmailInstructions: "Click the link in that email to complete your signup. Don't see it? Check your spam folder.",
+      spamFolder: "spam folder.",
 
       // App - Tracker
 
@@ -225,6 +229,10 @@ const resources = {
       emailLabel: "البريد الإلكتروني",
       nameLabel: "الاسم",
       clickHereLink: "انقر هنا",
+      verifyEmailTitle: "يرجى التحقق من بريدك الإلكتروني",
+      verifyEmailSubtitle: "أوشكت على الانتهاء! لقد أرسلنا رسالة إلى",
+      verifyEmailInstructions: "انقر على الرابط الموجود في تلك الرسالة لإكمال التسجيل. لم تجدها؟ تحقق من مجلد",
+      spamFolder: " البريد العشوائي",
 
       //App Tracker
       jobTracker: "متتبع الوظائف",
