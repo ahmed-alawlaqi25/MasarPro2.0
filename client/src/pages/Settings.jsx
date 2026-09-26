@@ -1,9 +1,15 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Mail, CalendarDays, LogOut, TriangleAlert, Trash2, Languages } from 'lucide-react';
+import { Mail, CalendarDays, LogOut, TriangleAlert, Trash2, Languages, Pencil, Upload, LoaderCircle } from 'lucide-react';
 import { useAuth } from '../components/AuthContext';
 import { supabase } from '../lib/supabase';
+import { changeAvatar, MAX_AVATAR_SIZE } from '../lib/avatar';
+
+const avatarCopy = {
+  en: { edit: 'Edit', upload: 'Upload photo', remove: 'Remove photo', hint: 'JPEG or PNG, up to 1 MB.', saving: 'Saving photo...', saved: 'Profile photo updated.', removed: 'Profile photo removed.', invalid: 'Choose a valid JPEG or PNG image up to 1 MB.', failed: 'Unable to update your photo. Please try again.' },
+  ar: { edit: 'تعديل', upload: 'رفع صورة', remove: 'إزالة الصورة', hint: 'JPEG أو PNG، بحد أقصى 1 ميجابايت.', saving: 'جارٍ حفظ الصورة...', saved: 'تم تحديث صورة الملف الشخصي.', removed: 'تمت إزالة صورة الملف الشخصي.', invalid: 'اختر صورة JPEG أو PNG صالحة بحجم لا يتجاوز 1 ميجابايت.', failed: 'تعذر تحديث الصورة. يرجى المحاولة مرة أخرى.' },
+};
 
 const copy = {
   en: { title: 'Settings', subtitle: 'Manage your account and personal information.', account: 'Account information', email: 'Email address', joined: 'Date joined', signOut: 'Sign out', signingOut: 'Signing out...', danger: 'Danger zone', warning: 'Deleting your account permanently removes your data.', delete: 'Delete account', unavailable: 'Account deletion is not available yet.', loading: 'Loading account...', unknown: 'Not provided', name: 'Your account' },
@@ -11,18 +17,77 @@ const copy = {
 };
 
 const Settings = () => {
-  const { session, profile, loading } = useAuth();
+  const { session, profile, loading, updateProfile, avatarSrc } = useAuth();
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const [signingOut, setSigningOut] = useState(false);
   const [error, setError] = useState('');
+  const [avatarBusy, setAvatarBusy] = useState(false);
+  const [avatarMenuOpen, setAvatarMenuOpen] = useState(false);
+  const [avatarStatus, setAvatarStatus] = useState('');
+  const fileInput = useRef(null);
+  const avatarMenu = useRef(null);
+  const editButton = useRef(null);
+  const avatarLock = useRef(false);
   const rtl = i18n.language.startsWith('ar');
   const text = copy[rtl ? 'ar' : 'en'];
+  const photoText = avatarCopy[rtl ? 'ar' : 'en'];
   const name = profile?.name || session?.user?.user_metadata?.name || text.name;
   const joined = session?.user?.created_at ? new Date(session.user.created_at) : null;
   const joinedLabel = joined && !Number.isNaN(joined.getTime())
     ? new Intl.DateTimeFormat(rtl ? 'ar-SA-u-ca-gregory' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' }).format(joined)
     : text.unknown;
+
+  useEffect(() => {
+    if (!avatarMenuOpen) return;
+    const dismiss = (event) => {
+      if (!avatarMenu.current?.contains(event.target)) setAvatarMenuOpen(false);
+    };
+    const escape = (event) => {
+      if (event.key === 'Escape') {
+        setAvatarMenuOpen(false);
+        editButton.current?.focus();
+      }
+    };
+    document.addEventListener('pointerdown', dismiss);
+    document.addEventListener('focusin', dismiss);
+    document.addEventListener('keydown', escape);
+    return () => {
+      document.removeEventListener('pointerdown', dismiss);
+      document.removeEventListener('focusin', dismiss);
+      document.removeEventListener('keydown', escape);
+    };
+  }, [avatarMenuOpen]);
+
+  const saveAvatar = async (file) => {
+    if (avatarLock.current || !session?.user?.id) return;
+    avatarLock.current = true;
+    setAvatarMenuOpen(false);
+    setAvatarBusy(true);
+    setAvatarStatus('');
+    setError('');
+    try {
+      if (file) {
+        if (!['image/jpeg', 'image/png'].includes(file.type) || !file.size || file.size > MAX_AVATAR_SIZE) {
+          throw new Error(photoText.invalid);
+        }
+        // Reject corrupt or mislabeled files before removing the existing photo.
+        try {
+          const bitmap = await createImageBitmap(file);
+          bitmap.close();
+        } catch { throw new Error(photoText.invalid); }
+      }
+      const nextProfile = await changeAvatar(supabase, session.user.id, profile?.avatar_url, file);
+      updateProfile(nextProfile);
+      setAvatarStatus(file ? photoText.saved : photoText.removed);
+    } catch (uploadError) {
+      setError(uploadError.message || photoText.failed);
+    } finally {
+      avatarLock.current = false;
+      setAvatarBusy(false);
+      editButton.current?.focus();
+    }
+  };
 
   const signOut = async () => {
     if (signingOut) return;
@@ -78,9 +143,25 @@ const Settings = () => {
             </section>
 
             <aside className="flex flex-col items-center justify-center border-t border-[#edf2fa] pt-6 text-center sm:border-s sm:border-t-0 sm:ps-7 sm:pt-0">
-              <img src="https://static.vecteezy.com/system/resources/previews/019/879/186/non_2x/user-icon-on-transparent-background-free-png.png" alt={name} className="h-24 w-24 rounded-full bg-[#e7f5f5] object-cover" />
+              <div ref={avatarMenu} className="relative" aria-busy={avatarBusy}>
+                <img src={avatarSrc} alt={name} className="h-24 w-24 rounded-full bg-[#e7f5f5] object-cover" />
+                <input ref={fileInput} type="file" accept="image/jpeg,image/png" aria-label={photoText.upload} className="hidden" disabled={avatarBusy || signingOut} onChange={(event) => {
+                  const file = event.target.files?.[0];
+                  event.target.value = '';
+                  if (file) saveAvatar(file);
+                }} />
+                <button ref={editButton} type="button" aria-expanded={avatarMenuOpen} aria-controls="avatar-actions" disabled={avatarBusy || signingOut || !profile || !session} onClick={() => setAvatarMenuOpen(!avatarMenuOpen)} className="absolute -bottom-1 -start-2 inline-flex items-center gap-1 rounded-md border border-slate-300 bg-white px-2 py-1 text-xs font-medium text-slate-700 shadow-sm hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-teal-600 disabled:cursor-wait disabled:opacity-60">
+                  {avatarBusy ? <LoaderCircle size={13} className="animate-spin" aria-hidden="true" /> : <Pencil size={13} aria-hidden="true" />}{photoText.edit}
+                </button>
+                {avatarMenuOpen && <div id="avatar-actions" className="absolute start-1/2 top-full z-20 mt-3 w-44 -translate-x-1/2 rounded-lg border border-slate-200 bg-white p-1 text-start shadow-lg rtl:translate-x-1/2">
+                  <button type="button" onClick={() => { setAvatarMenuOpen(false); fileInput.current?.click(); }} className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-slate-50 focus-visible:bg-slate-50"><Upload size={15} aria-hidden="true" />{photoText.upload}</button>
+                  <button type="button" disabled={!profile?.avatar_url} onClick={() => saveAvatar(null)} className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-red-600 hover:bg-red-50 focus-visible:bg-red-50 disabled:cursor-not-allowed disabled:opacity-40"><Trash2 size={15} aria-hidden="true" />{photoText.remove}</button>
+                </div>}
+              </div>
+              <p className="mt-3 text-xs text-slate-400">{photoText.hint}</p>
+              <p role="status" className="mt-1 text-xs text-teal-700">{avatarBusy ? photoText.saving : avatarStatus}</p>
               <p dir="auto" className="mt-3 break-words text-base font-bold">{name}</p>
-              <button type="button" disabled={signingOut} onClick={signOut} className="mt-5 inline-flex w-full max-w-48 items-center justify-center gap-2 rounded-md border border-[#b9c6df] px-4 py-2 text-sm text-[#43577e] transition-colors hover:border-rose-200 hover:bg-rose-50 hover:text-red-600 disabled:cursor-wait disabled:opacity-50">
+              <button type="button" disabled={signingOut || avatarBusy} onClick={signOut} className="mt-5 inline-flex w-full max-w-48 items-center justify-center gap-2 rounded-md border border-[#b9c6df] px-4 py-2 text-sm text-[#43577e] transition-colors hover:border-rose-200 hover:bg-rose-50 hover:text-red-600 disabled:cursor-wait disabled:opacity-50">
                 <LogOut size={17} />{signingOut ? text.signingOut : t('signOutButton')}
               </button>
             </aside>

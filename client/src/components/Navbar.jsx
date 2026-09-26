@@ -31,7 +31,7 @@ const Navbar = () => {
     }`;
 
     
-    const {profile } = useAuth()
+    const {profile, avatarSrc } = useAuth()
     const ProfileGreeting = () => (
         
         <Link
@@ -49,7 +49,7 @@ const Navbar = () => {
             </p>
             </div>
                         <img
-            src="/Ahmed_Profile_pic3 (4).png"
+            src={avatarSrc}
             alt= {profile?.name}
             className="h-11 w-11 rounded-full object-cover"
             />
