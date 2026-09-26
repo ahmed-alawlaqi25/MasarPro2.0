@@ -5,7 +5,7 @@ import { supabase } from "../lib/supabase";
 import { useAuth } from "./AuthContext";
 import JobApllicationsCard from "./JobApllicationsCard";
 import JobColumns from "./JobColumns";
-import {CircleCheckBig, FileText, Heart, Send, UserRoundGroup, Trash2, Trophy } from "lucide-react";
+import {CircleCheckBig, FileText, Heart, Send, UserRoundGroup, Trash2, Trophy, BadgeCheck } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 
@@ -219,7 +219,7 @@ const KanbanBoard = ({ jobs, setJobs, searchQuery = '' }) => {
           <p className="text-sm font-bold">{t('congratsGotJobTitle')}</p>
         </div>
       ) : null}
-      icon={<CircleCheckBig />}>
+      icon={<BadgeCheck />}>
       {renderJobs("accepted")}
     </JobColumns>
       

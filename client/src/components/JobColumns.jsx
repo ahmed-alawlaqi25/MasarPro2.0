@@ -7,7 +7,7 @@ const JobColumns = ({id, children, footer, bgColor, borderColor, text, icon, tex
         green: "bg-green-50",
         violet: "bg-violet-50",
         gray: "bg-gray-50",
-        orange:"bg-yellow-50",
+        orange:"bg-amber-50",
     };
 
         const textBgColors = {
@@ -22,8 +22,8 @@ const JobColumns = ({id, children, footer, bgColor, borderColor, text, icon, tex
         blue: "text-blue-700",
         green: "text-green-700",
         violet: "text-violet-700",
-        gray: "text-gray-700",
-        orange:"text-orange-700",
+        gray: "text-gray-600",
+        orange:"text-amber-600",
     };
 
         const borderColors = {
@@ -53,7 +53,7 @@ const JobColumns = ({id, children, footer, bgColor, borderColor, text, icon, tex
      <div
        ref={ref}
        className={`flex flex-col overflow-y-auto pb-2 transition-[transform,box-shadow] duration-200 west-out sm:h-[12rem] md:h-[22rem] lg:h-136 ${colors[bgColor]} border-t-2 ${borderColors[borderColor]} rounded-lg shadow-[0_8px_24px_rgba(31,52,85,0.06),inset_0_0_0_1px_rgba(220,227,237,0.35)] ${
-         isDropTarget ? `scale-[1.01] ring-2 ${ringColors[ringColor]} border-t-1 ` : ''
+         isDropTarget ? `scale-[1.01] ring-1 ${ringColors[ringColor]} border-1 ` : ''
        }`}
      >
         <div className="flex items-center justify-between mt-4 ml-7 mr-7">

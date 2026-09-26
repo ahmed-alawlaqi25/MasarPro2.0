@@ -12,7 +12,7 @@ const Card = ({icon, text, bgColor, textColor, count}) => {
     green: "bg-green-50",
     violet: "bg-violet-50",
     gray: "bg-gray-50",
-    orange:"bg-orange-50",
+    orange:"bg-amber-50",
   };
 
 
@@ -21,8 +21,8 @@ const Card = ({icon, text, bgColor, textColor, count}) => {
         blue: "text-blue-700",
         green: "text-green-700",
         violet: "text-violet-700",
-        gray: "text-gray-700",
-        orange:"text-orange-700",
+        gray: "text-gray-600",
+        orange:"text-amber-600",
     };
 
   

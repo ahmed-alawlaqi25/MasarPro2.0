@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import Card from '../components/Card'
-import {  CircleCheckBig, FileText, Heart, Send, UserRoundGroup, Plus, Search, X } from 'lucide-react';
+import {  CircleCheckBig, FileText, Heart, Send, UserRoundGroup, Plus, Search, X, BadgeCheck } from 'lucide-react';
 import KanbanBoard from '../components/KanbanBoard'
 import JobApplicationForm from '../components/JobApplicationForm';
 import { useJob } from '../components/JopContext';
@@ -42,8 +42,8 @@ const JobTracker = () => {
           <Card icon = {<Send />} count={getJobCount("applied")} text={t('appliedStatus')} bgColor="blue" textColor="blue"/> 
           <Card icon = {<UserRoundGroup />}count={getJobCount("interview")} text={t('interviewStatus')} bgColor="orange" textColor="orange"/>
           <Card icon = {<FileText />}count={getJobCount("offer")} text={t('offerStatus')} bgColor="violet" textColor="violet"/>
-          <Card icon = {<CircleCheckBig />}count={getJobCount("accepted")} text={t('acceptStatus')} bgColor="green" textColor="green" />
-          <div className="relative flex mt-2 w-full md:ml-auto md:w-80">
+          <Card icon = {<BadgeCheck /> }count={getJobCount("accepted")} text={t('acceptStatus')} bgColor="green" textColor="green" />
+          <div className={ document.documentElement.dir === "rtl"? "md:mr-auto relative flex mt-2 w-full md:w-80" : "md:ml-auto relative flex mt-2 w-full md:w-80"}>
             <Search size={18} aria-hidden="true" className="pointer-events-none absolute mr-2 ml-2 top-1/2 -translate-y-1/2 text-slate-400" />
             <input
               type="search"

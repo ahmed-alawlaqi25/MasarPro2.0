@@ -32,7 +32,7 @@ const JobApllicationsCard = ({ id, job, index }) => {
       ref={ref}
       className={`relative box-border mt-4 mr-2 w-[98%] touch-none select-none rounded-2xl border border-slate-200 bg-white p-3 transition-[opacity,box-shadow,scale] duration-150 ${
         isDragging
-          ? 'z-50 cursor-grabbing scale-[1.02] opacity-70 shadow-2xl ring-2 ring-sky-400'
+          ? 'z-50 cursor-grabbing scale-[1.02] opacity-70 shadow-2xl ring-2 ring-teal-400'
           : 'cursor-grab shadow-[0_3px_14px_rgba(15,23,42,0.08)]'
       }`}
     > 
