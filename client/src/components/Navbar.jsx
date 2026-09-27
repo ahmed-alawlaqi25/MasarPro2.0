@@ -26,7 +26,7 @@ const Navbar = () => {
     const getLinkClass = ({ isActive }) =>
     `flex items-center gap-1 rounded-md px-4 py-2 font-bold transition-colors duration-200 hover:border border-teal-300 hover:bg-[#e7f5f5] hover:text-[#278d8a] ${
       isActive
-        ? 'bg-[#e7f5f5] text-[#278d8a] '
+        ? 'bg-[#e7f5f5] text-teal-700 '
         : 'text-gray-500'
     }`;
 
@@ -40,11 +40,11 @@ const Navbar = () => {
         >
 
             <div className="text-right leading-tight">
-            <p className="text-sm font-bold text-slate-800">
+            <p className="text-sm font-bold text-[#0c1945]">
                 {t('welcomeMessage')} {profile?.name}
             </p>
 
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-gray-400">
                 {t('readyForNewOpportunities')}
             </p>
             </div>
@@ -110,22 +110,22 @@ const Navbar = () => {
                 <X className="hover:text-[#0fae9d]"/>
                 </button>
 
-                <NavLink to="/job-tracker" className={getLinkClass}>
+                <NavLink to="/job-tracker" onClick={() => setMobileOpen(false)} className={getLinkClass}>
                 <SquareKanban /> {t('jobTracker')}
                 </NavLink>
-                <NavLink to="/resume-builde" className={getLinkClass}>
+                <NavLink to="/resume-builde" onClick={() => setMobileOpen(false)} className={getLinkClass}>
                 <FileUser />{t('resumeBuilder')} 
                 </NavLink>
-                <NavLink to="/blog" className={getLinkClass}>
+                <NavLink to="/blog" onClick={() => setMobileOpen(false)} className={getLinkClass}>
                 <Newspaper />{t('Blog')}
                 </NavLink>
-                <NavLink to="/settings" className={getLinkClass}>
+                <NavLink to="/settings" onClick={() => setMobileOpen(false)} className={getLinkClass}>
                 <Settings />{t('settings')}
                 </NavLink>
                 <button
                     type="button"
                     onClick={handleSignOut}
-                    className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-bold text-gray-500 transition-colors duration-200 hover:bg-rose-50 hover:text-red-600 cursor-pointer"
+                    className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-bold text-gray-500 transition-colors duration-200 hover:bg-rose-50  hover:text-red-600 hover:border border-red-200 cursor-pointer"
                     >
                     <LogOut size={18} />
                     Sign out

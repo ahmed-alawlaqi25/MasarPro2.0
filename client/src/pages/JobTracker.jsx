@@ -23,7 +23,7 @@ const JobTracker = () => {
   const [searchQuery, setSearchQuery] = useState('');
 
   return (
-    <section className='bg-[#f4f9fc]'>
+    <section className='bg-[#f4f9fc] text-[#0c1945]'>
       <div className='px-5  md:px-10  pt-4'>
         <div className='flex justify-between mt-2'>
           <div>

@@ -191,8 +191,8 @@ const JobDetails = ({ applicationID, userId }) => {
 const JobApplication = () => {
   const { applicationID } = useParams();
   const { session, loading } = useAuth();
-  if (loading) return <p role="status" className="p-8">Loading application...</p>;
-  if (!session?.user) return <Link to="/login" className="block p-8">Sign in</Link>;
+  if (loading) return <p role="status" className="p-8">{t('loadingApplications')}</p>;
+  if (!session?.user) return <Link to="/login" className="block p-8">{t('loginMain')}</Link>;
   return <JobDetails key={session.user.id + ':' + applicationID} applicationID={applicationID} userId={session.user.id} />;
 };
 

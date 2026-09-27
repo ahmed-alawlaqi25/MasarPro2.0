@@ -253,14 +253,14 @@ const resources = {
       unableToLoadApplications: "تعذر تحميل الطلبات:",
 
       //job Form 
-      addJobApplicationTitle: "إضافة طلب وظيفة",
+      addJobApplicationTitle: "إضافة طلب وظيفي",
       enterJobApplicationDetailsSubtitle: "أدخل تفاصيل طلب الوظيفة أدناه.",
       companyNamePlaceholder: "مثال: أرامكو",
       jobTitlePlaceholder: "مثال: مهندس برمجيات",
       locationPlaceholder: "مثال: الرياض",
       statusLabel: "الحالة",
       addNotesLabel: "أضف ملاحظات حول الوظيفة",
-      saveApplicationButton: "حفظ الطلب",
+      saveApplicationButton: "حفظ الوظيفة",
 
       //Job Application
 

@@ -4,8 +4,8 @@ const JobColumns = ({id, children, footer, bgColor, borderColor, text, icon, tex
 
     const colors = {
         blue: "bg-blue-50",
-        green: "bg-green-50",
-        violet: "bg-violet-50",
+        green: "bg-teal-50",
+        violet: "bg-indigo-50",
         gray: "bg-gray-50",
         orange:"bg-amber-50",
     };
@@ -20,7 +20,7 @@ const JobColumns = ({id, children, footer, bgColor, borderColor, text, icon, tex
 
     const textColors = {
         blue: "text-blue-700",
-        green: "text-green-700",
+        green: "text-teal-700",
         violet: "text-violet-700",
         gray: "text-gray-600",
         orange:"text-amber-600",
@@ -28,7 +28,7 @@ const JobColumns = ({id, children, footer, bgColor, borderColor, text, icon, tex
 
         const borderColors = {
         blue: "border-blue-500",
-        green: "border-green-600",
+        green: "border-teal-600",
         violet: "border-violet-500",
         gray: "border-gray-500",
         orange:"border-orange-300", 
@@ -36,7 +36,7 @@ const JobColumns = ({id, children, footer, bgColor, borderColor, text, icon, tex
 
     const ringColors = {
         blue: "ring-blue-500",
-        green: "ring-green-600",
+        green: "ring-teal-600",
         violet: "ring-violet-500",
         gray: "ring-gray-500",
         orange:"ring-orange-300", 
@@ -58,7 +58,7 @@ const JobColumns = ({id, children, footer, bgColor, borderColor, text, icon, tex
      >
         <div className="flex items-center justify-between mt-4 ml-7 mr-7">
           <p className={`flex gap-3 text-1.5xl font-bold  items-center justify-center ${textColors[textColor]}`}>{icon} {text}</p>
-            <p className={`w-8 h-7 rounded-full text-1.5xl font-bold flex items-center justify-center ${textBgColors[textBgColor]} ${textColors[textColor]} ` } >{children.length}</p>
+            <p className={`w-9 h-6 rounded-full  font-bold flex items-center justify-center ${textBgColors[textBgColor]} ${textColors[textColor]} ` } >{children.length}</p>
         </div>
       <div className=' flex-col ml-2' >
         {children}

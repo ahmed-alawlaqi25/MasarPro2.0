@@ -104,7 +104,7 @@ const Settings = () => {
   };
 
   return (
-    <section dir={rtl ? 'rtl' : 'ltr'} className="min-h-[calc(100vh-100px)] bg-[#f4f9fc] px-5 py-7 text-[#0c1945] sm:px-10">
+    <section className="min-h-[calc(100vh-100px)] bg-[#f4f9fc] px-5 py-7 text-[#0c1945] sm:px-10">
       <header className="mx-auto mb-7 max-w-5xl">
         <h1 className="text-2xl font-bold sm:text-3xl">{t('settingsTitle')}</h1>
         <p className="mt-1 text-sm text-[#7a88a7]">{t('manageAccountDescription')}</p>

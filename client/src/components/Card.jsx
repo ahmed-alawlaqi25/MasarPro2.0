@@ -9,8 +9,8 @@ import React from 'react'
 const Card = ({icon, text, bgColor, textColor, count}) => {
   const colors = {
     blue: "bg-blue-50",
-    green: "bg-green-50",
-    violet: "bg-violet-50",
+    green: "bg-teal-50",
+    violet: "bg-indigo-50",
     gray: "bg-gray-50",
     orange:"bg-amber-50",
   };
@@ -19,7 +19,7 @@ const Card = ({icon, text, bgColor, textColor, count}) => {
 
   const textColors = {
         blue: "text-blue-700",
-        green: "text-green-700",
+        green: "text-teal-700",
         violet: "text-violet-700",
         gray: "text-gray-600",
         orange:"text-amber-600",
