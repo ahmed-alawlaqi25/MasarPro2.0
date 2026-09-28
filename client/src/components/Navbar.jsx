@@ -75,7 +75,7 @@ const Navbar = () => {
                 <NavLink to="/job-tracker" className={getLinkClass} >
                 <SquareKanban /> {t('jobTracker')}
                 </NavLink>
-                <NavLink to="/resume-builde" className={getLinkClass}>
+                <NavLink to="/resume-builder" className={getLinkClass}>
                 <FileUser />{t('resumeBuilderTitle')} 
                 </NavLink>
                 <NavLink to="/blog" className={getLinkClass}>
@@ -103,34 +103,32 @@ const Navbar = () => {
             {/* Mobile menu */}
             {mobileOpen && (
             <div className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-8 bg-white/95 backdrop-blur-md md:hidden">
+                
                 <button
                 onClick={() => setMobileOpen(false)}
                 className="absolute left-6 top-6 text-3xl"
                 >
                 <X className="hover:text-[#0fae9d]"/>
                 </button>
-
+                                <a href="/" className="flex items-center">
+                <img
+                src="/logoNoText.png"
+                alt="MasarPro Logo"
+                className="w-54 object-contain absolute right-5 top-0"
+                />
+                </a> 
                 <NavLink to="/job-tracker" onClick={() => setMobileOpen(false)} className={getLinkClass}>
                 <SquareKanban /> {t('jobTracker')}
                 </NavLink>
-                <NavLink to="/resume-builde" onClick={() => setMobileOpen(false)} className={getLinkClass}>
-                <FileUser />{t('resumeBuilder')} 
+                <NavLink to="/resume-builder" onClick={() => setMobileOpen(false)} className={getLinkClass}>
+                <FileUser />{t('resumeBuilderTitle')} 
                 </NavLink>
                 <NavLink to="/blog" onClick={() => setMobileOpen(false)} className={getLinkClass}>
                 <Newspaper />{t('Blog')}
                 </NavLink>
                 <NavLink to="/settings" onClick={() => setMobileOpen(false)} className={getLinkClass}>
-                <Settings />{t('settings')}
+                <Settings />{t('settingsTitle')}
                 </NavLink>
-                <button
-                    type="button"
-                    onClick={handleSignOut}
-                    className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-bold text-gray-500 transition-colors duration-200 hover:bg-rose-50  hover:text-red-600 hover:border border-red-200 cursor-pointer"
-                    >
-                    <LogOut size={18} />
-                    Sign out
-                </button>
-                
             </div>
             )}
         </nav>

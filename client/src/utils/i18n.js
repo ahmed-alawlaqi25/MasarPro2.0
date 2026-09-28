@@ -139,7 +139,33 @@ const resources = {
       deleteButton: "Delete",
       deletingApplication: "Deleting...",
       savingStatus: "Saving status...",
-      
+
+      //Resume Builder
+
+      resumeBuilderTitle:"Resume Builder",
+      resumeBuilderSubtitle: "Create, upload, and manage your resumes in one place", 
+      yourResumesTitle: "Your resumes",
+      updatedLabel: "Updated",
+      editResumeButton: "Edit resume",
+      searchResumePlaceholder: "Search resume",
+      createResumeButton: "Create resume",
+      startWithBlankResume: "Start with a blank resume",
+      uploadExisting: "Upload existing",
+      importYourResume: "Import your resume",
+      enterResumeTitlePlaceholder: "Enter resume title",
+      creatingResumeLoading: "Creating...",
+
+      //Builder
+
+      backToResumesLink: "Back to resumes",
+      templateTab: "Template",
+      accentTab: "Accent",
+      personalInformationSection: "Personal Information",
+      personalInformationSubtitle: "Add your details and see your resume update.",
+      photoUploadNotice: "Photo upload coming later",
+      nextButton: "Next",
+      previousButton: "Previous",
+      fullNameLabel: "Full name",
 
       //Settings 
       settingsTitle: "Settings",
@@ -287,6 +313,33 @@ const resources = {
       savingStatus: "جاري حفظ الحالة...",
       congratsGotJobTitle: "تهانينا! على الحصول على الوظيفة!",
       jobTitleLabel: "المسمى الوظيفي",
+
+      // Resume Builder
+
+      resumeBuilderTitle: "منشئ السيرة الذاتية",
+      resumeBuilderSubtitle: "أنشئ سيرتك الذاتية وارفعها وإدارتها في مكان واحد",
+      yourResumesTitle: "سيرك الذاتية",
+      updatedLabel: "اخر التحديث",
+      editResumeButton: "تعديل السيرة الذاتية",
+      searchResumePlaceholder: "البحث في السير الذاتية",
+      createResumeButton: "إنشاء سيرة ذاتية",
+      startWithBlankResume: "البدء بالسيرة الذاتية الفارغة",
+      uploadExisting: "رفع ملف حالي",
+      importYourResume: "استيراد سيرتك الذاتية",
+      enterResumeTitlePlaceholder: "أدخل عنوان السيرة الذاتية",
+      creatingResumeLoading: "جاري الإنشاء...",
+      
+      //Builder
+
+      backToResumesLink: "العودة إلى السير الذاتية",
+      templateTab: "القالب",
+      accentTab: "الالوان",
+      personalInformationSection: "البيانات الشخصية",
+      personalInformationSubtitle: "أضف تفاصيلك وشاهد تحديث سيرتك الذاتية.",
+      photoUploadNotice: "سيتم إضافة خيار رفع الصورة لاحقاً",
+      nextButton: "التالي",
+      previousButton: "السابق",
+      fullNameLabel: "الاسم الكامل",
 
       // Settings
       settingsTitle: "الإعدادات",

@@ -44,9 +44,9 @@ const App = () => {
           >
             <Route path="job-tracker/:applicationID" element={<JobApplication />} />
             <Route path="job-tracker" element={<JobTracker />} />
-            <Route path="resume-builde" element={<ResumeBuilder/>}/>
+            <Route path="resume-builder" element={<ResumeBuilder/>}/>
             <Route path="blog" element={<Blog />} />
-            <Route path="resume-builde/:resumeID" element={<Builder />} />
+            <Route path="resume-builder/:resumeID" element={<Builder />} />
             <Route path="settings" element={<Settings />} />
           </Route>
 
