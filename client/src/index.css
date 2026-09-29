@@ -7,3 +7,100 @@ html[lang="en"] {
 html[lang="ar"] {
   font-family: "Noto Sans Arabic", "Inter", sans-serif;
 }
+
+@media screen {
+  /* The dashboard wrapper contains the navbar and editor. */
+  div:has(> #resume-workspace) {
+    display: flex;
+    flex-direction: column;
+    height: 100dvh;
+    overflow: hidden;
+  }
+
+  div:has(> #resume-workspace) > nav {
+    flex-shrink: 0;
+  }
+
+  #resume-workspace [role="region"],
+  #resume-workspace section[tabindex] {
+    scrollbar-gutter: stable;
+  }
+}
+
+#resume-preview {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 210mm;
+  aspect-ratio: 210 / 297;
+  height: auto;
+  align-self: start;
+  /* Scale the 12mm page margins to the available preview width. */
+  padding: 5.714286%;
+  overflow-wrap: anywhere;
+}
+
+@media print {
+  @page {
+    size: A4;
+    margin: 12mm;
+  }
+
+  /* Hide siblings along the preview's ancestor chain, without leaving blank space. */
+  body:has(#resume-preview) *:not(:has(#resume-preview)):not(#resume-preview):not(#resume-preview *) {
+    display: none !important;
+  }
+
+  body:has(#resume-preview),
+  body:has(#resume-preview) *:has(#resume-preview) {
+    display: block !important;
+    width: auto !important;
+    max-width: none !important;
+    min-height: 0 !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    background: white !important;
+    overflow: visible !important;
+  }
+
+  #resume-preview {
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: auto !important;
+    overflow: visible !important;
+    break-inside: auto;
+    max-width: none !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  #resume-preview h2,
+  #resume-preview h3 {
+    break-after: avoid;
+  }
+
+  #resume-preview section {
+    break-inside: auto;
+  }
+
+  #resume-preview article {
+    break-inside: avoid-page;
+  }
+
+  #resume-preview li,
+  #resume-preview header {
+    break-inside: avoid;
+  }
+
+  #resume-preview p {
+    orphans: 3;
+    widows: 3;
+  }
+}
