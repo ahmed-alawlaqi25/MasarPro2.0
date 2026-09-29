@@ -1,57 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
-import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, PanelsTopLeft, Palette, Check } from 'lucide-react'
+import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, PanelsTopLeft, Palette, Check, Download } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import { Link } from 'react-router-dom'
+import { Link, useParams, useSearchParams } from 'react-router-dom'
+import { useAuth } from '../components/AuthContext'
+import { useResumeDraft } from '../lib/useResumeDraft'
 
 
 
-const personalFields = [
-  {
-    name: 'fullName',
-    label: `${t('fullNameLabel')}`,
-    placeholder: 'Ahmed Alawlaqi',
-    autoComplete: 'name',
-  },
-  {
-    name: 'professionalTitle', 
-    label: 'Professional title',
-    placeholder: 'Frontend Developer',
-    autoComplete: 'organization-title',
-  },
-  {
-    name: 'email',
-    label: 'Email address',
-    placeholder: 'ahmed@example.com',
-    type: 'email',
-    autoComplete: 'email',
-  },
-  {
-    name: 'phone',
-    label: 'Phone number',
-    placeholder: '+966',
-    type: 'tel',
-    autoComplete: 'tel',
-  },
-  {
-    name: 'location',
-    label: 'Location',
-    placeholder: 'Riyadh, Saudi Arabia',
-    autoComplete: 'address-level2',
-  },
-  {
-    name: 'website',
-    label: 'Website',
-    placeholder: 'https://yourwebsite.com',
-    type: 'url',
-    autoComplete: 'url',
-  },
-  {
-    name: 'linkedin',
-    label: 'LinkedIn',
-    placeholder: 'https://www.linkedin.com/in/yourname',
-    type: 'url',
-  },
-]
 
 const accentColors = [
   ['Blue', '#3b82f6'], ['Indigo', '#6366f1'], ['Purple', '#8b5cf6'],
@@ -61,12 +16,106 @@ const accentColors = [
 ]
 
 const Builder = () => {
+  const { resumeID } = useParams()
+  const { session, loading } = useAuth()
+  if (loading) return <p role="status" className="p-8">Loading account...</p>
+  if (!session?.user) return <Link to="/login" className="block p-8">Sign in to open your resume.</Link>
+  return <ResumeEditor key={`${session.user.id}:${resumeID}`} resumeId={resumeID} userId={session.user.id} />
+}
+
+const ResumeEditor = ({ resumeId, userId }) => {
+  const [searchParams, setSearchParams] = useSearchParams()
   const { t ,i18n } = useTranslation()
   const rtl = i18n.language.startsWith('ar')
-  const [accentColor, setAccentColor] = useState('#0c1945')
+  const { content, setContent, status, error: saveError, save } = useResumeDraft(resumeId, userId)
+  const accentColor = content.accentColor
+  const setAccentColor = color => setContent(previous => ({ ...previous, accentColor: color }))
   const [accentOpen, setAccentOpen] = useState(false)
   const accentPicker = useRef(null)
   const accentButton = useRef(null)
+  const [printing, setPrinting] = useState(false)
+  useEffect(() => {
+    if (searchParams.get('download') !== 'pdf' || status !== 'saved') return
+    let cancelled = false
+    const timer = setTimeout(async () => {
+      await document.fonts.ready
+      if (cancelled) return
+      const next = new URLSearchParams(searchParams)
+      next.delete('download')
+      setSearchParams(next, { replace: true })
+      const previousTitle = document.title
+      try {
+        document.title = `${content.personal.fullName.trim() || 'Resume'} - CV`
+        window.print()
+      } finally {
+        document.title = previousTitle
+      }
+    }, 150)
+    return () => { cancelled = true; clearTimeout(timer) }
+  }, [searchParams, setSearchParams, status, content.personal.fullName])
+
+  const downloadPdf = async () => {
+    if (printing) return
+    setPrinting(true)
+    const previousTitle = document.title
+    try {
+      await document.fonts.ready
+      document.title = `${content.personal.fullName.trim() || 'Resume'} - CV`
+      window.print()
+    } finally {
+      document.title = previousTitle
+      setPrinting(false)
+    }
+  }
+
+  const personalFields = [
+  
+  {
+    name: 'fullName',
+    label: t('fullNameLabel'),
+    placeholder: t('fullNamePlaceholder'),
+    autoComplete: 'name',
+  },
+  {
+    name: 'professionalTitle', 
+    label: t('professionalTitleLabel'),
+    placeholder: t('professionalTitlePlaceholder'),
+    autoComplete: 'organization-title',
+  },
+  {
+    name: 'email',
+    label: t('emailAddressLabel'),
+    placeholder: 'email@example.com',
+    type: 'email',
+    autoComplete: 'email',
+  },
+  {
+    name: 'phone',
+    label: t('phoneNumberLabel'),
+    placeholder: '+966 55 555 5555',
+    type: 'tel',
+    autoComplete: 'tel',
+  },
+  {
+    name: 'location',
+    label: t('locationLabel'),
+    placeholder: 'Riyadh, Saudi Arabia',
+    autoComplete: 'address-level2',
+  },
+  {
+    name: 'website',
+    label: t('websiteLabel'),
+    placeholder: 'https://yourwebsite.com',
+    type: 'url',
+    autoComplete: 'url',
+  },
+  {
+    name: 'linkedin',
+    label: t('linkedinLabel'),
+    placeholder: 'https://www.linkedin.com/in/yourname',
+    type: 'url',
+  },
+]
 
   useEffect(() => {
     if (!accentOpen) return
@@ -91,33 +140,17 @@ const Builder = () => {
 
   const [step, setStep] = useState(0)
   const steps = [
-    'Personal Information',
-    'Professional Summary',
-    'Professional Experience',
-    'Education & Training',
-    'Projects',
+    t('personalInformationSection'),
+    t('professionalSummarySection'),
+    t('professionalExperienceSection'),
+    t('educationTrainingSection'),
+    t('projectsLabel'),
     'Skills',
   ]
 
 const inputClass =
   'w-full rounded-lg border border-[#e3edfa] px-3 py-2.5 text-sm outline-none focus:border-teal-400 focus:ring-2 focus:ring-teal-100'
 
-  const [content, setContent] = useState({
-    personal: {
-      fullName: '',
-      professionalTitle: '',
-      email: '',
-      phone: '',
-      location: '',
-      website: '',
-      linkedin: '',
-    },
-      summary: '',
-      experience: [],
-      education: [],
-      projects: [],
-      skills: [],
-  })
   
   const addExperience = () => {
   const newExperience = {
@@ -212,21 +245,50 @@ const inputClass =
 
 
 
+  if (status === 'loading') return <p role="status" className="p-8">{rtl ? 'جارٍ تحميل السيرة الذاتية...' : 'Loading resume...'}</p>
+  if (status === 'load-error') return (
+    <div className="p-8">
+      <p role="alert" className="mb-3 text-red-700">{rtl ? 'تعذر فتح السيرة الذاتية.' : 'Unable to open this resume.'} {saveError}</p>
+      <Link to="/resume-builder" className="text-teal-700">{rtl ? 'العودة إلى السير الذاتية' : 'Back to resumes'}</Link>
+    </div>
+  )
+
   return (
     <section
-      className="min-h-screen bg-[#f4f9fc] px-5 py-8 text-[#0c1945] sm:px-8"
+      id="resume-workspace"
+      dir={rtl ? 'rtl' : 'ltr'}
+      className="min-h-0 flex-1 overflow-hidden bg-[#f4f9fc] px-4 py-4 text-[#0c1945] sm:px-8"
     >
-      <div className="mx-auto max-w-6xl">
+      <div className="mx-auto flex h-full min-h-0 max-w-7xl flex-col">
+        <div className="mb-2 grid gap-3 lg:grid-cols-5 lg:gap-8">
+          <p role="status" className={`text-end text-sm lg:col-span-3 lg:col-start-3 ${status === 'error' ? 'text-red-700' : 'text-slate-500'}`}>
+            {rtl
+              ? ({ saved: 'تم حفظ جميع التغييرات', pending: 'تغييرات غير محفوظة', saving: 'جارٍ الحفظ...', error: 'تعذر الحفظ. يرجى إعادة المحاولة.' })[status]
+              : ({ saved: 'All changes saved', pending: 'Unsaved changes', saving: 'Saving...', error: 'Save failed. Please retry.' })[status]}
+          </p>
+        </div>
+        {saveError && <p role="alert" className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">{saveError}</p>}
+        <div className="mb-5 grid items-center gap-3 lg:grid-cols-5 lg:gap-8">
         <Link
           to="/resume-builder"
-          className="mb-5 inline-flex items-center gap-2 text-sm text-slate-500 hover:text-teal-700"
+          className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-teal-700 lg:col-span-2"
         >
           {rtl ? <ArrowRight size={16} /> : <ArrowLeft size={16} />}
           {t('backToResumesLink')}
         </Link>
+        <div className="flex flex-wrap justify-end gap-2 lg:col-span-3">
+          <button type="button" onClick={() => void save()} disabled={status === 'saving' || status === 'saved'} className="rounded-lg border border-teal-200 bg-white px-4 py-2 text-sm text-teal-700 hover:bg-teal-50 disabled:opacity-50">
+            {rtl ? 'حفظ الآن' : 'Save now'}
+          </button>
+          <button type="button" onClick={downloadPdf} disabled={printing} title={rtl ? 'اختر حفظ بصيغة PDF في نافذة الطباعة' : 'Choose Save as PDF in the print dialog'} className="inline-flex items-center gap-2 rounded-lg bg-teal-600 px-4 py-2 text-sm text-white hover:bg-teal-700 disabled:opacity-50">
+            <Download size={16} aria-hidden="true" />
+            {rtl ? 'تنزيل PDF' : 'Download PDF'}
+          </button>
+        </div>
+        </div>
 
-        <div className="grid items-start gap-8 lg:grid-cols-5">
-          <section className="min-w-0 rounded-lg border border-t-4 border-[#e3edfa] bg-white px-6 py-5 shadow-sm lg:col-span-2">
+        <div className="grid min-h-0 flex-1 grid-rows-2 gap-4 lg:grid-cols-5 lg:grid-rows-1 lg:gap-6">
+          <section aria-label={rtl ? 'حقول السيرة الذاتية' : 'Resume fields'} tabIndex={0} className="min-h-0 min-w-0 overflow-y-auto overscroll-contain rounded-lg border border-t-4 border-[#e3edfa] bg-white px-6 py-5 shadow-sm lg:col-span-2">
             <div className="mb-4 flex flex-wrap items-center justify-between gap-x-3 gap-y-2" role="group" aria-label="Resume editor controls">
               <div className="flex items-center gap-1.5">
                 <button
@@ -296,6 +358,12 @@ const inputClass =
 
             <hr className="border-slate-200" />
 
+            {content.importSource?.text && <details className="mt-4 rounded-lg border border-sky-100 bg-sky-50 p-3 text-sm">
+              <summary className="cursor-pointer font-medium">{rtl ? 'مراجعة النص المستورد' : 'Review imported source text'}</summary>
+              <p className="mt-2 text-xs text-slate-600">{rtl ? 'راجع الحقول وصحح التفاصيل الناقصة أو الموضوعة في القسم الخطأ.' : 'Review each section. Correct missing details or text placed in the wrong field.'}</p>
+              <pre className="mt-3 max-h-64 overflow-y-auto whitespace-pre-wrap break-words font-sans text-xs text-slate-700">{content.importSource.text}</pre>
+            </details>}
+
             {step === 0 && <>
             <h2 className="mt-6 text-lg font-bold">
               {t('personalInformationSection')}
@@ -342,9 +410,9 @@ const inputClass =
 
             {step === 1 && (
               <div className="mt-6">
-                <h2 className="text-lg font-bold">Professional Summary</h2>
-                <p className="mt-1 text-sm text-slate-500">Describe your background, strengths, and career focus.</p>
-                <label htmlFor="professional-summary" className="mb-2 mt-6 block text-sm font-medium">Summary</label>
+                <h2 className="text-lg font-bold">{t('professionalSummarySection')}</h2>
+                <p className="mt-1 text-sm text-slate-500">{t('summaryDescription')}</p>
+                <label htmlFor="professional-summary" className="mb-2 mt-6 block text-sm font-medium">{t('summaryLabel')}</label>
                 <textarea
                   id="professional-summary"
                   rows={8}
@@ -353,7 +421,7 @@ const inputClass =
                     const value = event.target.value
                     setContent((previous) => ({ ...previous, summary: value }))
                   }}
-                  placeholder="Frontend developer with experience building..."
+                  placeholder= {t('summaryPlaceholder')}
                   className={`${inputClass} resize-y`}
                 />
               </div>
@@ -361,16 +429,16 @@ const inputClass =
 
             {step === 2 && (
               <div className="mt-6">
-                <h2 className="text-lg font-bold">Professional Experience</h2>
-                <p className="mt-1 text-sm text-slate-500">Add your work experience, starting with your most recent role.</p>
+                <h2 className="text-lg font-bold">{t('professionalExperienceSection')}</h2>
+                <p className="mt-1 text-sm text-slate-500">{t('professionalExperienceSubtitle')}</p>
                 <div className="mt-6 space-y-5">
                   {content.experience.map((job, index) => (
                     <fieldset key={job.id} className="min-w-0 space-y-4 rounded-xl border border-slate-200 p-4">
-                      <legend className="px-1 text-sm font-semibold">Experience {index + 1}</legend>
+                      <legend className="px-1 text-sm font-semibold">{t('experienceLabel')} {index + 1}</legend>
                       {[
-                        ['position', 'Job title'],
-                        ['company', 'Company'],
-                        ['location', 'Location'],
+                        ['position', t('jobTitleLabel')],
+                        ['company', t('companyLabel')],
+                        ['location', t('locationLabel')],
                       ].map(([field, label]) => (
                         <div key={field}>
                           <label htmlFor={`${job.id}-${field}`} className="mb-1.5 block text-sm font-medium">{label}</label>
@@ -378,46 +446,46 @@ const inputClass =
                         </div>
                       ))}
                       <div>
-                        <label htmlFor={`${job.id}-start`} className="mb-1.5 block text-sm font-medium">Start date</label>
+                        <label htmlFor={`${job.id}-start`} className="mb-1.5 block text-sm font-medium">{t('startDateLabel')}</label>
                         <input id={`${job.id}-start`} type="month" value={job.startDate} onChange={(event) => updateExperience(job.id, 'startDate', event.target.value)} className={inputClass} />
                       </div>
                       <label className="flex items-center gap-2 text-sm">
                         <input type="checkbox" checked={job.isCurrent} onChange={(event) => updateExperience(job.id, 'isCurrent', event.target.checked)} className="accent-teal-600" />
-                        I currently work here
+                        {t('currentlyWorkHereLabel')}
                       </label>
                       {!job.isCurrent && (
                         <div>
-                          <label htmlFor={`${job.id}-end`} className="mb-1.5 block text-sm font-medium">End date</label>
+                          <label htmlFor={`${job.id}-end`} className="mb-1.5 block text-sm font-medium">{t('endDateLabel')}</label>
                           <input id={`${job.id}-end`} type="month" min={job.startDate || undefined} value={job.endDate} onChange={(event) => updateExperience(job.id, 'endDate', event.target.value)} className={inputClass} />
                         </div>
                       )}
                       <div>
-                        <label htmlFor={`${job.id}-highlights`} className="mb-1.5 block text-sm font-medium">Responsibilities and achievements</label>
-                        <textarea id={`${job.id}-highlights`} rows={5} value={job.highlights.join('\n')} onChange={(event) => updateExperience(job.id, 'highlights', event.target.value.split('\n'))} placeholder="Write one point per line" className={`${inputClass} resize-y`} />
+                        <label htmlFor={`${job.id}-highlights`} className="mb-1.5 block text-sm font-medium">{t('responsibilitiesLabel')}</label>
+                        <textarea id={`${job.id}-highlights`} rows={5} value={job.highlights.join('\n')} onChange={(event) => updateExperience(job.id, 'highlights', event.target.value.split('\n'))} placeholder={t('responsibilitiesHelpText')} className={`${inputClass} resize-y`} />
                       </div>
-                      <button type="button" onClick={() => removeExperience(job.id)} className="text-sm text-red-600 hover:text-red-800">Remove experience {index + 1}</button>
+                      <button type="button" onClick={() => removeExperience(job.id)} className="text-sm text-red-600 hover:text-red-800">{t('removeExperienceButton')} {index + 1}</button>
                     </fieldset>
                   ))}
                 </div>
-                <button type="button" onClick={addExperience} className="mt-5 w-full rounded-lg border border-dashed border-teal-400 px-4 py-3 text-sm font-medium text-teal-700 hover:bg-teal-50">+ Add experience</button>
+                <button type="button" onClick={addExperience} className="mt-5 w-full rounded-lg border border-dashed border-teal-400 px-4 py-3 text-sm font-medium text-teal-700 hover:bg-teal-50">{t('addExperienceButton')}</button>
               </div>
             )}
             {(step === 3 || step === 4) && (() => {
               const education = step === 3
               const section = education ? 'education' : 'projects'
-              const label = education ? 'education or training' : 'project'
+              const label = education ? t('educationOrTrainingLabel') : t('projectLabel')
               const fields = education
-                ? [['qualification', 'Qualification or course', 'text'], ['institution', 'Institution or training provider', 'text'], ['location', 'Location', 'text']]
-                : [['name', 'Project name', 'text'], ['role', 'Your role', 'text'], ['url', 'Project link', 'url']]
+                ? [['qualification', t('qualificationLabel'), 'text'], ['institution', t('institutionLabel'), 'text'], ['location', t('locationLabel'), 'text']]
+                : [['name', t('projectNameLabel'), 'text'], ['role', t('yourRoleLabel'), 'text'], ['url', t('projectLinkLabel'), 'url']]
 
               return (
                 <div className="mt-6">
                   <h2 className="text-lg font-bold">{steps[step]}</h2>
-                  <p className="mt-1 text-sm text-slate-500">{education ? 'Add your qualifications, courses, and training.' : 'Highlight projects and explain your contribution.'}</p>
+                  <p className="mt-1 text-sm text-slate-500">{education ? t('educationTrainingSubtitle') : t('projectsHelpText')}</p>
                   <div className="mt-6 space-y-5">
                     {content[section].map((entry, index) => (
                       <fieldset key={entry.id} className="min-w-0 space-y-4 rounded-xl border border-slate-200 p-4">
-                        <legend className="px-1 text-sm font-semibold">{education ? 'Education & Training' : 'Project'} {index + 1}</legend>
+                        <legend className="px-1 text-sm font-semibold">{education ? t('educationTrainingSection') : t('projectLabel')} {index + 1}</legend>
                         {fields.map(([field, title, type]) => (
                           <div key={field}>
                             <label htmlFor={`${entry.id}-${field}`} className="mb-1.5 block text-sm font-medium">{title}</label>
@@ -425,66 +493,68 @@ const inputClass =
                           </div>
                         ))}
                         <div>
-                          <label htmlFor={`${entry.id}-start`} className="mb-1.5 block text-sm font-medium">Start date</label>
+                          <label htmlFor={`${entry.id}-start`} className="mb-1.5 block text-sm font-medium">{t('startDateLabel')}</label>
                           <input id={`${entry.id}-start`} type="month" value={entry.startDate} onChange={(event) => updateEntry(section, entry.id, 'startDate', event.target.value)} className={inputClass} />
                         </div>
                         <label className="flex items-center gap-2 text-sm">
                           <input type="checkbox" checked={entry.isCurrent} onChange={(event) => updateEntry(section, entry.id, 'isCurrent', event.target.checked)} className="accent-teal-600" />
-                          {education ? 'Currently studying or training' : 'Ongoing project'}
+                          {education ? t('currentlyStudyingLabel') : t('ongoingProjectLabel')}
                         </label>
                         {!entry.isCurrent && (
                           <div>
-                            <label htmlFor={`${entry.id}-end`} className="mb-1.5 block text-sm font-medium">End date</label>
+                            <label htmlFor={`${entry.id}-end`} className="mb-1.5 block text-sm font-medium">{t('endDateLabel')}</label>
                             <input id={`${entry.id}-end`} type="month" min={entry.startDate || undefined} value={entry.endDate} onChange={(event) => updateEntry(section, entry.id, 'endDate', event.target.value)} className={inputClass} />
                           </div>
                         )}
                         <div>
-                          <label htmlFor={`${entry.id}-description`} className="mb-1.5 block text-sm font-medium">{education ? 'Details or achievements' : 'Description and contribution'}</label>
+                          <label htmlFor={`${entry.id}-description`} className="mb-1.5 block text-sm font-medium">{education ? t('detailsLabel') : t('descriptionAndContributionLabel')}</label>
                           <textarea id={`${entry.id}-description`} rows={4} value={entry.description} onChange={(event) => updateEntry(section, entry.id, 'description', event.target.value)} className={`${inputClass} resize-y`} />
                         </div>
-                        <button type="button" onClick={() => removeEntry(section, entry.id)} className="text-sm text-red-600 hover:text-red-800">Remove {label} {index + 1}</button>
+                        <button type="button" onClick={() => removeEntry(section, entry.id)} className="text-sm text-red-600 hover:text-red-800">{t('removeButton')} {label} {index + 1}</button>
                       </fieldset>
                     ))}
                   </div>
-                  <button type="button" onClick={() => addEntry(section)} className="mt-5 w-full rounded-lg border border-dashed border-teal-400 px-4 py-3 text-sm font-medium text-teal-700 hover:bg-teal-50">+ Add {label}</button>
+                  <button type="button" onClick={() => addEntry(section)} className="mt-5 w-full rounded-lg border border-dashed border-teal-400 px-4 py-3 text-sm font-medium text-teal-700 hover:bg-teal-50">{t('addButton')} {label}</button>
                 </div>
               )
             })()}
             {step === 5 && (
               <div className="mt-6">
-                <h2 className="text-lg font-bold">Skills</h2>
-                <p className="mt-1 text-sm text-slate-500">Group related skills together. Separate skills with commas.</p>
+                <h2 className="text-lg font-bold">{t('skillsSectionTitle')}</h2>
+                <p className="mt-1 text-sm text-slate-500">{t('skillsHelpText')}</p>
                 <div className="mt-6 space-y-5">
                   {content.skills.map((group, index) => (
                     <fieldset key={group.id} className="min-w-0 space-y-4 rounded-xl border border-slate-200 p-4">
-                      <legend className="px-1 text-sm font-semibold">Skill group {index + 1}</legend>
+                      <legend className="px-1 text-sm font-semibold">{t('skillGroupLabel')} {index + 1}</legend>
                       <div>
-                        <label htmlFor={`${group.id}-category`} className="mb-1.5 block text-sm font-medium">Category (optional)</label>
-                        <input id={`${group.id}-category`} value={group.category} onChange={(event) => updateEntry('skills', group.id, 'category', event.target.value)} placeholder="Programming & Backend" className={inputClass} />
+                        <label htmlFor={`${group.id}-category`} className="mb-1.5 block text-sm font-medium">{t('categoryLabel')} ( {t('optionalLabel')} )</label>
+                        <input id={`${group.id}-category`} value={group.category} onChange={(event) => updateEntry('skills', group.id, 'category', event.target.value)} placeholder={t('programmingBackendExample')} className={inputClass} />
                       </div>
                       <div>
-                        <label htmlFor={`${group.id}-items`} className="mb-1.5 block text-sm font-medium">Skills</label>
+                        <label htmlFor={`${group.id}-items`} className="mb-1.5 block text-sm font-medium">{t('skillsSectionTitle')}</label>
                         <textarea id={`${group.id}-items`} rows={3} value={group.items} onChange={(event) => updateEntry('skills', group.id, 'items', event.target.value)} placeholder="JavaScript, Python, Node.js, Express" className={`${inputClass} resize-y`} />
                       </div>
-                      <button type="button" onClick={() => removeEntry('skills', group.id)} className="text-sm text-red-600 hover:text-red-800">Remove skill group {index + 1}</button>
+                      <button type="button" onClick={() => removeEntry('skills', group.id)} className="text-sm text-red-600 hover:text-red-800">{t('removeSkillGroupButton')} {index + 1}</button>
                     </fieldset>
                   ))}
                 </div>
-                <button type="button" onClick={addSkillGroup} className="mt-5 w-full rounded-lg border border-dashed border-teal-400 px-4 py-3 text-sm font-medium text-teal-700 hover:bg-teal-50">+ Add skill group</button>
+                <button type="button" onClick={addSkillGroup} className="mt-5 w-full rounded-lg border border-dashed border-teal-400 px-4 py-3 text-sm font-medium text-teal-700 hover:bg-teal-50">{t('addSkillGroupButton')}</button>
               </div>
             )}
           </section>
 
+          <div tabIndex={0} role="region" aria-label={rtl ? 'معاينة السيرة الذاتية القابلة للتمرير' : 'Scrollable resume preview'} className="min-h-0 min-w-0 overflow-y-auto overscroll-contain lg:col-span-3">
           <section
+            id="resume-preview"
             aria-label="Resume preview"
-            className="min-h-[700px] min-w-0 border border-[#e3edfa] bg-white px-4 py-6 shadow-sm sm:px-6 lg:col-span-3"
+            className="min-w-0 border border-[#e3edfa] bg-white shadow-sm lg:col-span-3"
           >
             <header className="text-center">
               <h1
                 style={{ color: accentColor }}
                 className="break-words text-2xl leading-tight font-bold"
               >
-                {personal.fullName.trim() || 'Your name'}
+                {personal.fullName.trim() || t('yourNameLabel')}
               </h1>
 
               {personal.professionalTitle.trim() && (
@@ -510,7 +580,7 @@ const inputClass =
             <hr className="mt-2 border-slate-200" />
             {content.summary.trim() && (
               <section className="mt-2">
-                <h2 style={{ color: accentColor }} className="text-xs font-bold">PROFESSIONAL SUMMARY</h2>
+                <h2 style={{ color: accentColor }} className="text-xs font-bold">{t('professionalSummarySection')}</h2>
                 <p className="mt-1 whitespace-pre-wrap break-words text-xs leading-[1.45] text-slate-700">{content.summary}</p>
               </section>
             )}
@@ -549,7 +619,7 @@ const inputClass =
               const education = section === 'education'
               return (
                 <section key={section} className="mt-2">
-                  <h2 style={{ color: accentColor }} className="border-t border-slate-200 pt-1.5 text-xs font-bold">{education ? 'EDUCATION & TRAINING' : 'PROJECTS'}</h2>
+                  <h2 style={{ color: accentColor }} className="border-t border-slate-200 pt-1.5 text-xs font-bold">{education ? t('educationTrainingSection') : t('projectsLabel')}</h2>
                   <div className="mt-1.5 space-y-2.5">
                     {entries.map((entry) => (
                       <article key={entry.id} className="break-words">
@@ -584,6 +654,7 @@ const inputClass =
               </section>
             )}
           </section>
+          </div>
         </div>
       </div>
     </section>
