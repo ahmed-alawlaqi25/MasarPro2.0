@@ -78,9 +78,9 @@ const Navbar = () => {
                 <NavLink to="/resume-builder" className={getLinkClass}>
                 <FileUser />{t('resumeBuilderTitle')} 
                 </NavLink>
-                <NavLink to="/blog" className={getLinkClass}>
+                {/* <NavLink to="/blog" className={getLinkClass}>
                 <Newspaper />{t('Blog')}
-                </NavLink>
+                </NavLink> */}
                 <NavLink to="/settings" className={getLinkClass}>
                 <Settings />{t('settingsTitle')}
                 </NavLink>
@@ -123,9 +123,9 @@ const Navbar = () => {
                 <NavLink to="/resume-builder" onClick={() => setMobileOpen(false)} className={getLinkClass}>
                 <FileUser />{t('resumeBuilderTitle')} 
                 </NavLink>
-                <NavLink to="/blog" onClick={() => setMobileOpen(false)} className={getLinkClass}>
+                {/* <NavLink to="/blog" onClick={() => setMobileOpen(false)} className={getLinkClass}>
                 <Newspaper />{t('Blog')}
-                </NavLink>
+                </NavLink> */}
                 <NavLink to="/settings" onClick={() => setMobileOpen(false)} className={getLinkClass}>
                 <Settings />{t('settingsTitle')}
                 </NavLink>
