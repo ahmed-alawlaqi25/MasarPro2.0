@@ -75,9 +75,8 @@ export default function ImportResumeDialog({ userId, onClose, onImported }) {
         <span>{copy('PDF, up to 5 MB and 10 pages', 'PDF، حتى 5 ميجابايت و10 صفحات')}</span>
         <input type="file" accept=".pdf,application/pdf" required disabled={busy} onChange={event => { setFile(event.target.files?.[0] || null); setError('') }} className="w-full min-w-0 text-xs file:me-2 file:rounded file:border-0 file:bg-white file:px-2 file:py-2 file:text-sky-700" />
       </label>
-      <p className="mb-4 text-xs text-slate-500">{copy('No AI service. PDF text is read on your device. Extracted text is saved with your resume, not the original PDF.', 'بدون خدمة ذكاء اصطناعي. تتم قراءة النص على جهازك وحفظه مع سيرتك، دون حفظ ملف PDF الأصلي.')}</p>
       {error && <p role="alert" className="mb-3 text-sm text-red-600">{error}</p>}
-      <button type="submit" disabled={busy || !file} className="w-full rounded bg-linear-to-l from-[#0874c9] to-[#0eb0b2] py-2 text-white disabled:opacity-50">
+      <button type="submit" disabled={busy || !file} className="w-full rounded active:cursor-pointer bg-linear-to-l from-[#0874c9] to-[#0eb0b2] py-2 text-white disabled:opacity-50">
         <span role="status">{phase === 'reading' ? copy('Reading PDF…', 'جارٍ قراءة الملف…') : phase === 'saving' ? copy('Saving resume…', 'جارٍ حفظ السيرة…') : copy('Import resume', 'استيراد السيرة')}</span>
       </button>
     </form>
