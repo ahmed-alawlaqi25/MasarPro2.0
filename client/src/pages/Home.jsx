@@ -15,7 +15,7 @@ const Home = () => {
                 
                 <Feature/>
                 
-                <Testimonial/>
+                {/* <Testimonial/> */}
                 <div className="pointer-events-none absolute -right-40 top-[35%] h-[500px] w-[500px] rounded-full bg-[#114f83]/10 blur-[130px]" />
                 <CTA/>
                 
