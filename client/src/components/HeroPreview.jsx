@@ -17,7 +17,7 @@ export default function HeroPreview() {
     if (focus) tabs.current[next]?.focus()
   }
   return <div className="relative z-5">
-    <div role="tablist" aria-label={rtl ? 'معاينة مزايا مسار برو' : 'MasarPro feature previews'} className="mx-auto  flex w-fit max-w-full gap-1 rounded-2xl border border-sky-100 bg-white/90 p-1.5 shadow-sm shadow-cyan-100">
+    <div role="tablist" dir={rtl ? 'rtl' : 'ltr'} aria-label={rtl ? 'معاينة مزايا مسار برو' : 'MasarPro feature previews'} className="mx-auto  grid w-full max-w-[380px] grid-cols-2 gap-1 rounded-xl border border-slate-200/70 bg-white/70 p-1">
       {slides.map(({ label, Icon }, index) => <button
         key={label} ref={element => { tabs.current[index] = element }}
         id={`hero-tab-${index}`} type="button" role="tab" aria-selected={selected === index}
@@ -27,8 +27,8 @@ export default function HeroPreview() {
           event.preventDefault()
           select(event.key === 'Home' ? 0 : event.key === 'End' ? slides.length - 1 : selected + (event.key === 'ArrowRight' ? (rtl ? -1 : 1) : (rtl ? 1 : -1)), true)
         }}
-        className={`inline-flex items-center justify-center gap-2 rounded-xl px-3 py-2.5 text-xs font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-600 sm:px-6 sm:text-sm ${selected === index ? 'bg-linear-to-l from-[#0874c9] to-[#0eb0b2] text-white shadow-sm' : 'text-[#344d80] hover:bg-[#e8f7f5] hover:text-[#0b9f91]'}`}>
-        <Icon size={20} aria-hidden="true" />{label}
+        className={`inline-flex min-h-11 min-w-0 items-center justify-center gap-1.5 rounded-lg px-2 py-2 text-xs font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-600 sm:gap-2 sm:px-4 sm:text-sm ${selected === index ? 'bg-[#e8f7f5] text-[#087f75]' : 'text-slate-500 hover:bg-slate-50 hover:text-[#344d80]'}`}>
+        <Icon size={16} className="shrink-0" aria-hidden="true" />{label}
       </button>)}
     </div>
     <div className="relative">
