@@ -19,7 +19,7 @@ const Callback = () => {
       }
 
       if (session) {
-        navigate('/job-tracker', { replace: true })
+        navigate('/resume-builder', { replace: true })
         return
       }
 

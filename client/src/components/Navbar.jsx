@@ -72,11 +72,11 @@ const Navbar = () => {
 
             {/* Desktop menu */}
             <div className="hidden items-center gap-4 text-sm   text-gray-500 font-bold md:flex">
-                <NavLink to="/job-tracker" className={getLinkClass} >
-                <SquareKanban /> {t('jobTracker')}
-                </NavLink>
                 <NavLink to="/resume-builder" className={getLinkClass}>
                 <FileUser />{t('resumeBuilderTitle')} 
+                </NavLink>
+                <NavLink to="/job-tracker" className={getLinkClass} >
+                <SquareKanban /> {t('jobTracker')}
                 </NavLink>
                 {/* <NavLink to="/blog" className={getLinkClass}>
                 <Newspaper />{t('Blog')}
@@ -116,12 +116,12 @@ const Navbar = () => {
                 alt="MasarPro Logo"
                 className="w-54 object-contain absolute right-5 top-0"
                 />
+                <NavLink to="/resume-builder" onClick={() => setMobileOpen(false)} className={getLinkClass}>
+                <FileUser />{t('resumeBuilderTitle')} 
+                </NavLink>
                 </a> 
                 <NavLink to="/job-tracker" onClick={() => setMobileOpen(false)} className={getLinkClass}>
                 <SquareKanban /> {t('jobTracker')}
-                </NavLink>
-                <NavLink to="/resume-builder" onClick={() => setMobileOpen(false)} className={getLinkClass}>
-                <FileUser />{t('resumeBuilderTitle')} 
                 </NavLink>
                 {/* <NavLink to="/blog" onClick={() => setMobileOpen(false)} className={getLinkClass}>
                 <Newspaper />{t('Blog')}

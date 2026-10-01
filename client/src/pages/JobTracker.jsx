@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import Card from '../components/Card'
-import {  CircleCheckBig, FileText, Heart, Send, UserRoundGroup, Plus, Search, X, BadgeCheck } from 'lucide-react';
+import { FileText, Heart, Send, UserRoundGroup, Plus, Search, X, BadgeCheck } from 'lucide-react';
 import KanbanBoard from '../components/KanbanBoard'
 import JobApplicationForm from '../components/JobApplicationForm';
 import { useJob } from '../components/JopContext';
@@ -24,25 +24,28 @@ const JobTracker = () => {
 
   return (
     <section className='bg-[#f4f9fc] text-[#0c1945]'>
-      <div className='px-5  md:px-10  pt-4'>
-        <div className='flex justify-between mt-2'>
-          <div>
-            <h1 className='text-4xl font-bold mb-2'>{t('jobTracker')}</h1>
+      <div className='px-4 md:px-10 pt-4'>
+        <div className='mt-2 flex items-center justify-between gap-2 md:gap-4'>
+          <div className="min-w-0">
+            <h1 className='text-lg font-bold leading-tight sm:text-2xl md:text-4xl'>{t('jobTracker')}</h1>
           </div>
             <button
               onClick={() => setIsFormOpen(true)}
-              className="flex items-center gap-3 rounded-lg bg-linear-to-l from-[#0874c9] to-[#0eb0b2] px-10 text-white transition hover:opacity-90">
-              <Plus />
-              <p>{t('addNewJobButton')}</p>
+              type="button"
+              className="inline-flex min-h-11 shrink-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-lg bg-linear-to-l from-[#0874c9] to-[#0eb0b2] px-2.5 py-2 text-xs text-white transition hover:opacity-90 sm:gap-2 sm:px-4 sm:text-sm md:gap-3 md:px-10 md:py-3 md:text-base">
+              <Plus aria-hidden="true" className="h-4 w-4 shrink-0 md:h-6 md:w-6" />
+              <span>{t('addNewJobButton')}</span>
             </button>
           </div>
-              <small className='text-slate-500 mr-4 '>{t('trackApplicationsDescription')}</small>
+              <small className='mt-2 block text-xs leading-relaxed text-slate-500 sm:text-sm'>{t('trackApplicationsDescription')}</small>
         <div className='flex flex-wrap items-center gap-3 mt-3'>
+          <div className="hidden flex-wrap items-center gap-3 md:flex">
           <Card icon = {<Heart fill="currentColor"/>} count={getJobCount("wishlist")} text={t('wishListStatus')} bgColor="gray"  textColor="gray"/>
           <Card icon = {<Send />} count={getJobCount("applied")} text={t('appliedStatus')} bgColor="blue" textColor="blue"/> 
           <Card icon = {<UserRoundGroup />}count={getJobCount("interview")} text={t('interviewStatus')} bgColor="orange" textColor="orange"/>
           <Card icon = {<FileText />}count={getJobCount("offer")} text={t('offerStatus')} bgColor="violet" textColor="violet"/>
           <Card icon = {<BadgeCheck /> }count={getJobCount("accepted")} text={t('acceptStatus')} bgColor="green" textColor="green" />
+          </div>
           <div className={ document.documentElement.dir === "rtl"? "md:mr-auto relative flex mt-2 w-full md:w-80" : "md:ml-auto relative flex mt-2 w-full md:w-80"}>
             <Search size={18} aria-hidden="true" className="pointer-events-none absolute mr-2 ml-2 top-1/2 -translate-y-1/2 text-slate-400" />
             <input
