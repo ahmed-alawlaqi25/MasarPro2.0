@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ChevronLeft, ChevronRight, Feather, Languages, Menu, MoveDownLeft, X,} from "lucide-react";
 import { Link, NavLink } from "react-router";
+import HeroPreview from './HeroPreview';
 
 
 
@@ -220,13 +221,7 @@ const Hero = () => {
           </div>
 
           {/* Dashboard image */}
-          <div className="relative z-10 overflow-hidden rounded-t-[22px] border-[12px] border-white/80 bg-white shadow-[0_20px_80px_rgba(27,121,171,0.18)]">
-            <img
-              src="/hero.png"
-              alt="MasarPro Dashboard"
-              className="w-full object-cover object-top"
-            />
-          </div>
+          <HeroPreview />
         </div>
       </div>
     </section>
