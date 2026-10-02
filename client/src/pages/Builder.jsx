@@ -601,7 +601,7 @@ const inputClass =
                           <h3 className="text-xs font-semibold">{job.position || job.company}</h3>
                           <p className="text-xs text-slate-500">{dates}</p>
                         </div>
-                        {(job.company || job.location) && <p className="mt-0.5 text-xs text-slate-600">{[job.position ? job.company : '', job.location].filter(Boolean).join(' · ')}</p>}
+                        {(job.company || job.location) && <p className="mt-0.5 text-xs text-slate-600">{[job.position ? job.company : '', job.location].filter(Boolean).join(' | ')}</p>}
                         {highlights.length > 0 && (
                           <ul className="mt-1 list-disc space-y-0.5 ps-4 text-xs leading-[1.45] text-slate-700">
                             {highlights.map((line, index) => <li key={index}>{line}</li>)}
@@ -627,9 +627,19 @@ const inputClass =
                           <h3 className="text-xs font-semibold">{education ? entry.qualification || entry.institution : entry.name}</h3>
                           <p className="text-xs text-slate-500">{[entry.startDate, entry.isCurrent ? presentLabel : entry.endDate].filter(Boolean).join(' – ')}</p>
                         </div>
-                        {(education ? entry.location || (entry.qualification && entry.institution) : entry.role) && <p className="mt-0.5 text-xs text-slate-600">{education ? [entry.qualification ? entry.institution : '', entry.location].filter(Boolean).join(' · ') : entry.role}</p>}
+                        {(education ? entry.location || (entry.qualification && entry.institution) : entry.role) && <p className="mt-0.5 text-xs text-slate-600">{education ? [entry.qualification ? entry.institution : '', entry.location].filter(Boolean).join(' | ') : entry.role}</p>}
                         {!education && entry.url.trim() && <p className="mt-1 break-all text-xs text-slate-500">{entry.url}</p>}
-                        {entry.description.trim() && <p className="mt-1 whitespace-pre-wrap text-xs leading-[1.45] text-slate-700">{entry.description}</p>}
+                        {entry.description.trim() && (
+                          <ul className="mt-1 list-disc space-y-0.5 ps-4 text-xs leading-[1.45] text-slate-700">
+                            {entry.description
+                              .split('\n')
+                              .map(line => line.trim())
+                              .filter(Boolean)
+                              .map((line, index) => (
+                                <li key={index}>{line}</li>
+                              ))}
+                          </ul>
+                        )}
                       </article>
                     ))}
                   </div>
