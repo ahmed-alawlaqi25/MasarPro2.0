@@ -587,7 +587,7 @@ const inputClass =
 
             {content.experience.some((job) => [job.position, job.company, job.location, job.startDate, job.endDate, ...job.highlights].some((value) => value.trim())) && (
               <section className="mt-2">
-                <h2 style={{ color: accentColor }} className="border-t border-slate-200 pt-1.5 text-xs font-bold">PROFESSIONAL EXPERIENCE</h2>
+                <h2 style={{ color: accentColor }} className="border-t border-slate-200 pt-1.5 text-xs font-bold">{t('professionalExperienceSection')}</h2>
                 <div className="mt-1.5 space-y-2.5">
                   {content.experience.map((job) => {
                     const highlights = job.highlights.filter((line) => line.trim())
@@ -638,7 +638,7 @@ const inputClass =
             })}
             {content.skills.some((group) => group.items.split(/[,\n،]/).some((item) => item.trim())) && (
               <section className="mt-2">
-                <h2 style={{ color: accentColor }} className="border-t border-slate-200 pt-1.5 text-xs font-bold">SKILLS</h2>
+                <h2 style={{ color: accentColor }} className="border-t border-slate-200 pt-1.5 text-xs font-bold">{t('skillsSectionTitle')}</h2>
                 <div className="mt-1 space-y-0.5 text-xs leading-[1.45] text-slate-700">
                   {content.skills.map((group) => {
                     const items = group.items.split(/[,\n،]/).map((item) => item.trim()).filter(Boolean)
