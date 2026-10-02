@@ -83,11 +83,10 @@ const ResumeEditor = ({ resumeId, userId }) => {
     autoComplete: 'organization-title',
   },
   {
-    name: 'email',
-    label: t('emailAddressLabel'),
-    placeholder: 'email@example.com',
-    type: 'email',
-    autoComplete: 'email',
+    name: 'location',
+    label: t('locationLabel'),
+    placeholder: 'Riyadh, Saudi Arabia',
+    autoComplete: 'address-level2',
   },
   {
     name: 'phone',
@@ -97,10 +96,11 @@ const ResumeEditor = ({ resumeId, userId }) => {
     autoComplete: 'tel',
   },
   {
-    name: 'location',
-    label: t('locationLabel'),
-    placeholder: 'Riyadh, Saudi Arabia',
-    autoComplete: 'address-level2',
+    name: 'email',
+    label: t('emailAddressLabel'),
+    placeholder: 'email@example.com',
+    type: 'email',
+    autoComplete: 'email',
   },
   {
     name: 'website',
