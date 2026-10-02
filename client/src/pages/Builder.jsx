@@ -552,7 +552,7 @@ const inputClass =
             <header className="text-center">
               <h1
                 style={{ color: accentColor }}
-                className="break-words text-2xl leading-tight font-bold"
+                className="break-words text-2xl mb-2 leading-tight font-bold"
               >
                 {personal.fullName.trim() || t('yourNameLabel')}
               </h1>
@@ -570,7 +570,7 @@ const inputClass =
                       key={index}
                       className="max-w-full break-words"
                     >
-                      {detail}
+                      <bdi dir="ltr">{detail}</bdi>
                     </li>
                   ))}
                 </ul>
