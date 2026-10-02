@@ -68,6 +68,16 @@ const ResumeEditor = ({ resumeId, userId }) => {
     }
   }
 
+  const personal = content.personal
+  const presentLabel = rtl ? 'حتى الآن' : 'Present'
+  const contactDetails = [
+  personal.location,
+  personal.phone,
+  personal.email,
+  personal.linkedin,
+  personal.website,
+].filter(value => typeof value === 'string' && value.trim());
+
   const personalFields = [
   
   {
@@ -194,8 +204,6 @@ const inputClass =
     }))
   }
 
-  const personal = content.personal
-
   const addEntry = (section) => {
     const entry = section === 'education'
       ? { id: crypto.randomUUID(), qualification: '', institution: '', location: '', startDate: '', endDate: '', isCurrent: false, description: '' }
@@ -234,14 +242,6 @@ const inputClass =
       },
     }))
   }
-
-  const contactDetails = [
-    personal.email,
-    personal.phone,
-    personal.location,
-    personal.website,
-    personal.linkedin,
-  ].filter((value) => value.trim())
 
 
 
@@ -564,17 +564,15 @@ const inputClass =
               )}
 
               {contactDetails.length > 0 && (
-                <ul
-                  dir="ltr"
-                  className="mt-1 flex list-none flex-wrap justify-center gap-x-2 gap-y-0.5 text-[11px] text-slate-500"
-                >
-                  {[city, phoneNumber, email, linkedin, website]
-                    .filter(Boolean)
-                    .map((detail, index) => (
-                      <li key={index} className="max-w-full break-words">
-                        <bdi dir="auto">{detail}</bdi>
-                      </li>
-                    ))}
+                <ul dir="ltr" className="mt-1 flex list-none flex-wrap justify-center gap-x-2 gap-y-0.5 text-[11px] text-slate-500">
+                  {contactDetails.map((detail, index) => (
+                    <li
+                      key={index}
+                      className="max-w-full break-words"
+                    >
+                      <bdi dir="auto">{detail}</bdi>
+                    </li>
+                  ))}
                 </ul>
               )}
             </header>
@@ -593,7 +591,7 @@ const inputClass =
                 <div className="mt-1.5 space-y-2.5">
                   {content.experience.map((job) => {
                     const highlights = job.highlights.filter((line) => line.trim())
-                    const dates = [job.startDate, job.isCurrent ? 'Present' : job.endDate].filter(Boolean).join(' – ')
+                    const dates = [job.startDate, job.isCurrent ? presentLabel : job.endDate].filter(Boolean).join(' – ')
                     const hasDetails = [job.position, job.company, job.location, job.startDate, job.endDate, ...highlights].some((value) => value.trim())
                     if (!hasDetails) return null
 
@@ -627,7 +625,7 @@ const inputClass =
                       <article key={entry.id} className="break-words">
                         <div className="flex flex-wrap items-baseline justify-between gap-2">
                           <h3 className="text-xs font-semibold">{education ? entry.qualification || entry.institution : entry.name}</h3>
-                          <p className="text-xs text-slate-500">{[entry.startDate, entry.isCurrent ? 'Present' : entry.endDate].filter(Boolean).join(' – ')}</p>
+                          <p className="text-xs text-slate-500">{[entry.startDate, entry.isCurrent ? presentLabel : entry.endDate].filter(Boolean).join(' – ')}</p>
                         </div>
                         {(education ? entry.location || (entry.qualification && entry.institution) : entry.role) && <p className="mt-0.5 text-xs text-slate-600">{education ? [entry.qualification ? entry.institution : '', entry.location].filter(Boolean).join(' · ') : entry.role}</p>}
                         {!education && entry.url.trim() && <p className="mt-1 break-all text-xs text-slate-500">{entry.url}</p>}
