@@ -564,15 +564,17 @@ const inputClass =
               )}
 
               {contactDetails.length > 0 && (
-                <ul className="mt-1 flex list-none flex-wrap justify-center gap-x-2 gap-y-0.5 text-[11px] text-slate-500">
-                  {contactDetails.map((detail, index) => (
-                    <li
-                      key={index}
-                      className="max-w-full break-words"
-                    >
-                      <bdi dir="ltr">{detail}</bdi>
-                    </li>
-                  ))}
+                <ul
+                  dir="ltr"
+                  className="mt-1 flex list-none flex-wrap justify-center gap-x-2 gap-y-0.5 text-[11px] text-slate-500"
+                >
+                  {[city, phoneNumber, email, linkedin, website]
+                    .filter(Boolean)
+                    .map((detail, index) => (
+                      <li key={index} className="max-w-full break-words">
+                        <bdi dir="auto">{detail}</bdi>
+                      </li>
+                    ))}
                 </ul>
               )}
             </header>
