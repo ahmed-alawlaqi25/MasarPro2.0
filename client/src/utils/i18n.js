@@ -199,6 +199,7 @@ const resources = {
       ongoingProjectLabel: "Ongoing project",
       currentlyStudyingLabel: "Currently studying or training",
       projectNameLabel: "Project name",
+      companyLabel: "Company",
       yourRoleLabel: "Your role",
       projectLinkLabel: "Project link",
       descriptionAndContributionLabel: "Description and contribution",
@@ -465,7 +466,20 @@ const resources = {
   }
 };
 
-let savedLanguage = 'en';
+const pageMetadata = {
+  en: {
+    title: 'MasarPro | Job Application Tracker & Resume Builder',
+    description: 'Organize your job applications and build your resume in Arabic or English with MasarPro. Track your progress, customize your CV, and export as PDF.',
+  },
+  ar: {
+    title: 'مسار برو | متابعة طلبات التوظيف وإنشاء السيرة الذاتية',
+    description: 'نظّم طلبات التوظيف وأنشئ سيرتك الذاتية بالعربية أو الإنجليزية مع مسار برو. تابع مراحل التقديم، وخصّص سيرتك الذاتية، واحفظها بصيغة PDF.',
+  },
+};
+
+const browserLanguage = (navigator.languages || [navigator.language])
+  .find(language => /^(ar|en)(-|$)/i.test(language));
+let savedLanguage = /^ar\b/i.test(browserLanguage || '') ? 'ar' : 'en';
 try {
   const stored = localStorage.getItem('masarpro-language');
   if (stored === 'en' || stored === 'ar') savedLanguage = stored;
@@ -475,6 +489,17 @@ const syncLanguage = (language) => {
   const selected = language.startsWith('ar') ? 'ar' : 'en';
   document.documentElement.lang = selected;
   document.documentElement.dir = selected === 'ar' ? 'rtl' : 'ltr';
+  const metadata = pageMetadata[selected];
+  document.title = metadata.title;
+  for (const [selector, value] of [
+    ['meta[name="description"]', metadata.description],
+    ['meta[property="og:title"]', metadata.title],
+    ['meta[property="og:description"]', metadata.description],
+    ['meta[name="twitter:title"]', metadata.title],
+    ['meta[name="twitter:description"]', metadata.description],
+  ]) {
+    document.querySelector(selector)?.setAttribute('content', value);
+  }
   try {
     localStorage.setItem('masarpro-language', selected);
   } catch { /* Direction switching still works without storage. */ }
