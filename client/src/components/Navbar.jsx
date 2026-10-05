@@ -1,25 +1,14 @@
-import { FileUser,  Menu, Newspaper, Settings, SquareKanban, X,  LogOut} from "lucide-react";
+import { FileUser, Mail, Menu, Settings, SquareKanban, X } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from 'react-i18next';
-import { Link, NavLink, useNavigate } from "react-router";
-import { supabase } from '../lib/supabase'
+import { Link, NavLink } from "react-router";
 import { useAuth } from "./AuthContext";
 
 
 const Navbar = () => {
 
     const [mobileOpen, setMobileOpen] = useState(false);
-    const navigate = useNavigate()
-    const handleSignOut = async () => {
-    const { error } = await supabase.auth.signOut()
-
-    if (error) {
-        console.error(error.message)
-        return
-    }
-      navigate('/login', { replace: true })
-    }
-    const { t  } = useTranslation();
+    const { t, i18n } = useTranslation();
 
 
     
@@ -32,7 +21,7 @@ const Navbar = () => {
 
     
     const {profile, avatarSrc } = useAuth()
-    const ProfileGreeting = () => (
+    const profileGreeting = (
         
         <Link
             to="/settings"
@@ -71,13 +60,15 @@ const Navbar = () => {
             </a>
 
             {/* Desktop menu */}
-            <div className="hidden items-center gap-4 text-sm   text-gray-500 font-bold md:flex">
+            <div className="hidden items-center gap-2 text-sm text-gray-500 font-bold xl:flex">
                 <NavLink to="/resume-builder" className={getLinkClass}>
                 <FileUser />{t('resumeBuilderTitle')} 
                 </NavLink>
+                <NavLink to="/cover-letter" className={getLinkClass}><Mail />{i18n.dir() === 'rtl' ? 'خطاب التقديم' : 'Cover letter'}</NavLink>
                 <NavLink to="/job-tracker" className={getLinkClass} >
                 <SquareKanban /> {t('jobTracker')}
                 </NavLink>
+                
                 {/* <NavLink to="/blog" className={getLinkClass}>
                 <Newspaper />{t('Blog')}
                 </NavLink> */}
@@ -87,14 +78,16 @@ const Navbar = () => {
             </div>
 
             {/* Desktop buttons */}
-            <div className="hidden items-center gap-4 md:flex">
-                <ProfileGreeting />
+            <div className="hidden items-center gap-4 xl:flex">
+                {profileGreeting}
             </div>
 
             {/* Mobile */}
             <button
                 onClick={() => setMobileOpen(true)}
-                className="rounded-lg  p-2 text-[#07133f] md:hidden  hover:text-[#0fae9d]"
+                aria-label={i18n.dir() === 'rtl' ? 'فتح القائمة' : 'Open menu'}
+                aria-expanded={mobileOpen}
+                className="rounded-lg p-2 text-[#07133f] xl:hidden hover:text-[#0fae9d]"
             >
                 <Menu />
             </button>
@@ -102,10 +95,11 @@ const Navbar = () => {
 
             {/* Mobile menu */}
             {mobileOpen && (
-            <div className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-8 bg-white/95 backdrop-blur-md md:hidden">
+            <div className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-8 bg-white/95 backdrop-blur-md xl:hidden">
                 
                 <button
                 onClick={() => setMobileOpen(false)}
+                aria-label={i18n.dir() === 'rtl' ? 'إغلاق القائمة' : 'Close menu'}
                 className="absolute left-6 top-6 text-3xl"
                 >
                 <X className="hover:text-[#0fae9d]"/>
@@ -116,10 +110,12 @@ const Navbar = () => {
                 alt="MasarPro Logo"
                 className="w-54 object-contain absolute right-5 top-0"
                 />
+                </a>
                 <NavLink to="/resume-builder" onClick={() => setMobileOpen(false)} className={getLinkClass}>
                 <FileUser />{t('resumeBuilderTitle')} 
                 </NavLink>
-                </a> 
+
+                <NavLink to="/cover-letter" onClick={() => setMobileOpen(false)} className={getLinkClass}><Mail />{i18n.dir() === 'rtl' ? 'خطاب التقديم' : 'Cover letter'}</NavLink>
                 <NavLink to="/job-tracker" onClick={() => setMobileOpen(false)} className={getLinkClass}>
                 <SquareKanban /> {t('jobTracker')}
                 </NavLink>

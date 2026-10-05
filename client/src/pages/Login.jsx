@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from 'react-i18next';
-import { Link, Navigate} from "react-router";
+import { Link, Navigate, useSearchParams } from "react-router";
 import { supabase } from '../lib/supabase'
 import { User2, Mail} from 'lucide-react'
 
 
 const Login = () => {
 
-    const query = new URLSearchParams(window.location.search)
-    const urlState = query.get('state')
-    const [state, setState] = React.useState(urlState || "login")
+    const [searchParams, setSearchParams] = useSearchParams()
+    const state = searchParams.get('state') === 'register' ? 'register' : 'login'
     const [submitError, setSubmitError] = useState('')
     const [submitting, setSubmitting] = useState(false)
 
@@ -127,7 +126,12 @@ const Login = () => {
                 <button type="submit" disabled={submitting} className="cursor-pointer mt-2 w-full h-11 rounded-full text-white bg-linear-to-r from-[#0fc2b3] to-[#114f83] hover:opacity-90 transition-opacity disabled:cursor-wait disabled:opacity-60">
                     {submitting ? (rtl ? 'جارٍ الإرسال...' : 'Sending...') : state === "login" ? `${t('loginTitle')}` : `${t('signUpTitle')}`}
                 </button>
-                <p className="text-gray-500 text-sm mt-3 mb-11">{state === "login" ? `${t('dontHaveAccount')}` : `${t('alreadyHaveAccount')}`} <button type="button" disabled={submitting} onClick={() => { setState(prev => prev === 'login' ? 'register' : 'login'); setSubmitError('') }} className="text-indigo-500 hover:underline disabled:opacity-60">{t('clickHereLink')}</button></p>
+                <p className="text-gray-500 text-sm mt-3 mb-11">{state === "login" ? `${t('dontHaveAccount')}` : `${t('alreadyHaveAccount')}`} <button type="button" disabled={submitting} onClick={() => {
+                    const next = new URLSearchParams(searchParams)
+                    next.set('state', state === 'login' ? 'register' : 'login')
+                    setSearchParams(next)
+                    setSubmitError('')
+                }} className="text-indigo-500 hover:underline disabled:opacity-60">{t('clickHereLink')}</button></p>
             </form>
             </div>
     )

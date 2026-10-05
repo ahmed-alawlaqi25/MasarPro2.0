@@ -15,12 +15,15 @@ import Builder from './pages/Builder'
 import Confirmemail from './pages/Confirmemail'
 import { AuthProvider } from './components/AuthContext'
 import { JobProvider } from './components/JopContext'
+import PageMetadata from './components/PageMetadata'
+import CoverLetter from './pages/CoverLetter'
 
 
 const App = () => {
 
   return (
     <>
+      <PageMetadata />
     
       <Routes>
         <Route element={<AuthProvider><PublicLayout /></AuthProvider>}>
@@ -45,6 +48,8 @@ const App = () => {
             <Route path="job-tracker/:applicationID" element={<JobApplication />} />
             <Route path="job-tracker" element={<JobTracker />} />
             <Route path="resume-builder" element={<ResumeBuilder/>}/>
+            <Route path="cover-letter" element={<CoverLetter />}/>
+            <Route path="cover-letter/:resumeID" element={<CoverLetter />}/>
             <Route path="blog" element={<Blog />} />
             <Route path="resume-builder/:resumeID" element={<Builder />} />
             <Route path="settings" element={<Settings />} />

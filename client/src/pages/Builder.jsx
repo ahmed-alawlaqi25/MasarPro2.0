@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../components/AuthContext'
 import { useResumeDraft } from '../lib/useResumeDraft'
+import ImproveSummary from '../components/ImproveSummary'
 
 
 
@@ -277,6 +278,7 @@ const inputClass =
           {t('backToResumesLink')}
         </Link>
         <div className="flex flex-wrap justify-end gap-2 lg:col-span-3">
+          <Link to={`/cover-letter/${resumeId}`} className="rounded-lg border border-teal-200 bg-white px-4 py-2 text-sm text-teal-700">{rtl ? 'خطاب التقديم' : 'Cover letter'}</Link>
           <button type="button" onClick={() => void save()} disabled={status === 'saving' || status === 'saved'} className="rounded-lg border border-teal-200 bg-white px-4 py-2 text-sm text-teal-700 hover:bg-teal-50 disabled:opacity-50">
             {rtl ? 'حفظ الآن' : 'Save now'}
           </button>
@@ -288,7 +290,7 @@ const inputClass =
         </div>
 
         <div className="grid min-h-0 flex-1 grid-rows-2 gap-4 lg:grid-cols-5 lg:grid-rows-1 lg:gap-6">
-          <section aria-label={rtl ? 'حقول السيرة الذاتية' : 'Resume fields'} tabIndex={0} className="min-h-0 min-w-0 overflow-y-auto overscroll-contain rounded-lg border border-t-4 border-[#e3edfa] bg-white px-6 py-5 shadow-sm lg:col-span-2">
+          <section aria-label={rtl ? 'حقول السيرة الذاتية' : 'Resume fields'} tabIndex={0} className="min-h-0 min-w-0 overflow-y-auto overscroll-contain rounded-lg border-t-4 border-t-teal-600 bg-white px-6 py-5 shadow-sm lg:col-span-2">
             <div className="mb-4 flex flex-wrap items-center justify-between gap-x-3 gap-y-2" role="group" aria-label="Resume editor controls">
               <div className="flex items-center gap-1.5">
                 <button
@@ -424,6 +426,7 @@ const inputClass =
                   placeholder= {t('summaryPlaceholder')}
                   className={`${inputClass} resize-y`}
                 />
+                <ImproveSummary summary={content.summary} rtl={rtl} onApply={summary => setContent(previous => ({ ...previous, summary }))} />
               </div>
             )}
 

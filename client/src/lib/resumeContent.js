@@ -1,3 +1,5 @@
+import { normalizeCoverLetter } from './coverLetter.js'
+
 const text = value => typeof value === 'string' ? value : ''
 const object = value => value && typeof value === 'object' && !Array.isArray(value) ? value : {}
 
@@ -14,6 +16,7 @@ export function normalizeResumeContent(value) {
     ...source,
     personal: { ...personal },
     summary: text(source.summary),
+    coverLetter: normalizeCoverLetter(source.coverLetter),
     accentColor: /^#[0-9a-f]{6}$/i.test(source.accentColor || '') ? source.accentColor : '#0c1945',
   }
   for (const key of ['fullName', 'professionalTitle', 'email', 'phone', 'location', 'website', 'linkedin']) {

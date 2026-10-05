@@ -1,5 +1,55 @@
 @import "tailwindcss";
 
+#cover-letter-preview {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 8.5in;
+  min-height: 0;
+  aspect-ratio: 8.5 / 11;
+  padding: 8%;
+  font-size: 14px;
+  overflow-wrap: anywhere;
+  font-family: "Inter", "Noto Sans Arabic", sans-serif;
+}
+
+@media print {
+  @page cover-letter {
+    size: letter;
+    margin: 0.7in;
+  }
+  body:has(#cover-letter-preview) *:not(:has(#cover-letter-preview)):not(#cover-letter-preview):not(#cover-letter-preview *) {
+    display: none !important;
+  }
+  body:has(#cover-letter-preview),
+  body:has(#cover-letter-preview) *:has(#cover-letter-preview) {
+    display: block !important;
+    width: auto !important;
+    max-width: none !important;
+    min-height: 0 !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    background: white !important;
+    overflow: visible !important;
+  }
+  #cover-letter-preview {
+    page: cover-letter;
+    width: 100%;
+    max-width: none;
+    aspect-ratio: auto;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+    font-size: 11pt;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+    orphans: 3;
+    widows: 3;
+  }
+  #cover-letter-preview header { break-inside: avoid; break-after: avoid; }
+}
+
 html[lang="en"] {
   font-family: "Inter", "Noto Sans Arabic", sans-serif;
 }

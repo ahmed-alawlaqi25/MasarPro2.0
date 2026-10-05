@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://masarpro.app/sitemap.xml

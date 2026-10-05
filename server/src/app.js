@@ -1,13 +1,15 @@
 const express = require('express');
 const path = require('node:path');
 const { existsSync } = require('node:fs');
+const { createAiRouter } = require('./ai');
 const escapeHtml = value => value.replace(/[&<>"']/g, character => ({
   '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
 })[character]);
 
-function createApp({ env = process.env, fetchEmail = fetch, now = Date.now } = {}) {
+function createApp({ env = process.env, fetchEmail = fetch, fetchAI = fetch, fetchAuth = fetch, now = Date.now } = {}) {
   const app = express();
   app.disable('x-powered-by');
+  app.use('/api/ai', express.json({ limit: '96kb' }), createAiRouter({ env, fetchAI, fetchAuth, now }));
   app.use(express.json({ limit: '24kb' }));
   const attempts = new Map();
   app.post('/api/contact', async (req, res) => {
