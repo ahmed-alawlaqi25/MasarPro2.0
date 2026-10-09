@@ -32,9 +32,9 @@ export default function HeroPreview() {
       </button>)}
     </div>
     <div className="relative">
-      <div className="h-[200px] sm:h-[420px] lg:h-[543px]  rounded-[22px] border-[6px] border-white/80 bg-white shadow-[0_20px_80px_rgba(27,121,171,0.18)] sm:border-[12px]">
+      <div className="overflow-hidden rounded-lg shadow-[0_20px_80px_rgba(27,121,171,0.18)]">
         {slides.map(({ src, label }, index) => <div key={src} id={`hero-panel-${index}`} role="tabpanel" aria-labelledby={`hero-tab-${index}`} hidden={selected !== index} tabIndex={0}>
-          <img src={src} alt={`MasarPro - ${label}`} className="h-full w-full object-contain object-top" />
+          <img src={src} alt={`MasarPro - ${label}`} className="block h-auto w-full rounded-lg" />
         </div>)}
       </div>
     </div>

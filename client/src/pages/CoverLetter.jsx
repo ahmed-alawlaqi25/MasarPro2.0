@@ -48,10 +48,10 @@ function ResumePicker({ userId, rtl }) {
         <p>{rtl ? 'تعذر تحميل السير الذاتية.' : 'Unable to load your CVs.'}</p>
         <button type="button" className="mt-3 underline" onClick={() => { setStatus('loading'); setReload(value => value + 1) }}>{rtl ? 'إعادة المحاولة' : 'Retry'}</button>
       </div>}
-      <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {resumes.map(resume => <Link key={resume.resume_id} to={`/cover-letter/${resume.resume_id}`} className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm transition hover:border-teal-400">
-          <FileText aria-hidden="true" className="mb-5 text-teal-600" />
-          <h2 className="font-semibold">{resume.title}</h2>
+      <div className="mt-6 grid grid-cols-1 gap-3 sm:mt-8 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
+        {resumes.map(resume => <Link key={resume.resume_id} to={`/cover-letter/${resume.resume_id}`} className="min-w-0 rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-teal-400 sm:p-6">
+          <FileText aria-hidden="true" className="mb-3 text-teal-600 sm:mb-5" />
+          <h2 className="font-semibold [overflow-wrap:anywhere]">{resume.title}</h2>
           <p className="mt-2 text-sm text-teal-700">{rtl ? 'فتح خطاب التقديم' : 'Open cover letter'} →</p>
         </Link>)}
       </div>
