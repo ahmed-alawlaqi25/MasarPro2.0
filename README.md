@@ -1,105 +1,126 @@
-MasarPro (مسار برو)
+# MasarPro | مسار برو
 
-MasarPro brings your job applications, CVs, and cover letters together in one place. Track your progress, update your CV, and prepare application documents in Arabic or English.
+Manage your job applications, build your CV, and write cover letters in Arabic or English.
 
-I originally built MasarPro with Flask and Jinja2 as my first full-stack project. This rebuild uses React and Node.js to make the frontend easier to maintain and improve the CV editing experience.
+MasarPro started as my first full-stack project, built with Flask and Jinja2. I rebuilt the application with React and Node.js to make the frontend easier to maintain and improve the CV editing experience.
 
-Features
+## Features
 
-• Track applications on a drag-and-drop board with Wishlist, Applied, Interview, Offer, and Accepted stages.
-• Find applications by company name or job title.
-• Build and edit CVs with automatic saving and a live preview.
-• Import a PDF CV to help fill in your draft.
-• Get CV summary suggestions through Google Gemini.
-• Generate cover letter drafts from your CV and a job description, then edit the wording yourself.
-• Export CVs and cover letters as PDFs through your browser’s print dialog.
-• Switch between Arabic and English, with right-to-left layout support.
-• Manage your account settings and upload a profile photo.
-• Send a message through the contact form, with email delivery through Resend.
+- Track applications on a drag-and-drop board with Wishlist, Applied, Interview, Offer, and Accepted stages.
+- Search applications by company name or job title.
+- Edit CVs with automatic saving and a live preview.
+- Import an existing PDF CV to help fill in your draft.
+- Get CV summary suggestions and cover letter drafts through Google Gemini.
+- Edit cover letters based on your CV and a job description.
+- Export CVs and cover letters through your browser’s Save as PDF option.
+- Switch between Arabic and English, with right-to-left layout support.
+- Manage account settings and upload a profile photo.
+- Send messages through a contact form powered by Resend.
 
-Technology
+## Built with
 
-The frontend uses React, Vite, Tailwind CSS, and i18next. PDF.js reads uploaded CVs.
+| Area | Tools |
+| --- | --- |
+| Frontend | React, Vite, Tailwind CSS |
+| Backend | Node.js, Express |
+| Authentication, database, and storage | Supabase |
+| Writing assistance | Google Gemini |
+| Contact emails | Resend |
+| Translations | i18next |
+| PDF import | PDF.js |
 
-The backend uses Node.js and Express. Supabase provides authentication, database storage, and file storage. Google Gemini provides writing assistance, and Resend delivers contact emails.
+## Project structure
 
-Project structure
+```text
+client/    React frontend
+server/    Express API and backend tests
+docs/      AI writing and contact configuration
+```
 
-client/ contains the React application.
-server/ contains the Express API and backend tests.
-docs/ contains configuration details for AI writing and contact emails.
+The frontend connects to Supabase for authentication and saved data. The backend handles Gemini requests and contact emails, keeping provider API keys outside the frontend.
 
-The frontend connects to Supabase for authentication and saved data. The server handles Gemini requests and contact emails, keeping provider API keys outside the frontend.
+## Getting started
 
-Running locally
+Use Node.js 24 or newer and a configured Supabase project.
 
-Use Node.js 24 or newer. Run the following commands from the project root to install dependencies:
+### 1. Install dependencies
 
+From the project root:
+
+```bash
 cd client
 npm install
 cd ../server
 npm install
+```
 
-Create client/.env with your Supabase connection settings:
+### 2. Configure environment variables
 
+Create `client/.env`:
+
+```dotenv
 VITE_SUPABASE_URL=your_supabase_project_url
 VITE_SUPABASE_PUBLISHABLE_KEY=your_supabase_publishable_key
+```
 
-Create server/.env with your backend settings:
+Create `server/.env`:
 
+```dotenv
 PORT=3001
 SUPABASE_URL=your_supabase_project_url
 SUPABASE_PUBLISHABLE_KEY=your_supabase_publishable_key
 GEMINI_API_KEY=your_gemini_api_key
 RESEND_API_KEY=your_resend_api_key
 MAIN_EMAIL=your_contact_recipient_email
+```
 
-The contact form uses noreply@masarpro.app as the sender. Verify the sender domain in Resend, or update the sender address for your deployment.
+See [AI writing setup](docs/ai-writing.md) and [contact form setup](docs/contact.md) for provider configuration. The contact form uses `noreply@masarpro.app` as the sender. Verify the domain in Resend or update the sender address for your deployment.
 
-See docs/ai-writing.md and docs/contact.md for configuration and deployment details.
+### 3. Start the application
 
-Start the frontend from the project root:
+Run the frontend from the project root:
 
+```bash
 cd client
 npm run dev
+```
 
-Start the backend from the project root in a separate terminal:
+Run the backend from the project root in a separate terminal:
 
+```bash
 cd server
 npm run dev
+```
 
-Open the local URL printed by Vite. During development, Vite forwards /api requests to the backend on port 3001.
+Open the local URL printed by Vite. Vite forwards `/api` requests to the backend on port `3001`.
 
-Production
+## Checks
 
 Build the frontend from the project root:
 
+```bash
 cd client
 npm run build
+```
 
-Start the backend from the project root:
+Run backend tests from the project root:
 
+```bash
 cd server
-npm start
-
-Express serves the built frontend and API together. If you host the frontend separately, forward /api/contact and /api/ai/* requests to the Express server.
-
-Checks
-
-Build the frontend from client/:
-
-npm run build
-
-Run the backend tests from server/:
-
 npm test
+```
 
-The backend tests cover contact form validation and AI request handling, including authentication, usage limits, and provider failures.
+Backend tests cover contact form validation and AI request handling, including authentication, usage limits, and provider failures.
 
-Current limitations
+## Deployment
 
-Account deletion is not yet implemented.
+Build the frontend with `npm run build` in `client/`, then run `npm start` in `server/`. Express serves the built frontend and API together.
 
-Contact and AI rate limits use server memory. Running multiple server instances requires a shared rate limiter.
+For separate frontend hosting, forward `/api/contact` and `/api/ai/*` to the Express server. Deployment details are in the [AI writing](docs/ai-writing.md) and [contact](docs/contact.md) guides.
 
-Review AI-generated text before using your application documents. PDF imports also need a manual check for missing or misplaced details.
+## Current limitations
+
+- Account deletion is not yet implemented.
+- Contact and AI rate limits use server memory. Multiple server instances require a shared rate limiter.
+- Generated text needs review before use.
+- Imported CVs need a manual check for missing or misplaced details.
