@@ -229,7 +229,7 @@ const ResumeBuilder = () => {
       </p>
     )}
 
-    <div className="flex flex-wrap gap-8">
+    <div className="flex flex-wrap justify-center gap-8">
       {renderResumes()}
     </div>
     {query && filteredResumes.length === 0 && <p role="status" className="py-8 text-center text-slate-500">
