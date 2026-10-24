@@ -17,6 +17,9 @@ const copy = {
 };
 
 const Settings = () => {
+  const [editingName, setEditingName] = useState(false);
+  const [editedName, setEditedName] = useState('');
+  const [savingName, setSavingName] = useState(false);
   const { session, profile, loading, updateProfile, avatarSrc } = useAuth();
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
@@ -35,6 +38,7 @@ const Settings = () => {
   const name = profile?.name || session?.user?.user_metadata?.name || text.name;
   const joined = session?.user?.created_at ? new Date(session.user.created_at) : null;
   const joinedLabel = joined && !Number.isNaN(joined.getTime())
+  
     ? new Intl.DateTimeFormat(rtl ? 'ar-SA-u-ca-gregory' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' }).format(joined)
     : text.unknown;
 
@@ -103,6 +107,37 @@ const Settings = () => {
     }
   };
 
+  const saveName = async () => {
+  const nextName = editedName.trim();
+
+  if (!nextName || !session?.user?.id) return;
+
+  setSavingName(true);
+  setError('');
+
+  try {
+    const { data, error } = await supabase
+      .from('profiles')
+      .update({ name: nextName })
+      .eq('user_id', session.user.id)
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    updateProfile(data);
+    setEditingName(false);
+  } catch (err) {
+    setError(err.message || 'Unable to update your name.');
+  } finally {
+    setSavingName(false);
+  }
+  };
+
+  useEffect(() => {
+  setEditedName(name);
+  }, [name]);
+
   return (
     <section className="min-h-[calc(100vh-100px)] bg-[#f4f9fc] px-5 py-7 text-[#0c1945] sm:px-10">
       <header className="mx-auto mb-7 max-w-5xl">
@@ -160,7 +195,58 @@ const Settings = () => {
               </div>
               <p className="mt-3 text-xs text-slate-400">{photoText.hint}</p>
               <p role="status" className="mt-1 text-xs text-teal-700">{avatarBusy ? photoText.saving : avatarStatus}</p>
-              <p dir="auto" className="mt-3 break-words text-base font-bold">{name}</p>
+              {editingName ? (
+                <div className="mt-3 flex w-full max-w-56 flex-col gap-2">
+                  <input
+                    dir="auto"
+                    value={editedName}
+                    onChange={(e) => setEditedName(e.target.value)}
+                    maxLength={80}
+                    autoFocus
+                    className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-800 outline-none focus:border-teal-500"
+                    aria-label="Display name"
+                  />
+
+                  <div className="flex justify-center gap-2">
+                    <button
+                      type="button"
+                      onClick={saveName}
+                      disabled={savingName || !editedName.trim()}
+                      className="rounded-md bg-teal-600 px-3 py-1.5 text-sm text-white disabled:opacity-50"
+                    >
+                      {savingName ? 'Saving...' : 'Save'}
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setEditedName(name);
+                        setEditingName(false);
+                      }}
+                      disabled={savingName}
+                      className="rounded-md border border-slate-300 px-3 py-1.5 text-sm"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+                ) : (
+                <div className="mt-3 flex items-center gap-2">
+                  <p dir="auto" className="break-words text-base font-bold">
+                    {name}
+                  </p>
+
+                  <button
+                    type="button"
+                    onClick={() => setEditingName(true)}
+                    disabled={savingName || signingOut}
+                    aria-label="Edit name"
+                    className="rounded p-1 text-slate-500 hover:bg-slate-100 hover:text-teal-700"
+                  >
+                    <Pencil size={14} />
+                  </button>
+                </div>
+              )}
               <button type="button" disabled={signingOut || avatarBusy} onClick={signOut} className="mt-5 inline-flex w-full max-w-48 items-center justify-center gap-2 rounded-md border border-[#b9c6df] px-4 py-2 text-sm text-[#43577e] transition-colors hover:border-rose-200 hover:bg-rose-50 hover:text-red-600 disabled:cursor-wait disabled:opacity-50">
                 <LogOut size={17} />{signingOut ? text.signingOut : t('signOutButton')}
               </button>
