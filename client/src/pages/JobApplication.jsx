@@ -135,7 +135,7 @@ const JobDetails = ({ applicationID, userId }) => {
                 </dl>
                 <div className="flex min-w-0 items-start gap-3 sm:pl-2">
                   <div className="min-w-0 pt-1">
-                    <div className='flex flex-row justify-between items-center'>
+                    <div className='flex flex-row justify-between gap-8 items-center'>
                       <p className=" text-lg font-bold mr-auto">{job.company_name || 'Company not provided'}</p>
                                               <div aria-hidden="true" className="grid  h-12 w-12 shrink-0 place-items-center rounded-full bg-[#e9f6f8] text-2xl font-bold text-teal-600">
                           <CompanyLogo job={job} />
