@@ -82,6 +82,7 @@ const resources = {
       verifyEmailSubtitle: "You're almost there! We sent an email to",
       verifyEmailInstructions: "Click the link in that email to complete your signup. Don't see it? Check your spam folder.",
       spamFolder: "spam folder.",
+      exists: 'This email is already registered. Please log in instead.',
 
       // App - Tracker
 
@@ -311,6 +312,8 @@ const resources = {
       verifyEmailSubtitle: "أوشكت على الانتهاء! لقد أرسلنا رسالة إلى",
       verifyEmailInstructions: "انقر على الرابط الموجود في تلك الرسالة لإكمال التسجيل. لم تجدها؟ تحقق من مجلد",
       spamFolder: " البريد العشوائي",
+      exists: 'هذا البريد مسجّل مسبقاً. سجّل الدخول بدلاً من ذلك.',
+
 
       //App Tracker
       jobTracker: "متتبع الوظائف",
