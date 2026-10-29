@@ -74,11 +74,14 @@ const Login = () => {
         register: 'تعذر إرسال رابط التسجيل. تحقق من بريدك الإلكتروني وحاول مجدداً.',
         rate: 'طلبات كثيرة. انتظر قليلاً ثم حاول مجدداً.',
         network: 'تعذر الاتصال. تحقق من اتصال الإنترنت وحاول مجدداً.',
+        exists: 'هذا البريد مسجّل مسبقاً. سجّل الدخول بدلاً من ذلك.',
+
     } : {
         login: 'Unable to sign in. Check your email address, or sign up if you are not registered.',
         register: 'Unable to send the sign-up link. Check your email address and try again.',
         rate: 'Too many requests. Please wait before trying again.',
         network: 'Unable to connect. Check your internet connection and try again.',
+        exists: 'This email is already registered. Please log in instead.',
     }
 
     const handleChange = (e) => {
