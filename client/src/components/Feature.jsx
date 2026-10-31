@@ -1,5 +1,5 @@
 import React from 'react'
-import { CalendarDays, FileText, Target } from "lucide-react";
+import { CalendarDays, FileText, Target, WandSparkles } from "lucide-react";
 import { useTranslation } from 'react-i18next';
 
 
@@ -50,10 +50,10 @@ const Feature = () => {
           />
 
           <FeatureCard
-            icon={<CalendarDays className="h-8 w-8 text-[#7c3aed]" />}
+            icon={<WandSparkles className="h-8 w-8 text-[#7c3aed]" />}
             iconBg="bg-[#f1eaff]"
             title={t('interviewOrganizerTitle')}
-            description={t('interviewOrganizerTitle')}
+            description={t('interviewOrganizerDesc')}
           />
         </div>
       </div>

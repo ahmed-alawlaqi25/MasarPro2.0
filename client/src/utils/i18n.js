@@ -50,8 +50,8 @@ const resources = {
       jobTrackingDesc:"Organize applications, statuses, and notes in a single dashboard",
       resumeBuilderTitle:"Resume Builder",
       resumeBuilderDesc:"Create a professional resume tailored for every opportunity",
-      interviewOrganizerTitle:"Interview Organizer",
-      interviewOrganizerDesc:"Schedule appointments, set reminders, and prepare for every interview",
+      interviewOrganizerTitle:"Cover Letter Generator",
+      interviewOrganizerDesc:"Generate tailored cover letters using your CV and job description",
 
       //
 
@@ -280,8 +280,8 @@ const resources = {
       jobTrackingDesc:"نظّم الطلبات، الحالات، والملاحظات في لوحة واحدة.",
       resumeBuilderTitle:"منشئ السيرة الذاتية",
       resumeBuilderDesc:"أنشئ سيرة ذاتية احترافية ومخصّصة لكل فرصة.",
-      interviewOrganizerTitle:"تنظيم المقابلات",
-      interviewOrganizerDesc:"رتّب المواعيد والتذكيرات واستعد لكل مقابلة.",
+      interviewOrganizerTitle:"إنشاء خطابات التقديم",
+      interviewOrganizerDesc:"أنشئ خطابات تقديم مخصصة بناء على سيرتك الذاتية والوصف الوظيفي",
 
       //Testimonials
 
