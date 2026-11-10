@@ -110,7 +110,7 @@ const Login = () => {
     }
 
     if (session) {
-    return <Navigate to="/job-tracker" replace />;
+    return <Navigate to="/resume-builder" replace />;
     }
 
 
