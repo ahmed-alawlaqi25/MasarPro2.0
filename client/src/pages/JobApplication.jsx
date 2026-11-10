@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 const statuses = ['wishlist', 'applied', 'interview', 'offer', 'accepted'];
 const statusLabels = ['Wish List', 'Applied', 'Interview', 'Offer', 'Accepted'];
 const panel = 'rounded-2xl border border-[#e3edfa] bg-white p-4 shadow-[0_4px_20px_rgba(31,52,85,0.025)] sm:p-5';
-const { t } = useTranslation()
+
 const safeUrl = (value) => {
   try {
     const url = new URL(value);
@@ -28,6 +28,7 @@ const JobDetails = ({ applicationID, userId }) => {
   const [pending, setPending] = useState('');
   const [saved, setSaved] = useState(false);
   const busy = useRef(false);
+  const { t } = useTranslation()
 
   useEffect(() => {
     let active = true;
@@ -191,6 +192,7 @@ const JobDetails = ({ applicationID, userId }) => {
 const JobApplication = () => {
   const { applicationID } = useParams();
   const { session, loading } = useAuth();
+  const { t } = useTranslation()
   if (loading) return <p role="status" className="p-8">{t('loadingApplications')}</p>;
   if (!session?.user) return <Link to="/login" className="block p-8">{t('loginMain')}</Link>;
   return <JobDetails key={session.user.id + ':' + applicationID} applicationID={applicationID} userId={session.user.id} />;
