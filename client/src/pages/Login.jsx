@@ -24,23 +24,6 @@ const Login = () => {
     setSubmitting(true)
 
     const isRegistering = state === 'register'
-    const email = formData.email.trim()
-
-    if (isRegistering) {
-    const { data: exists, error: rpcError } = await supabase
-        .rpc('email_exists', { p_email: email })
-
-    if (rpcError) {
-        setSubmitError('network')
-        setSubmitting(false)
-        return
-    }
-    if (exists) {
-        setSubmitError('exists')
-        setSubmitting(false)
-        return
-    }
-    }
 
     try {
     const { error } = await supabase.auth.signInWithOtp({
@@ -55,8 +38,15 @@ const Login = () => {
     })
 
     if (error) {
-        setSubmitError(error.status === 429 ? 'rate' : isRegistering ? 'register' : 'login')
-        return
+        if (error.status === 429) {
+            setSubmitError('rate')
+            return
+        }
+        if (isRegistering) {
+            setSubmitError('register')
+            return
+        }
+        // login: unknown email must look identical to success
     }
 
     window.location.href = '/confirm-email'
