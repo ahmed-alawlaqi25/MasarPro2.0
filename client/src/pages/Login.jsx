@@ -38,15 +38,8 @@ const Login = () => {
     })
 
     if (error) {
-        if (error.status === 429) {
-            setSubmitError('rate')
-            return
-        }
-        if (isRegistering) {
-            setSubmitError('register')
-            return
-        }
-        // login: unknown email must look identical to success
+        setSubmitError(error.status === 429 ? 'rate' : isRegistering ? 'register' : 'login')
+        return
     }
 
     window.location.href = '/confirm-email'
@@ -125,12 +118,12 @@ const Login = () => {
                 {state !== "login" && (
                     <div className="flex items-center mt-6 w-full bg-white border border-gray-300/80 h-12 rounded-full overflow-hidden pl-6 gap-2">
                         <User2 size={16} color='#6B7280' className='mr-2'/>
-                        <input type="text" name="name" placeholder={t('nameLabel')} className="border-none outline-none ring-0" value={formData.name} onChange={handleChange} required />
+                        <input type="text" name="name" maxLength={80} placeholder={t('nameLabel')} className="border-none outline-none ring-0" value={formData.name} onChange={handleChange} required />
                     </div>
                 )}
                 <div className="flex items-center w-full mt-4 bg-white border border-gray-300/80 h-12 rounded-full overflow-hidden pl-6 gap-2">
                     <Mail size={16} color='#6B7280' className='mr-2'/>
-                    <input type="email" name="email" aria-label={t('emailLabel')} aria-describedby={submitError ? 'email-error' : undefined} placeholder={t('emailLabel')} className="border-none outline-none ring-0" value={formData.email} onChange={handleChange} disabled={submitting} required />
+                    <input type="email" name="email" maxLength={254} aria-label={t('emailLabel')} aria-describedby={submitError ? 'email-error' : undefined} placeholder={t('emailLabel')} className="border-none outline-none ring-0" value={formData.email} onChange={handleChange} disabled={submitting} required />
                 </div>
                 {submitError && <p id="email-error" role="alert" dir={rtl ? 'rtl' : 'ltr'} className="mt-2 text-start text-sm leading-relaxed text-red-600">{errorMessages[submitError]}</p>}
                 <button type="submit" disabled={submitting} className="cursor-pointer mt-2 w-full h-11 rounded-full text-white bg-linear-to-r from-[#0fc2b3] to-[#114f83] hover:opacity-90 transition-opacity disabled:cursor-wait disabled:opacity-60">

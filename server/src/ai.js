@@ -42,8 +42,6 @@ function createAiRouter({ env = process.env, fetchAI = fetch, fetchAuth = fetch,
       res.set('Retry-After', active.has(userId) ? '5' : String(Math.ceil((limit.expires - time) / 1000)));
       return res.status(429).json({ code: 'RATE_LIMITED' });
     }
-    limit.count++;
-    limits.set(userId, limit);
     active.add(userId);
     try {
       const instruction = task === 'summary'
@@ -73,6 +71,9 @@ function createAiRouter({ env = process.env, fetchAI = fetch, fetchAuth = fetch,
       if (candidate?.finishReason !== 'STOP' || !text || text.length > (task === 'summary' ? 5000 : 14000)) {
         return res.status(502).json({ code: 'AI_FAILED' });
       }
+      if (!limits.has(userId) && limits.size >= 10000) limits.delete(limits.keys().next().value);
+      limit.count++;
+      limits.set(userId, limit);
       return res.json({ text });
     } catch (error) {
       return res.status(error.name === 'TimeoutError' ? 504 : 502).json({ code: error.name === 'TimeoutError' ? 'AI_TIMEOUT' : 'AI_FAILED' });

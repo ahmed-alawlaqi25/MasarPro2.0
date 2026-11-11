@@ -86,18 +86,21 @@ const ResumeEditor = ({ resumeId, userId }) => {
     label: t('fullNameLabel'),
     placeholder: t('fullNamePlaceholder'),
     autoComplete: 'name',
+    maxLength: 100,
   },
   {
     name: 'professionalTitle', 
     label: t('professionalTitleLabel'),
     placeholder: t('professionalTitlePlaceholder'),
     autoComplete: 'organization-title',
+    maxLength: 120,
   },
   {
     name: 'location',
     label: t('locationLabel'),
     placeholder: 'Riyadh, Saudi Arabia',
     autoComplete: 'address-level2',
+    maxLength: 120,
   },
   {
     name: 'phone',
@@ -105,6 +108,7 @@ const ResumeEditor = ({ resumeId, userId }) => {
     placeholder: '+966 55 555 5555',
     type: 'tel',
     autoComplete: 'tel',
+    maxLength: 40,
   },
   {
     name: 'email',
@@ -112,6 +116,7 @@ const ResumeEditor = ({ resumeId, userId }) => {
     placeholder: 'email@example.com',
     type: 'email',
     autoComplete: 'email',
+    maxLength: 254,
   },
   {
     name: 'website',
@@ -119,12 +124,14 @@ const ResumeEditor = ({ resumeId, userId }) => {
     placeholder: 'https://yourwebsite.com',
     type: 'url',
     autoComplete: 'url',
+    maxLength: 300,
   },
   {
     name: 'linkedin',
     label: t('linkedinLabel'),
     placeholder: 'https://www.linkedin.com/in/yourname',
     type: 'url',
+    maxLength: 300,
   },
 ]
 
@@ -399,6 +406,7 @@ const inputClass =
                     id={field.name}
                     name={field.name}
                     type={field.type || 'text'}
+                    maxLength={field.maxLength}
                     autoComplete={field.autoComplete}
                     placeholder={field.placeholder}
                     value={personal[field.name]}
@@ -418,6 +426,7 @@ const inputClass =
                 <textarea
                   id="professional-summary"
                   rows={8}
+                  maxLength={5000}
                   value={content.summary}
                   onChange={(event) => {
                     const value = event.target.value
@@ -445,7 +454,7 @@ const inputClass =
                       ].map(([field, label]) => (
                         <div key={field}>
                           <label htmlFor={`${job.id}-${field}`} className="mb-1.5 block text-sm font-medium">{label}</label>
-                          <input id={`${job.id}-${field}`} value={job[field]} onChange={(event) => updateExperience(job.id, field, event.target.value)} className={inputClass} />
+                          <input id={`${job.id}-${field}`} maxLength={150} value={job[field]} onChange={(event) => updateExperience(job.id, field, event.target.value)} className={inputClass} />
                         </div>
                       ))}
                       <div>
@@ -464,7 +473,7 @@ const inputClass =
                       )}
                       <div>
                         <label htmlFor={`${job.id}-highlights`} className="mb-1.5 block text-sm font-medium">{t('responsibilitiesLabel')}</label>
-                        <textarea id={`${job.id}-highlights`} rows={5} value={job.highlights.join('\n')} onChange={(event) => updateExperience(job.id, 'highlights', event.target.value.split('\n'))} placeholder={t('responsibilitiesHelpText')} className={`${inputClass} resize-y`} />
+                        <textarea id={`${job.id}-highlights`} rows={5} maxLength={3000} value={job.highlights.join('\n')} onChange={(event) => updateExperience(job.id, 'highlights', event.target.value.split('\n'))} placeholder={t('responsibilitiesHelpText')} className={`${inputClass} resize-y`} />
                       </div>
                       <button type="button" onClick={() => removeExperience(job.id)} className="text-sm text-red-600 hover:text-red-800">{t('removeExperienceButton')} {index + 1}</button>
                     </fieldset>
@@ -478,8 +487,8 @@ const inputClass =
               const section = education ? 'education' : 'projects'
               const label = education ? t('educationOrTrainingLabel') : t('projectLabel')
               const fields = education
-                ? [['qualification', t('qualificationLabel'), 'text'], ['institution', t('institutionLabel'), 'text'], ['location', t('locationLabel'), 'text']]
-                : [['name', t('projectNameLabel'), 'text'], ['role', t('yourRoleLabel'), 'text'], ['url', t('projectLinkLabel'), 'url']]
+                ? [['qualification', t('qualificationLabel'), 'text', 150], ['institution', t('institutionLabel'), 'text', 150], ['location', t('locationLabel'), 'text', 150]]
+                : [['name', t('projectNameLabel'), 'text', 150], ['role', t('yourRoleLabel'), 'text', 150], ['url', t('projectLinkLabel'), 'url', 300]]
 
               return (
                 <div className="mt-6">
@@ -489,10 +498,10 @@ const inputClass =
                     {content[section].map((entry, index) => (
                       <fieldset key={entry.id} className="min-w-0 space-y-4 rounded-xl border border-slate-200 p-4">
                         <legend className="px-1 text-sm font-semibold">{education ? t('educationTrainingSection') : t('projectLabel')} {index + 1}</legend>
-                        {fields.map(([field, title, type]) => (
+                        {fields.map(([field, title, type, maxLength]) => (
                           <div key={field}>
                             <label htmlFor={`${entry.id}-${field}`} className="mb-1.5 block text-sm font-medium">{title}</label>
-                            <input id={`${entry.id}-${field}`} type={type} value={entry[field]} onChange={(event) => updateEntry(section, entry.id, field, event.target.value)} className={inputClass} />
+                            <input id={`${entry.id}-${field}`} type={type} maxLength={maxLength} value={entry[field]} onChange={(event) => updateEntry(section, entry.id, field, event.target.value)} className={inputClass} />
                           </div>
                         ))}
                         <div>
@@ -511,7 +520,7 @@ const inputClass =
                         )}
                         <div>
                           <label htmlFor={`${entry.id}-description`} className="mb-1.5 block text-sm font-medium">{education ? t('detailsLabel') : t('descriptionAndContributionLabel')}</label>
-                          <textarea id={`${entry.id}-description`} rows={4} value={entry.description} onChange={(event) => updateEntry(section, entry.id, 'description', event.target.value)} className={`${inputClass} resize-y`} />
+                          <textarea id={`${entry.id}-description`} rows={4} maxLength={2500} value={entry.description} onChange={(event) => updateEntry(section, entry.id, 'description', event.target.value)} className={`${inputClass} resize-y`} />
                         </div>
                         <button type="button" onClick={() => removeEntry(section, entry.id)} className="text-sm text-red-600 hover:text-red-800">{t('removeButton')} {label} {index + 1}</button>
                       </fieldset>
@@ -531,11 +540,11 @@ const inputClass =
                       <legend className="px-1 text-sm font-semibold">{t('skillGroupLabel')} {index + 1}</legend>
                       <div>
                         <label htmlFor={`${group.id}-category`} className="mb-1.5 block text-sm font-medium">{t('categoryLabel')} ( {t('optionalLabel')} )</label>
-                        <input id={`${group.id}-category`} value={group.category} onChange={(event) => updateEntry('skills', group.id, 'category', event.target.value)} placeholder={t('programmingBackendExample')} className={inputClass} />
+                        <input id={`${group.id}-category`} maxLength={100} value={group.category} onChange={(event) => updateEntry('skills', group.id, 'category', event.target.value)} placeholder={t('programmingBackendExample')} className={inputClass} />
                       </div>
                       <div>
                         <label htmlFor={`${group.id}-items`} className="mb-1.5 block text-sm font-medium">{t('skillsSectionTitle')}</label>
-                        <textarea id={`${group.id}-items`} rows={3} value={group.items} onChange={(event) => updateEntry('skills', group.id, 'items', event.target.value)} placeholder="JavaScript, Python, Node.js, Express" className={`${inputClass} resize-y`} />
+                        <textarea id={`${group.id}-items`} rows={3} maxLength={1000} value={group.items} onChange={(event) => updateEntry('skills', group.id, 'items', event.target.value)} placeholder="JavaScript, Python, Node.js, Express" className={`${inputClass} resize-y`} />
                       </div>
                       <button type="button" onClick={() => removeEntry('skills', group.id)} className="text-sm text-red-600 hover:text-red-800">{t('removeSkillGroupButton')} {index + 1}</button>
                     </fieldset>

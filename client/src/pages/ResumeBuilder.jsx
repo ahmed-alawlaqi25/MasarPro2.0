@@ -83,7 +83,7 @@ const ResumeBuilder = () => {
       .from('resumes')
       .insert({
         user_id: session.user.id,
-        title: title.trim(),
+        title: title.trim().slice(0, 120),
         content: {},
       })
       .select('resume_id')
@@ -200,6 +200,7 @@ const ResumeBuilder = () => {
               <h2 className='text-xl font-bold mb-4'>{t('createResumeButton')}</h2>
               <input
                   type="text"
+                  maxLength={120}
                   placeholder= {t('enterResumeTitlePlaceholder')}
                   value={title}
                   onChange={(event) => setTitle(event.target.value)}

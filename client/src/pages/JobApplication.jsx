@@ -170,9 +170,9 @@ const JobDetails = ({ applicationID, userId }) => {
               <span className="text-[#596b94]">{t('noResumeAttached')}</span>
             </div>
 
-            <form className="mt-7 flex flex-1 flex-col" onSubmit={(event) => { event.preventDefault(); updateJob({ notes }, 'notes'); }}>
+            <form className="mt-7 flex flex-1 flex-col" onSubmit={(event) => { event.preventDefault(); updateJob({ notes: notes.slice(0, 5000) }, 'notes'); }}>
               <label htmlFor="application-notes" className="mb-4 flex items-center gap-3 text-lg font-bold"><StickyNote size={23} className="text-teal-500" />{t('notesTitle')}</label>
-              <textarea id="application-notes" value={notes} disabled={Boolean(pending)} onChange={(event) => { setNotes(event.target.value); setSaved(false); }} placeholder={t('addNotesPlaceholder')} rows={5} className="min-h-32 w-full flex-1 resize-y rounded-lg border border-[#dce7f7] bg-[#fafcff] p-4 text-sm leading-6 outline-none focus:border-teal-400 focus:ring-2 focus:ring-teal-100 disabled:opacity-60" />
+              <textarea id="application-notes" maxLength={5000} value={notes} disabled={Boolean(pending)} onChange={(event) => { setNotes(event.target.value); setSaved(false); }} placeholder={t('addNotesPlaceholder')} rows={5} className="min-h-32 w-full flex-1 resize-y rounded-lg border border-[#dce7f7] bg-[#fafcff] p-4 text-sm leading-6 outline-none focus:border-teal-400 focus:ring-2 focus:ring-teal-100 disabled:opacity-60" />
               <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
                 <span role="status" className="text-xs text-teal-700">{saved ? `${t('notesSaved')}` : dirty ? `${t('unsavedChanges')}` : ''}</span>
                 <button type="submit" disabled={!dirty || Boolean(pending)} className="inline-flex items-center gap-2 rounded-lg bg-teal-600 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-700 disabled:cursor-not-allowed disabled:opacity-40"><Check size={16} />{pending === `${t('notesTitle')}` ? `${t('savingNotes')}` : `${t('saveNotesButton')}`}</button>

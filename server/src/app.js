@@ -1,6 +1,9 @@
 const express = require('express');
 const path = require('node:path');
 const { existsSync } = require('node:fs');
+const helmet = require('helmet');
+const app = express();
+app.use(helmet());
 const { createAiRouter } = require('./ai');
 const escapeHtml = value => value.replace(/[&<>"']/g, character => ({
   '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
@@ -9,6 +12,7 @@ const escapeHtml = value => value.replace(/[&<>"']/g, character => ({
 function createApp({ env = process.env, fetchEmail = fetch, fetchAI = fetch, fetchAuth = fetch, now = Date.now } = {}) {
   const app = express();
   app.disable('x-powered-by');
+  app.set('trust proxy', 1);
   app.use('/api/ai', express.json({ limit: '96kb' }), createAiRouter({ env, fetchAI, fetchAuth, now }));
   app.use(express.json({ limit: '24kb' }));
   const attempts = new Map();
@@ -29,8 +33,6 @@ function createApp({ env = process.env, fetchEmail = fetch, fetchAI = fetch, fet
       res.set('Retry-After', String(Math.ceil((attempt.expires - time) / 1000)));
       return res.status(429).json({ code: 'RATE_LIMITED' });
     }
-    attempt.count += 1;
-    attempts.set(req.ip, attempt);
     try {
       const response = await fetchEmail('https://api.resend.com/emails', {
         method: 'POST',
@@ -44,6 +46,9 @@ function createApp({ env = process.env, fetchEmail = fetch, fetchAI = fetch, fet
         }),
       });
       if (!response.ok) return res.status(502).json({ code: 'SEND_FAILED' });
+      if (!attempts.has(req.ip) && attempts.size >= 10000) attempts.delete(attempts.keys().next().value);
+      attempt.count += 1;
+      attempts.set(req.ip, attempt);
       return res.json({ success: true });
     } catch { return res.status(502).json({ code: 'SEND_FAILED' }); }
   });

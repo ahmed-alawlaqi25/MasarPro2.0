@@ -42,8 +42,22 @@ const handleSubmit = async (event) => {
     return;
   }
 
+  const allowedStatuses = ["wishlist", "applied", "interview", "offer", "accepted"];
+  const companyName = formData.company_name.trim().slice(0, 120);
+  const jobTitle = formData.job_title.trim().slice(0, 150);
+  if (!companyName || !jobTitle || !allowedStatuses.includes(formData.status)) {
+    alert("Please enter valid job application details.");
+    return;
+  }
+
   const { error } = await supabase.from("jobs").insert({
-    ...formData,
+    company_name: companyName,
+    job_title: jobTitle,
+    location: formData.location.trim().slice(0, 120),
+    status: formData.status,
+    created_at: formData.created_at,
+    job_url: formData.job_url.trim().slice(0, 500),
+    notes: formData.notes.trim().slice(0, 5000),
     user_id: user.id,
   });
 
@@ -100,6 +114,7 @@ const handleSubmit = async (event) => {
               id="company_name"
               name="company_name"
               type="text"
+              maxLength={120}
               value={formData.company_name}
               onChange={handleChange}
               placeholder={t("companyNamePlaceholder")}
@@ -120,6 +135,7 @@ const handleSubmit = async (event) => {
               id="job_title"
               name="job_title"
               type="text"
+              maxLength={150}
               value={formData.job_title}
               onChange={handleChange}
               placeholder={t('jobTitlePlaceholder')}
@@ -140,6 +156,7 @@ const handleSubmit = async (event) => {
               id="location"
               name="location"
               type="text"
+              maxLength={120}
               value={formData.location}
               onChange={handleChange}
               placeholder={t('locationPlaceholder')}
@@ -201,6 +218,7 @@ const handleSubmit = async (event) => {
               id="job_url"
               name="job_url"
               type="url"
+              maxLength={500}
               value={formData.job_url}
               onChange={handleChange}
               placeholder="https://example.com/job"
@@ -219,6 +237,7 @@ const handleSubmit = async (event) => {
             <textarea
               id="notes"
               name="notes"
+              maxLength={5000}
               value={formData.notes}
               onChange={handleChange}
               placeholder={t('addNotesLabel')}
