@@ -69,3 +69,33 @@ alter table public.jobs
   on delete set null (resume_id);
 
 create index jobs_resume_id_idx on public.jobs (resume_id);
+
+-- FUNCTION: delete_user
+-- Allows an authenticated user to permanently delete their own account.
+-- Deleting the user from auth.users cascades to profiles, jobs, and resumes.
+create or replace function public.delete_user()
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_user_id uuid;
+begin
+  v_user_id := auth.uid();
+  if v_user_id is null then
+    raise exception 'Not authenticated';
+  end if;
+
+  -- Remove avatar files from storage if present
+  delete from storage.objects
+  where bucket_id = 'user_avatar'
+    and (name like v_user_id || '/%' or owner = v_user_id);
+
+  -- Delete from auth.users (cascades to profiles, jobs, resumes)
+  delete from auth.users where id = v_user_id;
+end;
+$$;
+
+revoke all on function public.delete_user() from public;
+grant execute on function public.delete_user() to authenticated;

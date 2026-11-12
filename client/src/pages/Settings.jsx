@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Mail, CalendarDays, LogOut, TriangleAlert, Trash2, Languages, Pencil, Upload, LoaderCircle } from 'lucide-react';
 import { useAuth } from '../components/AuthContext';
 import { supabase } from '../lib/supabase';
-import { changeAvatar, MAX_AVATAR_SIZE } from '../lib/avatar';
+import { changeAvatar, MAX_AVATAR_SIZE, AVATAR_BUCKET, avatarPath } from '../lib/avatar';
 
 const avatarCopy = {
   en: { edit: 'Edit', upload: 'Upload photo', remove: 'Remove photo', hint: 'JPEG or PNG, up to 1 MB.', saving: 'Saving photo...', saved: 'Profile photo updated.', removed: 'Profile photo removed.', invalid: 'Choose a valid JPEG or PNG image up to 1 MB.', failed: 'Unable to update your photo. Please try again.' },
@@ -24,6 +24,8 @@ const Settings = () => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const [signingOut, setSigningOut] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deletingAccount, setDeletingAccount] = useState(false);
   const [error, setError] = useState('');
   const [avatarBusy, setAvatarBusy] = useState(false);
   const [avatarMenuOpen, setAvatarMenuOpen] = useState(false);
@@ -62,6 +64,17 @@ const Settings = () => {
       document.removeEventListener('keydown', escape);
     };
   }, [avatarMenuOpen]);
+
+  useEffect(() => {
+    if (!showDeleteModal) return;
+    const handleEscape = (event) => {
+      if (event.key === 'Escape' && !deletingAccount) {
+        setShowDeleteModal(false);
+      }
+    };
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [showDeleteModal, deletingAccount]);
 
   const saveAvatar = async (file) => {
     if (avatarLock.current || !session?.user?.id) return;
@@ -132,6 +145,30 @@ const Settings = () => {
   } finally {
     setSavingName(false);
   }
+  };
+
+  const deleteAccount = async () => {
+    if (deletingAccount || !session?.user?.id) return;
+    setDeletingAccount(true);
+    setError('');
+    try {
+      if (profile?.avatar_url) {
+        const path = avatarPath(supabase, profile.avatar_url, session.user.id);
+        if (path) {
+          await supabase.storage.from(AVATAR_BUCKET).remove([path]).catch(() => {});
+        }
+      }
+
+      const { error: rpcError } = await supabase.rpc('delete_user');
+      if (rpcError) throw rpcError;
+
+      await supabase.auth.signOut().catch(() => {});
+      navigate('/login', { replace: true });
+    } catch (err) {
+      setError(err.message || (rtl ? 'تعذر حذف الحساب. يرجى المحاولة لاحقاً.' : 'Unable to delete account. Please try again.'));
+      setDeletingAccount(false);
+      setShowDeleteModal(false);
+    }
   };
 
   useEffect(() => {
@@ -260,12 +297,75 @@ const Settings = () => {
             <p className="mt-2 text-sm text-[#7a88a7]">{t('deleteAccountWarning')}</p>
           </div>
           <div className="shrink-0">
-            <button type="button" disabled aria-describedby="delete-unavailable" className="inline-flex cursor-not-allowed items-center justify-center gap-2 rounded-md border border-red-200 bg-red-50/30 px-4 py-2 text-sm text-red-400"><Trash2 size={17} />{t('deleteAccountButton')}</button>
-            <p id="delete-unavailable" className="mt-2 text-xs text-slate-400">{t('deleteAccountUnavailable')}</p>
+            <button
+              type="button"
+              disabled={deletingAccount || signingOut}
+              onClick={() => setShowDeleteModal(true)}
+              className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-md border border-red-300 bg-red-50 px-4 py-2 text-sm font-semibold text-red-600 transition-colors hover:bg-red-100 hover:border-red-400 focus-visible:outline-2 focus-visible:outline-red-500 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              <Trash2 size={17} />{t('deleteAccountButton')}
+            </button>
           </div>
         </section>
         {error && <p role="alert" className="rounded-lg bg-red-50 p-3 text-sm text-red-700">{error}</p>}
       </div>
+
+      {showDeleteModal && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="modal-delete-title"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs"
+          onClick={() => !deletingAccount && setShowDeleteModal(false)}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl"
+          >
+            <div className="flex items-center gap-3 text-red-600">
+              <div className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-red-100">
+                <TriangleAlert size={22} aria-hidden="true" />
+              </div>
+              <h3 id="modal-delete-title" className="text-lg font-bold text-slate-900">
+                {t('confirmDeleteTitle')}
+              </h3>
+            </div>
+
+            <p className="mt-4 text-sm leading-relaxed text-slate-600">
+              {t('confirmDeleteDescription')}
+            </p>
+
+            <div className="mt-6 flex justify-end gap-3">
+              <button
+                type="button"
+                disabled={deletingAccount}
+                onClick={() => setShowDeleteModal(false)}
+                className="cursor-pointer rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 disabled:opacity-50"
+              >
+                {t('cancelButton')}
+              </button>
+              <button
+                type="button"
+                disabled={deletingAccount}
+                onClick={deleteAccount}
+                className="inline-flex cursor-pointer items-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-700 disabled:cursor-wait disabled:opacity-50"
+              >
+                {deletingAccount ? (
+                  <>
+                    <LoaderCircle size={16} className="animate-spin" aria-hidden="true" />
+                    {t('deletingAccount')}
+                  </>
+                ) : (
+                  <>
+                    <Trash2 size={16} aria-hidden="true" />
+                    {t('confirmDeleteButton')}
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 };

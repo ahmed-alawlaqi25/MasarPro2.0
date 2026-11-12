@@ -231,6 +231,11 @@ const resources = {
       deleteAccountWarning: "Deleting your account will permanently delete your data.",
       deleteAccountButton: "Delete Account",
       deleteAccountUnavailable: "Account deletion is currently unavailable.",
+      confirmDeleteTitle: "Delete Account",
+      confirmDeleteDescription: "Are you sure you want to delete your account? This action cannot be undone. All your resumes, job applications, and personal data will be permanently deleted.",
+      confirmDeleteButton: "Yes, delete my account",
+      deletingAccount: "Deleting account...",
+      cancelButton: "Cancel",
       signOutButton: "Sign out",
     }
   },
@@ -458,6 +463,11 @@ const resources = {
       deleteAccountWarning: "سيؤدي حذف الحساب إلى حذف بياناتك بشكل نهائي.",
       deleteAccountButton: "حذف الحساب",
       deleteAccountUnavailable: "حذف الحساب غير متاح حالياً",
+      confirmDeleteTitle: "حذف الحساب",
+      confirmDeleteDescription: "هل أنت متأكد من رغبتك في حذف حسابك؟ لا يمكن التراجع عن هذا الإجراء. سيتم حذف جميع سيرك الذاتية وطلبات التوظيف وبياناتك الشخصية بشكل نهائي.",
+      confirmDeleteButton: "نعم، احذف حسابي",
+      deletingAccount: "جارٍ حذف الحساب...",
+      cancelButton: "إلغاء",
       signOutButton: "تسجيل الخروج",
       
     }
