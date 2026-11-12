@@ -219,7 +219,7 @@ const ResumeBuilder = () => {
               >
                 {creating ? `${t('creatingResumeLoading')}` : `${t('createResumeButton')}`}
               </button>
-              <XIcon className={`absolute top-4  text-slate-400 hover:text-slate-600 cursor-pointer transition-colors ${document.documentElement.dir === "ltr"? "right-4": "left-4"}`} onClick={() => {setShowCreateResume(false); setTitle("")}}/>
+              <XIcon className={`absolute top-4 text-slate-400 hover:text-slate-600 cursor-pointer transition-colors ${i18n.dir() !== "rtl" ? "right-4" : "left-4"}`} onClick={() => {setShowCreateResume(false); setTitle("")}}/>
             </div>
         </form>
       )}

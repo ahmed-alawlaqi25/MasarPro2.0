@@ -5,11 +5,11 @@ import { useTranslation } from 'react-i18next';
 
 const Feature = () => {
 
-    const {t} = useTranslation();
+    const {t, i18n} = useTranslation();
 
     return (
     <section id='features'
-        dir="rtl"
+        dir={i18n.dir()}
         className="relative overflow-hidden bg-[#f4f9fc] px-4 py-8"
     >
       {/* Background glow */}

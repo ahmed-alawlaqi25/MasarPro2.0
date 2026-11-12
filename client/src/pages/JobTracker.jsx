@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 
 const JobTracker = () => {
 
-  const {t} = useTranslation()
+  const {t, i18n} = useTranslation()
 
   const { jobs, setJobs, loading, error } = useJob();
 
@@ -46,7 +46,7 @@ const JobTracker = () => {
           <Card icon = {<FileText />}count={getJobCount("offer")} text={t('offerStatus')} bgColor="violet" textColor="violet"/>
           <Card icon = {<BadgeCheck /> }count={getJobCount("accepted")} text={t('acceptStatus')} bgColor="green" textColor="green" />
           </div>
-          <div className={ document.documentElement.dir === "rtl"? "md:mr-auto relative flex mt-2 w-full md:w-80" : "md:ml-auto relative flex mt-2 w-full md:w-80"}>
+          <div className={ i18n.dir() === "rtl"? "md:mr-auto relative flex mt-2 w-full md:w-80" : "md:ml-auto relative flex mt-2 w-full md:w-80"}>
             <Search size={18} aria-hidden="true" className="pointer-events-none absolute mr-2 ml-2 top-1/2 -translate-y-1/2 text-slate-400" />
             <input
               type="search"

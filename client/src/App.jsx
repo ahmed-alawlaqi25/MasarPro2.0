@@ -1,5 +1,5 @@
 import Home from './pages/Home'
-import { Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import Login from './pages/Login'
 import Callback from './pages/Callback'
 import Contact from './pages/Contact'
@@ -9,8 +9,6 @@ import ResumeBuilder from './pages/ResumeBuilder'
 import Settings from './pages/Settings'
 import Dashboard from './pages/Dashboard'
 import PublicLayout from './pages/PublicLayout'
-import Preview from './pages/Preview'
-import Blog from './pages/Blog'
 import Builder from './pages/Builder'
 import Confirmemail from './pages/Confirmemail'
 import { AuthProvider } from './components/AuthContext'
@@ -32,7 +30,6 @@ const App = () => {
           <Route path="login" element={<Login />} />
           <Route path="confirm-email" element={<Confirmemail />} />
           <Route path="contact" element={<Contact />} />
-          <Route path="preview/:resumeLink" element={<Preview />}/>
           <Route path="callback" element={<Callback />} />
         </Route>
 
@@ -49,11 +46,11 @@ const App = () => {
             <Route path="resume-builder" element={<ResumeBuilder/>}/>
             <Route path="cover-letter" element={<CoverLetter />}/>
             <Route path="cover-letter/:resumeID" element={<CoverLetter />}/>
-            <Route path="blog" element={<Blog />} />
             <Route path="resume-builder/:resumeID" element={<Builder />} />
             <Route path="settings" element={<Settings />} />
           </Route>
 
+          <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </AuthProvider>
     

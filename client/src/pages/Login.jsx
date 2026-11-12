@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useTranslation } from 'react-i18next';
-import { Link, Navigate, useSearchParams } from "react-router";
+import { Link, Navigate, useSearchParams } from "react-router-dom";
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../components/AuthContext'
 import { User2, Mail} from 'lucide-react'

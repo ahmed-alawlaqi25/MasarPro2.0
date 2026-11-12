@@ -1,7 +1,7 @@
 import { FileUser, Mail, Menu, Settings, SquareKanban, X } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from 'react-i18next';
-import { Link, NavLink } from "react-router";
+import { Link, NavLink } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 
 
@@ -51,13 +51,13 @@ const Navbar = () => {
         <nav className="relative z-50 w-full bg-white border-b  border-slate-200">
             <div className="mx-auto flex  items-center justify-between px-5  md:px-10 lg:px-16">
             {/* Logo */}
-            <a href="/" className="flex items-center">
+            <Link to="/" className="flex items-center">
                 <img
                 src="/logoNoText.png"
                 alt="MasarPro Logo"
                 className="w-54 object-contain"
                 />
-            </a>
+            </Link>
 
             {/* Desktop menu */}
             <div className="hidden items-center gap-2 text-sm text-gray-500 font-bold xl:flex">
@@ -104,13 +104,13 @@ const Navbar = () => {
                 >
                 <X className="hover:text-[#0fae9d]"/>
                 </button>
-                                <a href="/" className="flex items-center">
+                                <Link to="/" onClick={() => setMobileOpen(false)} className="flex items-center">
                 <img
                 src="/logoNoText.png"
                 alt="MasarPro Logo"
                 className="w-54 object-contain absolute right-5 top-0"
                 />
-                </a>
+                </Link>
                 <NavLink to="/resume-builder" onClick={() => setMobileOpen(false)} className={getLinkClass}>
                 <FileUser />{t('resumeBuilderTitle')} 
                 </NavLink>

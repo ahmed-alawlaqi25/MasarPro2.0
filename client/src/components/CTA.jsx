@@ -1,13 +1,13 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 
 
 
 const CTA = () => {
 
-    const {t} = useTranslation();
+    const {t, i18n} = useTranslation();
   return (
         <div className="w-full max-w-5xl  mx-auto px-6 sm:px-10">
         <div className="relative  overflow-hidden rounded-3xl border border-slate-200 bg-white px-6 py-12 sm:px-10 md:px-14">
@@ -33,7 +33,7 @@ const CTA = () => {
         <Link to="/login?state=register" className="flex items-center gap-3 rounded-lg bg-linear-to-l from-[#0874c9] to-[#0eb0b2] px-7 py-3 font-medium text-white transition hover:opacity-90">
                     
         <span>{t('startNow')}</span>
-        {document.documentElement.dir == "rtl" ? <ChevronLeft /> : <ChevronRight />}
+        {i18n.dir() === "rtl" ? <ChevronLeft /> : <ChevronRight />}
         
         <svg
         xmlns="http://www.w3.org/2000/svg"

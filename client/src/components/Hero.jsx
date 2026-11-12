@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ChevronLeft, ChevronRight, Feather, Languages, Menu, MoveDownLeft, X,} from "lucide-react";
-import { Link, NavLink } from "react-router";
+import { Link } from "react-router-dom";
 import HeroPreview from './HeroPreview';
 
 
@@ -10,16 +10,11 @@ const Hero = () => {
     const [mobileOpen, setMobileOpen] = useState(false);
 
     const { t, i18n } = useTranslation();
+    const isRtl = i18n.dir() === "rtl";
 
       const changeLanguage = () => {
-      const newLanguage = i18n.language === "ar" ? "en" : "ar";
-
+      const newLanguage = isRtl ? "en" : "ar";
       i18n.changeLanguage(newLanguage);
-
-      document.documentElement.dir =
-        newLanguage === "ar" ? "rtl" : "ltr";
-
-      document.documentElement.lang = newLanguage;
      };
 
      
@@ -31,28 +26,28 @@ const Hero = () => {
         <div className="mx-auto flex max-w-[1450px] items-center justify-between px-5 py-4 md:px-10 lg:px-16">
 
           {/* Logo */}
-          <a href="/" className="flex items-center">
+          <Link to="/" className="flex items-center">
             <img
               src="/logoNoText.png"
               alt="MasarPro Logo"
               className="w-[170px] object-contain"
             />
-          </a>
+          </Link>
 
           {/* Desktop menu */}
           <div className="hidden items-center gap-9 text-sm font-medium md:flex">
-            <a href="/" className="rounded-full bg-[#e8f7f5] px-4 py-1.5 text-sm font-medium text-[#0b9f91]">
+            <Link to="/" className="rounded-full bg-[#e8f7f5] px-4 py-1.5 text-sm font-medium text-[#0b9f91]">
               {t('main')}
-            </a>
-            <a href="/#features" className="transition hover:text-[#0fae9d]">
+            </Link>
+            <a href="#features" className="transition hover:text-[#0fae9d]">
               {t('feature')}
             </a>
-            <a href="/contact" className="transition hover:text-[#0fae9d]">
+            <Link to="/contact" className="transition hover:text-[#0fae9d]">
               {t('contact')}
-            </a>
+            </Link>
              <button onClick={changeLanguage} className="flex items-center text-[#050040] hover:text-[#0fc2b3] transition cursor-pointer">
                 <Languages />
-                <span>{i18n.language === "ar" ? "EN" : "AR"}</span>
+                <span>{isRtl ? "EN" : "AR"}</span>
               </button>
           </div>
 
@@ -92,12 +87,12 @@ const Hero = () => {
               <X className="hover:text-[#0fae9d]"/>
             </button>
 
-            <a className="rounded-full bg-[#e8f7f5] px-8 py-2 text-sm font-medium text-[#0b9f91]" href="/">{t('main')}</a>
-            <a className="hover:text-[#0fae9d]" href="#features">{t('feature')}</a>
-            <a className="hover:text-[#0fae9d]" href="/contact">{t('contact')}</a>
+            <Link onClick={() => setMobileOpen(false)} className="rounded-full bg-[#e8f7f5] px-8 py-2 text-sm font-medium text-[#0b9f91]" to="/">{t('main')}</Link>
+            <a onClick={() => setMobileOpen(false)} className="hover:text-[#0fae9d]" href="#features">{t('feature')}</a>
+            <Link onClick={() => setMobileOpen(false)} className="hover:text-[#0fae9d]" to="/contact">{t('contact')}</Link>
               <button onClick={changeLanguage} className="flex items-center text-[#050040] hover:text-[#0fc2b3] transition cursor-pointer">
                 <Languages />
-                <span>{i18n.language === "ar" ? "EN" : "AR"}</span>
+                <span>{isRtl ? "EN" : "AR"}</span>
               </button>
             <Link to="/login?state=login" className="rounded-lg border border-[#0b86c6] px-10 py-2 font-medium transition hover:bg-sky-50">
               {t('loginMain')}
@@ -131,7 +126,7 @@ const Hero = () => {
           <Link to="/login?state=register" className="flex items-center gap-3 rounded-xl bg-linear-to-l from-[#0574ca] to-[#0bafa9] px-8 py-3.5 font-semibold text-white shadow-lg shadow-cyan-100 transition hover:-translate-y-0.5">
             
            {t("startNow")}
-           {i18n.language === "ar" ? <ChevronLeft /> : <ChevronRight />}
+           {isRtl ? <ChevronLeft /> : <ChevronRight />}
           </Link>
 
           <a href="#features" className="flex items-center gap-3 rounded-xl border border-[#82bddd] bg-white px-8 py-3.5 font-semibold text-[#13214e] transition hover:bg-sky-50">

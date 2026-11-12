@@ -53,7 +53,7 @@ const JobDetails = ({ applicationID, userId }) => {
   const [pending, setPending] = useState('');
   const [saved, setSaved] = useState(false);
   const busy = useRef(false);
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
 
   useEffect(() => {
     let active = true;
@@ -133,7 +133,7 @@ const JobDetails = ({ applicationID, userId }) => {
   return (
     <section className="bg-[#f4f9fc] px-4 py-6 text-[#0c1945] sm:px-8 lg:py-8">
       <div className="mx-auto max-w-[1280px] rounded-3xl border border-[#e3edfa] bg-white/85 p-4 shadow-[0_8px_32px_rgba(31,52,85,0.035)] sm:p-5">
-        <Link to="/job-tracker" className="mb-5 inline-flex items-center gap-2 text-sm text-slate-500 hover:text-teal-700">{document.documentElement.dir == "ltr"? <ArrowLeft size={16} />: <ArrowRight size={16} />}{t('backToJobTracker')}</Link>
+        <Link to="/job-tracker" className="mb-5 inline-flex items-center gap-2 text-sm text-slate-500 hover:text-teal-700">{i18n.dir() !== "rtl" ? <ArrowLeft size={16} /> : <ArrowRight size={16} />}{t('backToJobTracker')}</Link>
         <header className="mb-4">
           <span className="inline-flex items-center gap-2 rounded-lg bg-[#e7f5f5] px-3 py-2 text-sm font-semibold text-[#009d96]"><FileText size={18} />{t('applicationDetailsTitle')}</span>
           <h1 className="mt-2 break-words text-xl font-bold sm:text-2xl">{job.job_title || 'Untitled application'}</h1>
