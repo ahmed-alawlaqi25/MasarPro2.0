@@ -46,6 +46,7 @@ const JobDetails = ({ applicationID, userId }) => {
   const { setJobs } = useJob();
   const navigate = useNavigate();
   const [job, setJob] = useState(null);
+  const [resumes, setResumes] = useState([]);
   const [notes, setNotes] = useState('');
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState('');
@@ -59,11 +60,16 @@ const JobDetails = ({ applicationID, userId }) => {
     let active = true;
     const load = async () => {
       try {
-        const { data, error: queryError } = await supabase.from('jobs').select('*')
-          .eq('job_id', applicationID).eq('user_id', userId).maybeSingle();
+        const [{ data, error: queryError }, { data: resumesData }] = await Promise.all([
+          supabase.from('jobs').select('*')
+            .eq('job_id', applicationID).eq('user_id', userId).maybeSingle(),
+          supabase.from('resumes').select('resume_id, title')
+            .eq('user_id', userId).order('updated_at', { ascending: false }),
+        ]);
         if (queryError) throw queryError;
         if (active) {
           setJob(data);
+          setResumes(resumesData ?? []);
           setNotes(data?.notes ?? '');
         }
       } catch (queryError) {
@@ -188,10 +194,30 @@ const JobDetails = ({ applicationID, userId }) => {
             </select>
             {pending === 'status' && <p role="status" className="mt-2 text-sm text-teal-700">{t('savingStatus')}</p>}
             <div className="my-6 border-t border-[#e3edfa]" />
-            <h2 className="mb-4 flex items-center gap-3 text-lg font-bold"><UserRound size={23} className="text-teal-500" />{t('resumeTitle')}</h2>
-            <div className="flex items-center justify-between gap-3 rounded-lg border border-[#dce7f7] bg-[#fafcff] p-4 text-sm">
-              <span className="text-[#596b94]">{t('noResumeAttached')}</span>
+            <div className="mb-4 flex items-center justify-between gap-3">
+              <label htmlFor="application-resume" className="flex items-center gap-3 text-lg font-bold"><UserRound size={23} className="text-teal-500" />{t('resumeTitle')}</label>
+              {job.resume_id && (
+                <Link to={`/resume-builder/${job.resume_id}`} className="inline-flex items-center gap-1.5 text-sm font-medium text-teal-600 hover:underline">
+                  {t('openResumeLink')}
+                  <ExternalLink size={14} aria-hidden="true" />
+                </Link>
+              )}
             </div>
+            <select
+              id="application-resume"
+              value={job.resume_id ?? ''}
+              disabled={Boolean(pending)}
+              onChange={(event) => updateJob({ resume_id: event.target.value || null }, 'resume')}
+              className="w-full rounded-lg border border-[#dce7f7] bg-[#fafcff] px-4 py-3 text-sm outline-none focus:border-teal-400 focus:ring-2 focus:ring-teal-100 disabled:opacity-60"
+            >
+              <option value="">{t('noResumeAttached')}</option>
+              {resumes.map((resume) => (
+                <option key={resume.resume_id} value={resume.resume_id}>
+                  {resume.title}
+                </option>
+              ))}
+            </select>
+            {pending === 'resume' && <p role="status" className="mt-2 text-sm text-teal-700">{t('savingResume')}</p>}
 
             <form className="mt-7 flex flex-1 flex-col" onSubmit={(event) => { event.preventDefault(); updateJob({ notes: notes.slice(0, 5000) }, 'notes'); }}>
               <label htmlFor="application-notes" className="mb-4 flex items-center gap-3 text-lg font-bold"><StickyNote size={23} className="text-teal-500" />{t('notesTitle')}</label>

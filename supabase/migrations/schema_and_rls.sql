@@ -50,3 +50,22 @@ alter table public.profiles enable row level security;
 alter table public.jobs enable row level security;
 alter table public.resumes enable row level security;
 -- (policies from the SQL-Editor query go below)
+
+
+
+
+alter table public.resumes
+  add constraint resumes_id_user_key unique (resume_id, user_id);
+
+
+alter table public.jobs
+  add column resume_id uuid null;
+
+
+alter table public.jobs
+  add constraint jobs_resume_fkey
+  foreign key (resume_id, user_id)
+  references public.resumes (resume_id, user_id)
+  on delete set null (resume_id);
+
+create index jobs_resume_id_idx on public.jobs (resume_id);

@@ -140,6 +140,8 @@ const resources = {
       deleteButton: "Delete",
       deletingApplication: "Deleting...",
       savingStatus: "Saving status...",
+      savingResume: "Saving resume...",
+      openResumeLink: "Open resume",
 
       //Resume Builder
 
@@ -363,6 +365,8 @@ const resources = {
       deletingApplication: "جاري الحذف...",
       deleteButton: "حذف",
       savingStatus: "جاري حفظ الحالة...",
+      savingResume: "جاري حفظ السيرة الذاتية...",
+      openResumeLink: "فتح السيرة الذاتية",
       congratsGotJobTitle: "تهانينا! على الحصول على الوظيفة!",
       jobTitleLabel: "المسمى الوظيفي",
 
