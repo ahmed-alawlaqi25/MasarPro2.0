@@ -18,6 +18,7 @@ export function normalizeResumeContent(value) {
     summary: text(source.summary),
     coverLetter: normalizeCoverLetter(source.coverLetter),
     accentColor: /^#[0-9a-f]{6}$/i.test(source.accentColor || '') ? source.accentColor : '#0c1945',
+    template: ['classic', 'executive'].includes(source.template) ? source.template : 'classic',
   }
   for (const key of ['fullName', 'professionalTitle', 'email', 'phone', 'location', 'website', 'linkedin']) {
     result.personal[key] = text(personal[key])

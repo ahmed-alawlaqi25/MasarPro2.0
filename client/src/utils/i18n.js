@@ -162,6 +162,11 @@ const resources = {
 
       backToResumesLink: "Back to resumes",
       templateTab: "Template",
+      classicTemplate: "Classic",
+      classicTemplateDesc: "Traditional single-column layout",
+      executiveTemplate: "Executive",
+      executiveTemplateDesc: "Modern two-column layout with serif heading",
+      selectTemplate: "Select Template",
       accentTab: "Accent",
       personalInformationSection: "Personal Information",
       personalInformationSubtitle: "Add your details and see your resume update.",
@@ -395,6 +400,11 @@ const resources = {
 
       backToResumesLink: "العودة إلى السير الذاتية",
       templateTab: "القالب",
+      classicTemplate: "كلاسيكي",
+      classicTemplateDesc: "تصميم تقليدي بعمود واحد",
+      executiveTemplate: "تنفيذي",
+      executiveTemplateDesc: "تصميم عصري بعمودين مع عنوان أنيق",
+      selectTemplate: "اختر القالب",
       accentTab: "الالوان",
       personalInformationSection: "البيانات الشخصية",
       personalInformationSubtitle: "أضف تفاصيلك وشاهد تحديث سيرتك الذاتية.",

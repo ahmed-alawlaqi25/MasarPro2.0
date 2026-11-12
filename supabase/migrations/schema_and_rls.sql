@@ -87,12 +87,7 @@ begin
     raise exception 'Not authenticated';
   end if;
 
-  -- Remove avatar files from storage if present
-  delete from storage.objects
-  where bucket_id = 'user_avatar'
-    and (name like v_user_id || '/%' or owner = v_user_id);
-
-  -- Delete from auth.users (cascades to profiles, jobs, resumes)
+  -- Delete from auth.users (cascades to profiles, jobs, resumes via foreign keys)
   delete from auth.users where id = v_user_id;
 end;
 $$;

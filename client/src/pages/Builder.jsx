@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
-import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, PanelsTopLeft, Palette, Check, Download } from 'lucide-react'
+import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, PanelsTopLeft, Palette, Check, Download, FileText, Columns2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../components/AuthContext'
 import { useResumeDraft } from '../lib/useResumeDraft'
 import ImproveSummary from '../components/ImproveSummary'
+import ClassicTemplate from '../components/templates/ClassicTemplate'
+import ExecutiveTemplate from '../components/templates/ExecutiveTemplate'
 
 
 
@@ -31,6 +33,11 @@ const ResumeEditor = ({ resumeId, userId }) => {
   const { content, setContent, status, error: saveError, save } = useResumeDraft(resumeId, userId)
   const accentColor = content.accentColor
   const setAccentColor = color => setContent(previous => ({ ...previous, accentColor: color }))
+  const currentTemplate = content.template || 'classic'
+  const setTemplate = template => setContent(previous => ({ ...previous, template }))
+  const [templateOpen, setTemplateOpen] = useState(false)
+  const templatePicker = useRef(null)
+  const templateButton = useRef(null)
   const [accentOpen, setAccentOpen] = useState(false)
   const accentPicker = useRef(null)
   const accentButton = useRef(null)
@@ -155,6 +162,27 @@ const ResumeEditor = ({ resumeId, userId }) => {
       document.removeEventListener('keydown', escape)
     }
   }, [accentOpen])
+
+  useEffect(() => {
+    if (!templateOpen) return
+    const dismiss = (event) => {
+      if (!templatePicker.current?.contains(event.target)) setTemplateOpen(false)
+    }
+    const escape = (event) => {
+      if (event.key === 'Escape') {
+        setTemplateOpen(false)
+        templateButton.current?.focus()
+      }
+    }
+    document.addEventListener('pointerdown', dismiss)
+    document.addEventListener('focusin', dismiss)
+    document.addEventListener('keydown', escape)
+    return () => {
+      document.removeEventListener('pointerdown', dismiss)
+      document.removeEventListener('focusin', dismiss)
+      document.removeEventListener('keydown', escape)
+    }
+  }, [templateOpen])
 
   const [step, setStep] = useState(0)
   const steps = [
@@ -300,15 +328,76 @@ const inputClass =
           <section aria-label={rtl ? 'حقول السيرة الذاتية' : 'Resume fields'} tabIndex={0} className="min-h-0 min-w-0 overflow-y-auto overscroll-contain rounded-lg border-t-4 border-t-teal-600 bg-white px-6 py-5 shadow-sm lg:col-span-2">
             <div className="mb-4 flex flex-wrap items-center justify-between gap-x-3 gap-y-2" role="group" aria-label="Resume editor controls">
               <div className="flex items-center gap-1.5">
-                <button
-                  type="button"
-                  disabled
-                  title="Template selection coming soon"
-                  className="inline-flex cursor-not-allowed items-center gap-1 rounded-md border border-sky-100 bg-sky-50 px-2 py-2 text-xs font-medium text-sky-700"
-                >
-                  <PanelsTopLeft size={14} aria-hidden="true" />
-                  {t('templateTab')}
-                </button>
+                <div ref={templatePicker} className="relative">
+                  <button
+                    ref={templateButton}
+                    type="button"
+                    aria-expanded={templateOpen}
+                    aria-controls="resume-template-picker"
+                    onClick={() => setTemplateOpen((open) => !open)}
+                    className="inline-flex cursor-pointer items-center gap-1 rounded-md border border-sky-200 bg-sky-50 px-2 py-2 text-xs font-medium text-sky-700 hover:bg-sky-100 focus-visible:outline-2 focus-visible:outline-sky-600"
+                  >
+                    <PanelsTopLeft size={14} aria-hidden="true" />
+                    {t('templateTab')}
+                  </button>
+                  {templateOpen && (
+                    <div
+                      id="resume-template-picker"
+                      role="group"
+                      aria-label="Resume template"
+                      className="absolute start-0 top-full z-20 mt-2 w-64 rounded-xl border border-slate-200 bg-white p-2.5 shadow-xl"
+                    >
+                      <p className="mb-2 text-xs font-bold text-slate-700 px-1">{t('selectTemplate')}</p>
+                      <div className="space-y-1.5">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setTemplate('classic')
+                            setTemplateOpen(false)
+                            templateButton.current?.focus()
+                          }}
+                          className={`flex w-full items-start gap-2.5 rounded-lg border p-2 text-start transition-colors cursor-pointer ${
+                            currentTemplate === 'classic'
+                              ? 'border-teal-500 bg-teal-50/60 ring-1 ring-teal-400'
+                              : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50'
+                          }`}
+                        >
+                          <FileText size={18} className="mt-0.5 shrink-0 text-slate-600" aria-hidden="true" />
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center justify-between">
+                              <span className="text-xs font-bold text-slate-900">{t('classicTemplate')}</span>
+                              {currentTemplate === 'classic' && <Check size={14} className="text-teal-600" aria-hidden="true" />}
+                            </div>
+                            <p className="text-[11px] text-slate-500 leading-tight mt-0.5">{t('classicTemplateDesc')}</p>
+                          </div>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setTemplate('executive')
+                            setTemplateOpen(false)
+                            templateButton.current?.focus()
+                          }}
+                          className={`flex w-full items-start gap-2.5 rounded-lg border p-2 text-start transition-colors cursor-pointer ${
+                            currentTemplate === 'executive'
+                              ? 'border-teal-500 bg-teal-50/60 ring-1 ring-teal-400'
+                              : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50'
+                          }`}
+                        >
+                          <Columns2 size={18} className="mt-0.5 shrink-0 text-slate-600" aria-hidden="true" />
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center justify-between">
+                              <span className="text-xs font-bold text-slate-900">{t('executiveTemplate')}</span>
+                              {currentTemplate === 'executive' && <Check size={14} className="text-teal-600" aria-hidden="true" />}
+                            </div>
+                            <p className="text-[11px] text-slate-500 leading-tight mt-0.5">{t('executiveTemplateDesc')}</p>
+                          </div>
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
                 <div ref={accentPicker} className="relative">
                   <button
                     ref={accentButton}
@@ -380,18 +469,6 @@ const inputClass =
             <p className="mt-1 text-sm text-slate-500">
               {t('personalInformationSubtitle')}
             </p>
-
-            <div className="my-6 flex items-center gap-3">
-              <img
-                src="/Sample_User_Icon.png"
-                alt="Default profile"
-                className="h-16 w-16 rounded-full object-cover"
-              />
-              <p className="text-sm text-slate-400">
-                {t('photoUploadNotice')}
-              </p>
-            </div>
-
             <div className="space-y-4">
               {personalFields.map((field) => (
                 <div key={field.name}>
@@ -561,119 +638,24 @@ const inputClass =
             aria-label="Resume preview"
             className="min-w-0 border border-[#e3edfa] bg-white shadow-sm lg:col-span-3"
           >
-            <header className="text-center">
-              <h1
-                style={{ color: accentColor }}
-                className="break-words text-2xl mb-2 leading-tight font-bold"
-              >
-                {personal.fullName.trim() || t('yourNameLabel')}
-              </h1>
-
-              {personal.professionalTitle.trim() && (
-                <p className="mt-1 text-xs font-medium text-slate-600">
-                  {personal.professionalTitle}
-                </p>
-              )}
-
-              {contactDetails.length > 0 && (
-                <ul dir="ltr" className="mt-1 flex list-none flex-wrap justify-center gap-x-2 gap-y-0.5 text-[11px] text-slate-500">
-                  {contactDetails.map((detail, index) => (
-                    <li
-                      key={index}
-                      className="max-w-full break-words"
-                    >
-                      <bdi dir="auto">{detail}</bdi>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </header>
-
-            <hr className="mt-2 border-slate-200" />
-            {content.summary.trim() && (
-              <section className="mt-2">
-                <h2 style={{ color: accentColor }} className="text-xs font-bold">{t('professionalSummarySection')}</h2>
-                <p className="mt-1 whitespace-pre-wrap break-words text-xs leading-[1.45] text-slate-700">{content.summary}</p>
-              </section>
-            )}
-
-            {content.experience.some((job) => [job.position, job.company, job.location, job.startDate, job.endDate, ...job.highlights].some((value) => value.trim())) && (
-              <section className="mt-2">
-                <h2 style={{ color: accentColor }} className="border-t border-slate-200 pt-1.5 text-xs font-bold">{t('professionalExperienceSection')}</h2>
-                <div className="mt-1.5 space-y-2.5">
-                  {content.experience.map((job) => {
-                    const highlights = job.highlights.filter((line) => line.trim())
-                    const dates = [job.startDate, job.isCurrent ? presentLabel : job.endDate].filter(Boolean).join(' – ')
-                    const hasDetails = [job.position, job.company, job.location, job.startDate, job.endDate, ...highlights].some((value) => value.trim())
-                    if (!hasDetails) return null
-
-                    return (
-                      <article key={job.id} className="break-words">
-                        <div className="flex flex-wrap items-baseline justify-between gap-2">
-                          <h3 className="text-xs font-semibold">{job.position || job.company}</h3>
-                          <p className="text-xs text-slate-500">{dates}</p>
-                        </div>
-                        {(job.company || job.location) && <p className="mt-0.5 text-xs text-slate-600">{[job.position ? job.company : '', job.location].filter(Boolean).join(' | ')}</p>}
-                        {highlights.length > 0 && (
-                          <ul className="mt-1 list-disc space-y-0.5 ps-4 text-xs leading-[1.45] text-slate-700">
-                            {highlights.map((line, index) => <li key={index}>{line}</li>)}
-                          </ul>
-                        )}
-                      </article>
-                    )
-                  })}
-                </div>
-              </section>
-            )}
-            {['education', 'projects'].map((section) => {
-              const entries = content[section].filter(hasEntryContent)
-              if (!entries.length) return null
-              const education = section === 'education'
-              return (
-                <section key={section} className="mt-2">
-                  <h2 style={{ color: accentColor }} className="border-t border-slate-200 pt-1.5 text-xs font-bold">{education ? t('educationTrainingSection') : t('projectsLabel')}</h2>
-                  <div className="mt-1.5 space-y-2.5">
-                    {entries.map((entry) => (
-                      <article key={entry.id} className="break-words">
-                        <div className="flex flex-wrap items-baseline justify-between gap-2">
-                          <h3 className="text-xs font-semibold">{education ? entry.qualification || entry.institution : entry.name}</h3>
-                          <p className="text-xs text-slate-500">{[entry.startDate, entry.isCurrent ? presentLabel : entry.endDate].filter(Boolean).join(' – ')}</p>
-                        </div>
-                        {(education ? entry.location || (entry.qualification && entry.institution) : entry.role) && <p className="mt-0.5 text-xs text-slate-600">{education ? [entry.qualification ? entry.institution : '', entry.location].filter(Boolean).join(' | ') : entry.role}</p>}
-                        {!education && entry.url.trim() && <p className="mt-1 break-all text-xs text-slate-500">{entry.url}</p>}
-                        {entry.description.trim() && (
-                          <ul className="mt-1 list-disc space-y-0.5 ps-4 text-xs leading-[1.45] text-slate-700">
-                            {entry.description
-                              .split('\n')
-                              .map(line => line.trim())
-                              .filter(Boolean)
-                              .map((line, index) => (
-                                <li key={index}>{line}</li>
-                              ))}
-                          </ul>
-                        )}
-                      </article>
-                    ))}
-                  </div>
-                </section>
-              )
-            })}
-            {content.skills.some((group) => group.items.split(/[,\n،]/).some((item) => item.trim())) && (
-              <section className="mt-2">
-                <h2 style={{ color: accentColor }} className="border-t border-slate-200 pt-1.5 text-xs font-bold">{t('skillsSectionTitle')}</h2>
-                <div className="mt-1 space-y-0.5 text-xs leading-[1.45] text-slate-700">
-                  {content.skills.map((group) => {
-                    const items = group.items.split(/[,\n،]/).map((item) => item.trim()).filter(Boolean)
-                    if (!items.length) return null
-                    return (
-                      <p key={group.id} className="break-words">
-                        {group.category.trim() && <span className="font-semibold">{group.category.trim()}: </span>}
-                        {items.join(', ')}
-                      </p>
-                    )
-                  })}
-                </div>
-              </section>
+            {currentTemplate === 'executive' ? (
+              <ExecutiveTemplate
+                content={content}
+                accentColor={accentColor}
+                t={t}
+                presentLabel={presentLabel}
+                contactDetails={contactDetails}
+                hasEntryContent={hasEntryContent}
+              />
+            ) : (
+              <ClassicTemplate
+                content={content}
+                accentColor={accentColor}
+                t={t}
+                presentLabel={presentLabel}
+                contactDetails={contactDetails}
+                hasEntryContent={hasEntryContent}
+              />
             )}
           </section>
           </div>
