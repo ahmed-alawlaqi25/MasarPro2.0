@@ -24,7 +24,7 @@ function CompanyLogo({ job }) {
       loading="lazy"
       referrerPolicy="no-referrer"
       onError={() => setFailedFor(companyName)}
-      className="h-full w-full rounded-full object-contain"
+      className="h-full w-full rounded-full object-cover"
     />
   );
 }
@@ -50,7 +50,7 @@ const JobApllicationsCard = ({ id, job, index }) => {
       
             <div className="flex shrink-0 items-center gap-1">
 
-                      <div className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-white shadow-[0_1px_5px_rgba(15,23,42,0.12)] ring-1 ring-slate-100">
+                      <div className="grid h-12 w-12 shrink-0 place-items-center overflow-hidden rounded-full bg-white shadow-[0_1px_5px_rgba(15,23,42,0.12)] ring-1 ring-slate-100">
             <CompanyLogo job={job} />
           </div>
             </div>
