@@ -1,40 +1,38 @@
 const express = require('express');
-const helmet = require('helmet');
 const path = require('node:path');
 const { existsSync } = require('node:fs');
 const { createAiRouter } = require('./ai');
+
+function escapeHtml(value) {
+  return value.replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
+}
 
 function createApp({ env = process.env, fetchEmail = fetch, fetchAI = fetch, fetchAuth = fetch, now = Date.now } = {}) {
   const app = express();
   app.disable('x-powered-by');
   app.set('trust proxy', 1);
 
-  app.use(
-    helmet({
-      xPoweredBy: false,
-      xContentTypeOptions: true,
-      frameguard: { action: 'deny' },
-      referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
-      hsts: { maxAge: 31536000, includeSubDomains: true },
-      contentSecurityPolicy: {
-        directives: {
-          'default-src': ["'self'"],
-          'connect-src': ["'self'", 'https://*.supabase.co'],
-          'img-src': ["'self'", 'data:', 'blob:', 'https://*.supabase.co', 'https://img.logo.dev'],
-          'style-src': ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
-          'font-src': ["'self'", 'https://fonts.gstatic.com'],
-          'script-src': ["'self'"],
-          'worker-src': ["'self'", 'blob:'],
-          'frame-ancestors': ["'none'"],
-          'base-uri': ["'self'"],
-          'form-action': ["'self'"],
-        },
-      },
-      xFrameOptions: { action: 'deny' },
-      referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
-      hsts: { maxAge: 31536000, includeSubDomains: true },
-    })
-  );
+  app.use((_req, res, next) => {
+    res.set({
+      'X-Content-Type-Options': 'nosniff',
+      'X-Frame-Options': 'DENY',
+      'Referrer-Policy': 'strict-origin-when-cross-origin',
+      'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
+      'Content-Security-Policy': [
+        "default-src 'self'",
+        "connect-src 'self' https://*.supabase.co",
+        "img-src 'self' data: blob: https://*.supabase.co https://img.logo.dev",
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+        "font-src 'self' https://fonts.gstatic.com",
+        "script-src 'self'",
+        "worker-src 'self' blob:",
+        "frame-ancestors 'none'",
+        "base-uri 'self'",
+        "form-action 'self'",
+      ].join('; '),
+    });
+    next();
+  });
   app.use('/api/ai', express.json({ limit: '96kb' }), createAiRouter({ env, fetchAI, fetchAuth, now }));
   app.use(express.json({ limit: '24kb' }));
   const attempts = new Map();
