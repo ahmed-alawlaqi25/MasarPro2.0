@@ -61,6 +61,7 @@ Create `client/.env`:
 ```dotenv
 VITE_SUPABASE_URL=your_supabase_project_url
 VITE_SUPABASE_PUBLISHABLE_KEY=your_supabase_publishable_key
+VITE_LOGO_DEV_KEY=your_logo_dev_publishable_key
 ```
 
 Create `server/.env`:

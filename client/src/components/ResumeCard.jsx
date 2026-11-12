@@ -65,7 +65,7 @@ const ResumeCard = ({
               {resume.title}
             </h3>
             <p className="mt-1 text-xs text-[#8192ad]">
-              {t('updatedLabel')} {resume.updated_at.split('T')[0]}
+              {t('updatedLabel')} {resume.updated_at?.split('T')[0] ?? ''}
             </p>
           </div>
         </div>

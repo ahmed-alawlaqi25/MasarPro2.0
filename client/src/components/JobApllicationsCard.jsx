@@ -1,25 +1,35 @@
+import { useState } from 'react';
 import {useSortable} from '@dnd-kit/react/sortable';
 import { CalendarDays, ArrowUpRight, Building, MapPin } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
+const LOGO_DEV_KEY = import.meta.env.VITE_LOGO_DEV_KEY;
 
+function CompanyLogo({ job }) {
+  const companyName = String(job?.company_name ?? '').trim();
+  const [failedFor, setFailedFor] = useState(null);
 
+  if (!LOGO_DEV_KEY || !companyName || failedFor === companyName) {
+    return (
+      <span className="text-sm font-bold uppercase text-teal-700" aria-hidden="true">
+        {companyName ? companyName.charAt(0) : <Building size={18} />}
+      </span>
+    );
+  }
 
-
-
-
-const JobApllicationsCard = ({ id, job, index }) => {
-
-
-  function CompanyLogo({ job }) {
   return (
     <img
-      src={`https://img.logo.dev/name/${encodeURIComponent(job.company_name)}?token=${import.meta.env.VITE_LOGO_DEV_KEY}`}
-      alt={`${job.company_name} logo`}
+      src={`https://img.logo.dev/name/${encodeURIComponent(companyName)}?token=${encodeURIComponent(LOGO_DEV_KEY)}`}
+      alt={`${companyName} logo`}
+      loading="lazy"
+      referrerPolicy="no-referrer"
+      onError={() => setFailedFor(companyName)}
+      className="h-full w-full rounded-full object-contain"
     />
   );
 }
 
+const JobApllicationsCard = ({ id, job, index }) => {
   const navigate = useNavigate();
   const {ref, isDragging} = useSortable({
     id,

@@ -7,8 +7,33 @@ import { useJob } from '../components/JopContext';
 import { useTranslation } from 'react-i18next';
 
 const statuses = ['wishlist', 'applied', 'interview', 'offer', 'accepted'];
-const statusLabels = ['Wish List', 'Applied', 'Interview', 'Offer', 'Accepted'];
+const statusKeys = ['wishListStatus', 'appliedStatus', 'interviewStatus', 'offerStatus', 'acceptStatus'];
 const panel = 'rounded-2xl border border-[#e3edfa] bg-white p-4 shadow-[0_4px_20px_rgba(31,52,85,0.025)] sm:p-5';
+const LOGO_DEV_KEY = import.meta.env.VITE_LOGO_DEV_KEY;
+
+function CompanyLogo({ job }) {
+  const companyName = String(job?.company_name ?? '').trim();
+  const [failedFor, setFailedFor] = useState(null);
+
+  if (!LOGO_DEV_KEY || !companyName || failedFor === companyName) {
+    return (
+      <span className="text-base font-bold uppercase text-teal-600" aria-hidden="true">
+        {companyName ? companyName.charAt(0) : <Building2 size={20} />}
+      </span>
+    );
+  }
+
+  return (
+    <img
+      src={`https://img.logo.dev/name/${encodeURIComponent(companyName)}?token=${encodeURIComponent(LOGO_DEV_KEY)}`}
+      alt={`${companyName} logo`}
+      loading="lazy"
+      referrerPolicy="no-referrer"
+      onError={() => setFailedFor(companyName)}
+      className="h-full w-full rounded-full object-contain"
+    />
+  );
+}
 
 const safeUrl = (value) => {
   try {
@@ -105,16 +130,6 @@ const JobDetails = ({ applicationID, userId }) => {
   const status = String(job.status ?? '').trim().toLowerCase().replace(/[\s_-]+/g, '');
   const dirty = notes !== (job.notes ?? '');
 
-    function CompanyLogo({ job }) {
-  return (
-    <img
-      src={`https://img.logo.dev/name/${encodeURIComponent(job.company_name)}?token=${import.meta.env.VITE_LOGO_DEV_KEY}`}
-      alt={`${job.company_name} logo`}
-    />
-  );
-}
-
-
   return (
     <section className="bg-[#f4f9fc] px-4 py-6 text-[#0c1945] sm:px-8 lg:py-8">
       <div className="mx-auto max-w-[1280px] rounded-3xl border border-[#e3edfa] bg-white/85 p-4 shadow-[0_8px_32px_rgba(31,52,85,0.035)] sm:p-5">
@@ -161,7 +176,7 @@ const JobDetails = ({ applicationID, userId }) => {
             <label htmlFor="application-status" className="mb-4 flex items-center gap-3 text-lg font-bold"><BriefcaseBusiness size={23} className="text-teal-500" />{t('applicationStatusLabel')}</label>
             <select id="application-status" value={status} disabled={Boolean(pending)} onChange={(event) => updateJob({ status: event.target.value }, 'status')} className="w-full rounded-lg border border-[#dce7f7] bg-[#fafcff] px-4 py-3 text-sm outline-none focus:border-teal-400 focus:ring-2 focus:ring-teal-100 disabled:opacity-60">
               {!statuses.includes(status) && <option value={status}>{job.status || 'Select status'}</option>}
-              {statuses.map((value, index) => <option key={value} value={value}>{statusLabels[index]}</option>)}
+              {statuses.map((value, index) => <option key={value} value={value}>{t(statusKeys[index])}</option>)}
             </select>
             {pending === 'status' && <p role="status" className="mt-2 text-sm text-teal-700">{t('savingStatus')}</p>}
             <div className="my-6 border-t border-[#e3edfa]" />
@@ -175,14 +190,14 @@ const JobDetails = ({ applicationID, userId }) => {
               <textarea id="application-notes" maxLength={5000} value={notes} disabled={Boolean(pending)} onChange={(event) => { setNotes(event.target.value); setSaved(false); }} placeholder={t('addNotesPlaceholder')} rows={5} className="min-h-32 w-full flex-1 resize-y rounded-lg border border-[#dce7f7] bg-[#fafcff] p-4 text-sm leading-6 outline-none focus:border-teal-400 focus:ring-2 focus:ring-teal-100 disabled:opacity-60" />
               <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
                 <span role="status" className="text-xs text-teal-700">{saved ? `${t('notesSaved')}` : dirty ? `${t('unsavedChanges')}` : ''}</span>
-                <button type="submit" disabled={!dirty || Boolean(pending)} className="inline-flex items-center gap-2 rounded-lg bg-teal-600 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-700 disabled:cursor-not-allowed disabled:opacity-40"><Check size={16} />{pending === `${t('notesTitle')}` ? `${t('savingNotes')}` : `${t('saveNotesButton')}`}</button>
+                <button type="submit" disabled={!dirty || Boolean(pending)} className="inline-flex items-center gap-2 rounded-lg bg-teal-600 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-700 disabled:cursor-not-allowed disabled:opacity-40"><Check size={16} />{pending === 'notes' ? `${t('savingNotes')}` : `${t('saveNotesButton')}`}</button>
               </div>
             </form>
           </section>
         </div>
         {error && <p role="alert" className="mt-5 rounded-lg bg-red-50 p-3 text-sm text-red-700">{error}</p>}
         <footer className="mt-6 flex justify-start">
-          <button type="button" disabled={Boolean(pending)} onClick={deleteJob} className="inline-flex items-center gap-2 rounded-lg border border-red-200 bg-red-50/40 px-5 py-3 text-sm font-semibold text-red-600 hover:bg-red-100 disabled:opacity-50"><Trash2 size={18} />{pending === `${t('deleteButton')}` ? `${t('deletingApplication')}` : `${t('deleteApplicationButton')}` }</button>
+          <button type="button" disabled={Boolean(pending)} onClick={deleteJob} className="inline-flex items-center gap-2 rounded-lg border border-red-200 bg-red-50/40 px-5 py-3 text-sm font-semibold text-red-600 hover:bg-red-100 disabled:opacity-50"><Trash2 size={18} />{pending === 'delete' ? `${t('deletingApplication')}` : `${t('deleteApplicationButton')}` }</button>
         </footer>
       </div>
     </section>
