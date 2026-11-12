@@ -145,22 +145,22 @@ const JobDetails = ({ applicationID, userId }) => {
               <div className="grid gap-4 sm:grid-cols-2">
                 <dl className="min-w-0 space-y-4 border-b border-[#e3edfa] pb-4 text-sm text-[#596b94] sm:border-e sm:border-b-0 sm:pe-4 sm:pb-0">
                   <div className="flex h-7 items-center"><dt className="flex items-center gap-2"><Building2 size={18} />{t('companyNameLabel')}</dt></div>
-                  <div className="flex h-7 items-center"><dt className="flex items-center gap-2"><MapPin size={18} />{t('locationLabel')}</dt></div>
-                  <div className="flex h-7 items-center"><dt className="flex items-center gap-2"><CalendarDays size={18} />{t('applicationDateLabel')}</dt></div>
-                  <div className="flex h-7 items-center"><dt className="flex items-center gap-2"><Link2 size={18} />{t('jobLinkLabel')}</dt></div>
+                  <div className="flex h-5 items-center"><dt className="flex items-center gap-2"><MapPin size={18} />{t('locationLabel')}</dt></div>
+                  <div className="flex h-5 items-center"><dt className="flex items-center gap-2"><CalendarDays size={18} />{t('applicationDateLabel')}</dt></div>
+                  <div className="flex h-5 items-center"><dt className="flex items-center gap-2"><Link2 size={18} />{t('jobLinkLabel')}</dt></div>
                 </dl>
                 <div className="flex min-w-0 items-center justify-between gap-4 sm:ps-2">
                   <div className="min-w-0 flex-1 space-y-4">
                     <div className="flex h-7 items-center">
                       <p className="truncate text-lg font-bold text-[#0c1945]">{job.company_name || 'Company not provided'}</p>
                     </div>
-                    <div className="flex h-7 items-center">
+                    <div className="flex h-5 items-center">
                       <p className="truncate text-sm text-[#596b94]">{job.location || 'Location not provided'}</p>
                     </div>
-                    <div className="flex h-7 items-center">
+                    <div className="flex h-5 items-center">
                       <dd className="text-sm text-[#596b94]"><time dateTime={job.created_at || undefined}>{job.created_at ? String(job.created_at).slice(0, 10) : 'Not provided'}</time></dd>
                     </div>
-                    <div className="flex h-7 items-center">
+                    <div className="flex h-5 items-center">
                       {jobUrl ? (
                         <a href={jobUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 truncate text-sm text-teal-600 hover:underline"><ExternalLink size={16} className="shrink-0" />{new URL(jobUrl).hostname}</a>
                       ) : (
@@ -168,7 +168,7 @@ const JobDetails = ({ applicationID, userId }) => {
                       )}
                     </div>
                   </div>
-                  <div aria-hidden="true" className="grid h-16 w-16 shrink-0 place-items-center overflow-hidden rounded-full bg-[#e9f6f8] text-2xl font-bold text-teal-600 ring-1 ring-[#e3edfa]">
+                  <div aria-hidden="true" className="grid h-16 w-16 shrink-0 place-items-center overflow-hidden rounded-full bg-[#e9f6f8] text-2xl font-bold text-teal-600 ring-1 ring-[#e3edfa] mr-2 mb-8">
                     <CompanyLogo job={job} />
                   </div>
                 </div>
