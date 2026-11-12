@@ -55,6 +55,10 @@ export const AuthProvider = ({ children }) => {
         setProfile(data)
         setProfileOwner(userId)
       })
+      .catch(() => {
+        if (!active) return
+        setProfileOwner(userId)
+      })
     return () => { active = false }
   }, [userId])
 

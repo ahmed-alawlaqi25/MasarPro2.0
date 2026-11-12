@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useTranslation } from 'react-i18next';
 import { Link, Navigate, useSearchParams } from "react-router";
 import { supabase } from '../lib/supabase'
+import { useAuth } from '../components/AuthContext'
 import { User2, Mail} from 'lucide-react'
 
 
@@ -11,6 +12,7 @@ const Login = () => {
     const state = searchParams.get('state') === 'register' ? 'register' : 'login'
     const [submitError, setSubmitError] = useState('')
     const [submitting, setSubmitting] = useState(false)
+    const { session, loading } = useAuth()
 
     const [formData, setFormData] = React.useState({
         name: '',
@@ -73,20 +75,6 @@ const Login = () => {
         setFormData(prev => ({ ...prev, [name]: value }))
     }
 
-
-    const [session, setSession] = useState(null);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-    const {
-        data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, nextSession) => {
-        setSession(nextSession);
-        setLoading(false);
-    });
-
-    return () => subscription.unsubscribe();
-    }, []);
 
     if (loading) {
     return <p>Loading...</p>;

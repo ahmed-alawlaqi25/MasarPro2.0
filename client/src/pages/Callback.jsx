@@ -7,27 +7,32 @@ const Callback = () => {
   const [error, setError] = React.useState('')
 
   React.useEffect(() => {
-    const finishLogin = async () => {
-      const {
-        data: { session },
-        error,
-      } = await supabase.auth.getSession()
+  let done = false
 
-      if (error) {
-        setError(error.message)
-        return
-      }
-
-      if (session) {
+  const { data: { subscription } } = supabase.auth.onAuthStateChange(
+    (event, session) => {
+      if (done) return
+      if (session && (event === 'SIGNED_IN' || event === 'INITIAL_SESSION')) {
+        done = true
         navigate('/resume-builder', { replace: true })
-        return
       }
-
-      setError('The sign-in link is invalid or expired.')
     }
+  )
 
-    finishLogin()
-  }, [navigate])
+  // fallback: if no event fires, check once, then fail
+  const timer = setTimeout(async () => {
+    if (done) return
+    const { data: { session }, error } = await supabase.auth.getSession()
+    done = true
+    if (session) navigate('/resume-builder', { replace: true })
+    else setError(error?.message ?? 'The sign-in link is invalid or expired.')
+  }, 3000)
+
+  return () => {
+    subscription.unsubscribe()
+    clearTimeout(timer)
+  }
+}, [navigate])
 
   if (error) {
     return <p>{error}</p>

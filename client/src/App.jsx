@@ -23,11 +23,11 @@ import CoverLetter from './pages/CoverLetter'
 const App = () => {
 
   return (
-    <>
+    <AuthProvider>
       <PageMetadata />
     
       <Routes>
-        <Route element={<AuthProvider><PublicLayout /></AuthProvider>}>
+        <Route element={<PublicLayout />}>
           <Route path="/" element={<Home />} />
           <Route path="login" element={<Login />} />
           <Route path="confirm-email" element={<Confirmemail />} />
@@ -39,11 +39,9 @@ const App = () => {
         
           <Route
             element={
-              <AuthProvider>
-                <JobProvider>
-                  <Dashboard />
-                </JobProvider>
-              </AuthProvider>
+              <JobProvider>
+                <Dashboard />
+              </JobProvider>
             }
           >
             <Route path="job-tracker/:applicationID" element={<JobApplication />} />
@@ -57,7 +55,7 @@ const App = () => {
           </Route>
 
       </Routes>
-    </>
+    </AuthProvider>
     
   )
 }
