@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, PanelsTopLeft, Palette, Check, Download, FileText, Columns2 } from 'lucide-react'
+import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, PanelsTopLeft, Palette, Check, Download, FileText, Columns2, LayoutList } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../components/AuthContext'
@@ -7,6 +7,7 @@ import { useResumeDraft } from '../lib/useResumeDraft'
 import ImproveSummary from '../components/ImproveSummary'
 import ClassicTemplate from '../components/templates/ClassicTemplate'
 import ExecutiveTemplate from '../components/templates/ExecutiveTemplate'
+import ModernTemplate from '../components/templates/ModernTemplate'
 
 
 
@@ -394,6 +395,29 @@ const inputClass =
                             <p className="text-[11px] text-slate-500 leading-tight mt-0.5">{t('executiveTemplateDesc')}</p>
                           </div>
                         </button>
+
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setTemplate('modern')
+                            setTemplateOpen(false)
+                            templateButton.current?.focus()
+                          }}
+                          className={`flex w-full items-start gap-2.5 rounded-lg border p-2 text-start transition-colors cursor-pointer ${
+                            currentTemplate === 'modern'
+                              ? 'border-teal-500 bg-teal-50/60 ring-1 ring-teal-400'
+                              : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50'
+                          }`}
+                        >
+                          <LayoutList size={18} className="mt-0.5 shrink-0 text-slate-600" aria-hidden="true" />
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center justify-between">
+                              <span className="text-xs font-bold text-slate-900">{t('modernTemplate')}</span>
+                              {currentTemplate === 'modern' && <Check size={14} className="text-teal-600" aria-hidden="true" />}
+                            </div>
+                            <p className="text-[11px] text-slate-500 leading-tight mt-0.5">{t('modernTemplateDesc')}</p>
+                          </div>
+                        </button>
                       </div>
                     </div>
                   )}
@@ -640,6 +664,15 @@ const inputClass =
           >
             {currentTemplate === 'executive' ? (
               <ExecutiveTemplate
+                content={content}
+                accentColor={accentColor}
+                t={t}
+                presentLabel={presentLabel}
+                contactDetails={contactDetails}
+                hasEntryContent={hasEntryContent}
+              />
+            ) : currentTemplate === 'modern' ? (
+              <ModernTemplate
                 content={content}
                 accentColor={accentColor}
                 t={t}

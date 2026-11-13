@@ -9,6 +9,15 @@ test('older resumes receive a usable letter draft without losing CV fields', () 
   assert.equal(value.coverLetter.language, 'en')
   assert.equal(value.summary, 'Existing summary')
   assert.equal(value.custom, 'keep me')
+  assert.equal(value.template, 'classic')
+})
+
+test('template selection normalizes supported templates and falls back to classic', () => {
+  assert.equal(normalizeResumeContent({ template: 'executive' }).template, 'executive')
+  assert.equal(normalizeResumeContent({ template: 'modern' }).template, 'modern')
+  assert.equal(normalizeResumeContent({ template: 'classic' }).template, 'classic')
+  assert.equal(normalizeResumeContent({ template: 'unknown' }).template, 'classic')
+  assert.equal(normalizeResumeContent({}).template, 'classic')
 })
 
 test('saved cover letters survive reopening and unrelated CV edits', () => {
