@@ -4,8 +4,8 @@
     <linearGradient id="left" x1="339" y1="345" x2="250" y2="515" gradientUnits="userSpaceOnUse"><stop stop-color="#003b63"/><stop offset="1" stop-color="#00aebc"/></linearGradient>
     <linearGradient id="peak" x1="549" y1="180" x2="750" y2="459" gradientUnits="userSpaceOnUse"><stop stop-color="#00416b"/><stop offset="1" stop-color="#008feb"/></linearGradient>
     <linearGradient id="right" x1="637" y1="310" x2="798" y2="504" gradientUnits="userSpaceOnUse"><stop stop-color="#002c58"/><stop offset="1" stop-color="#00a5fa"/></linearGradient>
-    <linearGradient id="teal" x1="306" y1="216" x2="498" y2="440" gradientUnits="userSpaceOnUse"><stop stop-color="#00d2b0"/><stop offset="1" stop-color="#00a6c4"/></linearGradient>
-    <linearGradient id="center" x1="439" y1="305" x2="518" y2="509" gradientUnits="userSpaceOnUse"><stop stop-color="#0089af"/><stop offset="1" stop-color="#005987"/></linearGradient>
+    <linearGradient id="teal" x1="306" y1="216" x2="498" y2="440" gradientUnits="userSpaceOnUse"><stop stop-color="#0031d2"/><stop offset="1" stop-color="#00a6c4"/></linearGradient>
+    <linearGradient id="center" x1="439" y1="305" x2="518" y2="509" gradientUnits="userSpaceOnUse"><stop stop-color="#003daf"/><stop offset="1" stop-color="#005987"/></linearGradient>
   </defs>
   <path fill="url(#left)" d="M198 513H269Q299 513 315 488L397 362L344 309L198 513Z"/>
   <path fill="url(#peak)" d="M399 410L540 191Q560 162 590 162Q620 162 640 192L803 445Q819 471 805 493Q794 513 765 513H708Q681 513 665 490L591 378L520 489Q504 513 482 513L399 410Z"/>
