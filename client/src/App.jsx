@@ -34,7 +34,6 @@ const App = () => {
           <Route path="contact" element={<Contact />} />
           <Route path="terms" element={<Terms />} />
           <Route path="callback" element={<Callback />} />
-          <Route path="job-tracker" element={<JobTracker />} />
         </Route>
 
         
