@@ -1,17 +1,22 @@
-import { useState } from 'react';
-import {useSortable} from '@dnd-kit/react/sortable';
-import { CalendarDays, ArrowUpRight, Building, MapPin } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useState } from "react";
+import { useSortable } from "@dnd-kit/react/sortable";
+import { ArrowUpRight, Building, CalendarDays, MapPin } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const LOGO_DEV_KEY = import.meta.env.VITE_LOGO_DEV_KEY;
 
-function CompanyLogo({ job }) {
-  const companyName = String(job?.company_name ?? '').trim();
+function CompanyLogo({ job, isDark }) {
+  const companyName = String(job?.company_name ?? "").trim();
   const [failedFor, setFailedFor] = useState(null);
 
   if (!LOGO_DEV_KEY || !companyName || failedFor === companyName) {
     return (
-      <span className="text-sm font-bold uppercase text-teal-700" aria-hidden="true">
+      <span
+        className={`text-sm font-bold uppercase ${
+          isDark ? "text-[#60a5fa]" : "text-[#1d55e5]"
+        }`}
+        aria-hidden="true"
+      >
         {companyName ? companyName.charAt(0) : <Building size={18} />}
       </span>
     );
@@ -29,47 +34,64 @@ function CompanyLogo({ job }) {
   );
 }
 
-const JobApllicationsCard = ({ id, job, index }) => {
+const JobApllicationsCard = ({ id, job, index, isDark = false }) => {
   const navigate = useNavigate();
-  const {ref, isDragging} = useSortable({
+  const { ref, isDragging } = useSortable({
     id,
     index,
     group: job.status,
   });
+
   return (
     <div
-      
       ref={ref}
-      className={`relative box-border mt-4 mr-2 w-[98%] touch-none select-none rounded-2xl border border-slate-200 bg-white p-3 transition-[opacity,box-shadow,scale] duration-150 ${
+      className={`relative mt-3 box-border w-full touch-none select-none rounded-xl border p-3.5 transition-all duration-150 ${
+        isDark
+          ? "border-slate-800/90 bg-[#131d33] text-slate-100 hover:border-blue-500/40"
+          : "border-slate-200/90 bg-white text-[#0f172a] hover:border-blue-300/80"
+      } ${
         isDragging
-          ? 'z-50 cursor-grabbing scale-[1.02] opacity-70 shadow-2xl ring-2 ring-teal-400'
-          : 'cursor-grab shadow-[0_3px_14px_rgba(15,23,42,0.08)]'
+          ? "z-50 scale-[1.02] cursor-grabbing opacity-75 shadow-2xl ring-2 ring-[#1d55e5]"
+          : "cursor-grab shadow-xs"
       }`}
-    > 
-      <div className="flex items-start gap-4 ">
-      
-            <div className="flex shrink-0 items-center gap-1">
-
-                      <div className="grid h-12 w-12 shrink-0 place-items-center overflow-hidden rounded-full bg-white shadow-[0_1px_5px_rgba(15,23,42,0.12)] ring-1 ring-slate-100">
-            <CompanyLogo job={job} />
+    >
+      <div className="flex items-start gap-3">
+        <div className="flex shrink-0 items-center">
+          <div
+            className={`grid h-11 w-11 shrink-0 place-items-center overflow-hidden rounded-full ring-1 ${
+              isDark
+                ? "bg-[#0f1628] ring-slate-700"
+                : "bg-white shadow-xs ring-slate-100"
+            }`}
+          >
+            <CompanyLogo job={job} isDark={isDark} />
           </div>
-            </div>
+        </div>
 
         <div className="min-w-0 flex-1">
-          <div className="flex items-start justify-between gap-3">
+          <div className="flex items-start justify-between gap-2">
             <div className="min-w-0">
-              <h3 title={job.job_title} className="truncate text-[15px] font-bold leading-5 text-black">
-                {job.job_title || 'Job title not provided'}
+              <h3
+                title={job.job_title}
+                className={`truncate text-sm font-bold leading-5 ${
+                  isDark ? "text-white" : "text-[#0f172a]"
+                }`}
+              >
+                {job.job_title || "Job title not provided"}
               </h3>
-              <div className='flex items-center text-slate-400 gap-1 '>
-                <Building size={16} className='mt-1' />
-                              <p title={job.company_name} className="truncate mb-1  text-sm mt-1 leading-4 text-slate-500"> 
-                {job.company_name}
-              </p>
+              <div
+                className={`mt-0.5 flex items-center gap-1 text-xs ${
+                  isDark ? "text-slate-400" : "text-slate-500"
+                }`}
+              >
+                <Building size={13} className="shrink-0" />
+                <p title={job.company_name} className="truncate">
+                  {job.company_name}
+                </p>
               </div>
-
             </div>
-                        <button
+
+            <button
               type="button"
               aria-label={`Open application for ${job.company_name}`}
               title="Open application"
@@ -79,25 +101,43 @@ const JobApllicationsCard = ({ id, job, index }) => {
                 event.stopPropagation();
                 navigate(`/job-tracker/${id}`);
               }}
-              className="grid h-9 w-9 shrink-0 cursor-pointer place-items-center rounded-lg text-slate-500 transition-colors duration-200 hover:bg-[#e7f5f5] hover:text-[#278d8a] focus-visible:outline-2 focus-visible:outline-[#278d8a]"
+              className={`grid h-8 w-8 shrink-0 cursor-pointer place-items-center rounded-lg transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-[#1d55e5] ${
+                isDark
+                  ? "text-slate-400 hover:bg-[#182747] hover:text-[#60a5fa]"
+                  : "text-slate-400 hover:bg-[#edf3ff] hover:text-[#1d55e5]"
+              }`}
             >
-              <ArrowUpRight size={18} />
+              <ArrowUpRight size={16} />
             </button>
+          </div>
 
+          <div
+            className={`mt-2 flex items-center gap-1 text-xs ${
+              isDark ? "text-slate-400" : "text-slate-500"
+            }`}
+          >
+            <MapPin size={13} className="shrink-0" />
+            <span className="min-w-0 truncate">
+              {job.location || "Location not provided"}
+            </span>
           </div>
-          <div className=" flex items-center gap-1 text-sm text-slate-400">
-            <MapPin size={16} />
-            <span className="min-w-0 break-words">{job.location || 'Location not provided'}</span>
-          </div>
-          
-          <p  className=" flex items-center gap-1 text-sm text-slate-400">
-          <CalendarDays width="16"  />
-          <span>{job.created_at ? String(job.created_at).slice(0, 10) : 'Date not provided'}</span>
+
+          <p
+            className={`mt-1 flex items-center gap-1 text-xs ${
+              isDark ? "text-slate-500" : "text-slate-400"
+            }`}
+          >
+            <CalendarDays size={13} className="shrink-0" />
+            <span>
+              {job.created_at
+                ? String(job.created_at).slice(0, 10)
+                : "Date not provided"}
+            </span>
           </p>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default JobApllicationsCard
+export default JobApllicationsCard;
