@@ -15,6 +15,7 @@ import { AuthProvider } from './components/AuthContext'
 import { JobProvider } from './components/JopContext'
 import PageMetadata from './components/PageMetadata'
 import CoverLetter from './pages/CoverLetter'
+import Terms from './pages/Terms'
 
 
 
@@ -31,6 +32,7 @@ const App = () => {
           <Route path="login" element={<Login />} />
           <Route path="confirm-email" element={<Confirmemail />} />
           <Route path="contact" element={<Contact />} />
+          <Route path="terms" element={<Terms />} />
           <Route path="callback" element={<Callback />} />
         </Route>
 
