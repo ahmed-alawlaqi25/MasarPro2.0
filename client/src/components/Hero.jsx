@@ -152,7 +152,7 @@ const Hero = ({ isDark = false, onToggleTheme }) => {
           <Link
             to="/"
             className={`flex items-center transition ${
-              isDark ? "rounded-xl px-2.5 py-1" : ""
+              isDark ? "rounded-xl" : ""
             }`}
           >
             
