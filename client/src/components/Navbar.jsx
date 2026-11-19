@@ -12,6 +12,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, NavLink } from "react-router-dom";
 import { useAuth } from "./AuthContext";
+import MasarLogo from "./MasarLogo";
 
 function getInitialTheme() {
   try {
@@ -111,14 +112,7 @@ const Navbar = () => {
       <div className="mx-auto flex items-center justify-between px-5 py-3.5 md:px-10 lg:px-16">
         {/* Logo */}
         <Link to="/" className="flex items-center">
-          <img
-            src="/icons.svg"
-            alt="MasarPro Logo"
-            className="w-[60px] object-contain"
-          />
-          <p className="mt-1 ml-1 text-lg font-bold text-blue-500">
-            {isRtl ? "مسار برو" : "MasarPro"}
-          </p>
+          <MasarLogo isDark={isDark} isRtl={isRtl} />
         </Link>
 
         {/* Desktop menu */}
@@ -214,14 +208,7 @@ const Navbar = () => {
             onClick={() => setMobileOpen(false)}
             className="flex items-center"
           >
-            <img
-              src="/icons.svg"
-              alt="MasarPro Logo"
-              className="w-[60px] object-contain"
-            />
-            <p className="mt-1 ml-1 text-lg font-bold text-blue-500">
-              {isRtl ? "مسار برو" : "MasarPro"}
-            </p>
+            <MasarLogo isDark={isDark} isRtl={isRtl} />
           </Link>
 
           <NavLink

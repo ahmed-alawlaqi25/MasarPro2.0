@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { ArrowLeft, Languages, Moon, Sun } from "lucide-react";
 import Footer from "../components/Footer";
+import MasarLogo from "../components/MasarLogo";
 
 const TERMS_COPY = {
   en: {
@@ -152,14 +153,7 @@ export default function Terms() {
       >
         <div className="mx-auto flex max-w-5xl items-center justify-between gap-3 px-5 py-4 sm:px-8">
           <Link to="/" className="flex items-center">
-            <img
-              src="/icons.svg"
-              alt="MasarPro Logo"
-              className="w-[60px] object-contain"
-            />
-            <p className="mt-1 ml-1 text-lg font-bold text-blue-500">
-              {isRtl ? "مسار برو" : "MasarPro"}
-            </p>
+            <MasarLogo isDark={isDark} isRtl={isRtl} />
           </Link>
 
           <div className="flex items-center gap-3 sm:gap-5">

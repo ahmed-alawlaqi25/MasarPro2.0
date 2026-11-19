@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../components/AuthContext";
+import MasarLogo from "../components/MasarLogo";
 
 function getInitialTheme() {
   try {
@@ -163,14 +164,7 @@ const Login = () => {
       >
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-5 py-4 sm:px-8">
           <Link to="/" className="flex items-center">
-            <img
-              src="/icons.svg"
-              alt="MasarPro Logo"
-              className="w-[60px] object-contain"
-            />
-            <p className="mt-1 ml-1 text-lg font-bold text-blue-500">
-              {isRtl ? "مسار برو" : "MasarPro"}
-            </p>
+            <MasarLogo isDark={isDark} isRtl={isRtl} />
           </Link>
 
           <div className="flex items-center gap-3 sm:gap-5">
@@ -232,14 +226,7 @@ const Login = () => {
           }`}
         >
           <Link to="/" className="inline-flex items-center justify-center">
-            <img
-              src="/icons.svg"
-              alt="MasarPro Logo"
-              className="w-[64px] object-contain"
-            />
-            <span className="mt-1 ml-1 text-xl font-bold text-blue-500">
-              {isRtl ? "مسار برو" : "MasarPro"}
-            </span>
+            <MasarLogo isDark={isDark} isRtl={isRtl} size="lg" />
           </Link>
 
           <h1

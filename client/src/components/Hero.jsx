@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { AnimatePresence, motion } from "framer-motion";
 import { Check, Languages, Menu, Moon, Sparkles, Sun, X } from "lucide-react";
 import { Link } from "react-router-dom";
+import MasarLogo from "./MasarLogo";
 
 const HERO_COPY = {
   en: {
@@ -149,21 +150,8 @@ const Hero = ({ isDark = false, onToggleTheme }) => {
         }`}
       >
         <div className="mx-auto flex max-w-[1450px] items-center justify-between px-5 py-4 md:px-10 lg:px-16">
-          <Link
-            to="/"
-            className={`flex items-center transition ${
-              isDark ? "rounded-xl" : ""
-            }`}
-          >
-            
-            <img
-              src="/icons.svg"
-              alt="MasarPro Logo"
-              className="w-[70px] object-contain sm:w-[60px]"
-            />
-            <p className="mt-1 ml-1 font-bold text-lg text-blue-500">
-              {isRtl ? "مسار برو" : "MasarPro"}
-            </p>
+          <Link to="/" className="flex items-center">
+            <MasarLogo isDark={isDark} isRtl={isRtl} />
           </Link>
 
           {/* Desktop menu */}

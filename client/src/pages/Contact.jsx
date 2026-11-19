@@ -14,6 +14,7 @@ import {
   Sun,
 } from "lucide-react";
 import Footer from "../components/Footer";
+import MasarLogo from "../components/MasarLogo";
 
 const copy = {
   en: {
@@ -165,18 +166,8 @@ export default function Contact() {
         }`}
       >
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-5 py-4 sm:px-8">
-          <Link
-            to="/"
-            className={`flex items-center transition ${isDark ? "rounded-xl px-2.5 py-1" : ""}`}
-          >
-            <img
-              src="/icons.svg"
-              alt="MasarPro Logo"
-              className="w-[70px] object-contain sm:w-[60px]"
-            />
-            <p className="mt-1 ml-1 text-lg font-bold text-blue-500">
-              {isRtl ? "مسار برو" : "MasarPro"}
-            </p>
+          <Link to="/" className="flex items-center">
+            <MasarLogo isDark={isDark} isRtl={isRtl} />
           </Link>
 
           <div className="flex items-center gap-3 sm:gap-5">
