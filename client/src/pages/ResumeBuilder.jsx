@@ -1,243 +1,455 @@
-import { CloudUpload, Plus, Search, XIcon } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
-import ResumeCard from '../components/ResumeCard'
-import ImportResumeDialog from '../components/ImportResumeDialog'
-import { supabase } from '../lib/supabase'
-import { useAuth } from '../components/AuthContext'
-import { useNavigate } from 'react-router-dom'
-import { useTranslation } from 'react-i18next'
+import { CloudUpload, Plus, Search, XIcon } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import ResumeCard from "../components/ResumeCard";
+import ImportResumeDialog from "../components/ImportResumeDialog";
+import { supabase } from "../lib/supabase";
+import { useAuth } from "../components/AuthContext";
+import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+
+function getInitialTheme() {
+  try {
+    return localStorage.getItem("masarpro-theme") === "dark";
+  } catch {
+    return false;
+  }
+}
 
 const ResumeBuilder = () => {
+  const { session } = useAuth();
+  const [isDark, setIsDark] = useState(getInitialTheme);
+  const [creating, setCreating] = useState(false);
+  const [error, setError] = useState("");
+  const [showCreateResume, setShowCreateResume] = useState(false);
+  const [showUploadResume, setShowUploadResume] = useState(false);
+  const [title, setTitle] = useState("");
+  const [resumes, setResumes] = useState([]);
+  const [search, setSearch] = useState("");
+  const [resumeError, setResumeError] = useState("");
+  const [deletingId, setDeletingId] = useState(null);
+  const deleting = useRef(false);
+  const userId = session?.user?.id;
 
-  const { session } = useAuth()
-  const [creating, setCreating] = useState(false)
-  const [error, setError] = useState('')
-  const [showCreateResume, setShowCreateResume] = useState(false)
-  const [showUploadResume, setShowUploadResume] = useState(false)
-  const [title, setTitle] = useState("")
-  const [resumes, setResumes] = useState([])
-  const [search, setSearch] = useState('')
-  const [resumeError, setResumeError] = useState('')
-  const [deletingId, setDeletingId] = useState(null)
-  const deleting = useRef(false)
-  const userId = session?.user?.id
-
-  const {t, i18n} = useTranslation()
-
+  const { t, i18n } = useTranslation();
+  const isRtl = i18n.dir() === "rtl";
 
   useEffect(() => {
-  let active = true
+    const syncTheme = () => {
+      setIsDark(getInitialTheme());
+    };
+    window.addEventListener("masarpro-theme-change", syncTheme);
+    window.addEventListener("storage", syncTheme);
+    return () => {
+      window.removeEventListener("masarpro-theme-change", syncTheme);
+      window.removeEventListener("storage", syncTheme);
+    };
+  }, []);
 
-  const fetchResumes = async () => {
-    setResumes([])
-    setResumeError('')
+  useEffect(() => {
+    let active = true;
 
-    if (!userId) return
+    const fetchResumes = async () => {
+      setResumes([]);
+      setResumeError("");
 
-    try {
-      const { data, error } = await supabase
-        .from('resumes')
-        .select('resume_id, title, updated_at, personal:content->personal, accentColor:content->>accentColor')
-        .eq('user_id', userId)
-        .order('updated_at', { ascending: false })
+      if (!userId) return;
 
-      if (error) throw error
+      try {
+        const { data, error: fetchError } = await supabase
+          .from("resumes")
+          .select(
+            "resume_id, title, updated_at, personal:content->personal, accentColor:content->>accentColor",
+          )
+          .eq("user_id", userId)
+          .order("updated_at", { ascending: false });
 
-      if (active) setResumes(data ?? [])
-    } catch (err) {
-      if (active) {
-        setResumeError(err.message || 'Unable to load resumes.')
+        if (fetchError) throw fetchError;
+
+        if (active) setResumes(data ?? []);
+      } catch (err) {
+        if (active) {
+          setResumeError(err.message || "Unable to load resumes.");
+        }
       }
-    }
-  }
+    };
 
-  fetchResumes()
+    fetchResumes();
 
-  return () => {
-    active = false
-  }
-}, [userId])
-  const navigate = useNavigate()
+    return () => {
+      active = false;
+    };
+  }, [userId]);
+
+  const navigate = useNavigate();
 
   const createResume = async (event) => {
-  event.preventDefault()
+    event.preventDefault();
+    if (creating) return;
+    setError("");
 
-  if (creating) return
+    if (!session?.user?.id) {
+      setError("Please sign in before creating a resume.");
+      return;
+    }
 
-  setError('')
+    if (!title.trim()) {
+      setError("Enter a resume title.");
+      return;
+    }
 
-  if (!session?.user?.id) {
-    setError('Please sign in before creating a resume.')
-    return
-  }
+    setCreating(true);
 
-  if (!title.trim()) {
-    setError('Enter a resume title.')
-    return
-  }
+    try {
+      const { data, error: insertError } = await supabase
+        .from("resumes")
+        .insert({
+          user_id: session.user.id,
+          title: title.trim().slice(0, 120),
+          content: {},
+        })
+        .select("resume_id")
+        .single();
 
-  setCreating(true)
+      if (insertError) throw insertError;
 
-  try {
-    const { data, error: insertError } = await supabase
-      .from('resumes')
-      .insert({
-        user_id: session.user.id,
-        title: title.trim().slice(0, 120),
-        content: {},
-      })
-      .select('resume_id')
-      .single()
-
-    if (insertError) throw insertError
-
-    setShowCreateResume(false)
-    setTitle('')
-
-    navigate(`/resume-builder/${data.resume_id}`)
-  } catch (err) {
-    setError(err.message || 'Unable to create your resume.')
-  } finally {
-    setCreating(false)
-  }
-  }
+      setShowCreateResume(false);
+      setTitle("");
+      navigate(`/resume-builder/${data.resume_id}`);
+    } catch (err) {
+      setError(err.message || "Unable to create your resume.");
+    } finally {
+      setCreating(false);
+    }
+  };
 
   const deleteResume = async (resume) => {
-    if (!userId || deleting.current) return
-    const rtl = i18n.dir() === 'rtl'
-    if (!window.confirm(rtl
-      ? `حذف «${resume.title}» نهائياً؟ لا يمكن التراجع عن الحذف.`
-      : `Permanently delete "${resume.title}"? This cannot be undone.`)) return
-    deleting.current = true
-    setDeletingId(resume.resume_id)
-    setResumeError('')
-    try {
-      const { data, error } = await supabase.from('resumes').delete()
-        .eq('resume_id', resume.resume_id).eq('user_id', userId)
-        .select('resume_id').single()
-      if (error || !data) throw new Error('Delete failed')
-      setResumes(previous => previous.filter(item => item.resume_id !== resume.resume_id))
-    } catch {
-      setResumeError(rtl ? 'تعذر حذف السيرة. تحقق من الاتصال وصلاحية الحذف ثم حاول مجدداً.' : 'Unable to delete the resume. Check your connection and delete permissions, then retry.')
-    } finally {
-      deleting.current = false
-      setDeletingId(null)
-    }
-  }
-
-  const query = search.trim().toLocaleLowerCase()
-  const filteredResumes = resumes.filter(resume =>
-    [resume.title, resume.personal?.fullName].some(value =>
-      (typeof value === 'string' ? value : '').toLocaleLowerCase().includes(query)
+    if (!userId || deleting.current) return;
+    if (
+      !window.confirm(
+        isRtl
+          ? `حذف «${resume.title}» نهائياً؟ لا يمكن التراجع عن الحذف.`
+          : `Permanently delete "${resume.title}"? This cannot be undone.`,
+      )
     )
-  )
+      return;
+    deleting.current = true;
+    setDeletingId(resume.resume_id);
+    setResumeError("");
+    try {
+      const { data, error: delError } = await supabase
+        .from("resumes")
+        .delete()
+        .eq("resume_id", resume.resume_id)
+        .eq("user_id", userId)
+        .select("resume_id")
+        .single();
+      if (delError || !data) throw new Error("Delete failed");
+      setResumes((previous) =>
+        previous.filter((item) => item.resume_id !== resume.resume_id),
+      );
+    } catch {
+      setResumeError(
+        isRtl
+          ? "تعذر حذف السيرة. تحقق من الاتصال وصلاحية الحذف ثم حاول مجدداً."
+          : "Unable to delete the resume. Check your connection and delete permissions, then retry.",
+      );
+    } finally {
+      deleting.current = false;
+      setDeletingId(null);
+    }
+  };
+
+  const query = search.trim().toLocaleLowerCase();
+  const filteredResumes = resumes.filter((resume) =>
+    [resume.title, resume.personal?.fullName].some((value) =>
+      (typeof value === "string" ? value : "")
+        .toLocaleLowerCase()
+        .includes(query),
+    ),
+  );
 
   const renderResumes = () =>
-  filteredResumes.map((resume) => (
-    <ResumeCard
-      key={resume.resume_id}
-      id={resume.resume_id}
-      resume={resume}
-      deleting={deletingId === resume.resume_id}
-      onDelete={deletingId ? undefined : () => void deleteResume(resume)}
-      onDownload={() => navigate(`/resume-builder/${resume.resume_id}?download=pdf`)}
-      onEdit={() =>
-        navigate(`/resume-builder/${resume.resume_id}`)
-      }
-    />
-  ))
+    filteredResumes.map((resume) => (
+      <ResumeCard
+        key={resume.resume_id}
+        id={resume.resume_id}
+        resume={resume}
+        isDark={isDark}
+        deleting={deletingId === resume.resume_id}
+        onDelete={deletingId ? undefined : () => void deleteResume(resume)}
+        onDownload={() =>
+          navigate(`/resume-builder/${resume.resume_id}?download=pdf`)
+        }
+        onEdit={() => navigate(`/resume-builder/${resume.resume_id}`)}
+      />
+    ));
 
   return (
-    <section className="min-h-screen bg-[#f4f9fc] px-8 py-10 lg:px-18 text-[#0c1945]">
-        <div className='mb-8'>
-          <p className='text-4xl font-bold'>{t('resumeBuilderTitle')}</p>
-          <p className='text-gray-500 mt-1'>{t('resumeBuilderSubtitle')}</p>
-        
+    <section
+      className={`min-h-[calc(100vh-73px)] px-6 py-10 transition-colors duration-300 sm:px-10 lg:px-16 ${
+        isDark ? "bg-[#080d1a] text-slate-100" : "bg-[#f8fbff] text-[#0f172a]"
+      }`}
+    >
+      <div className="mb-8">
+        <h1
+          className={`text-2xl font-extrabold tracking-tight sm:text-3xl md:text-4xl ${
+            isDark ? "text-white" : "text-[#0f172a]"
+          }`}
+        >
+          {t("resumeBuilderTitle")}
+        </h1>
+        <p
+          className={`mt-1.5 text-sm sm:text-base ${
+            isDark ? "text-slate-400" : "text-slate-500"
+          }`}
+        >
+          {t("resumeBuilderSubtitle")}
+        </p>
       </div>
 
-      <div className='flex flex-col lg:flex-row md:flex-row items-center gap-6 mb-6'>
-        <div onClick={() => setShowCreateResume(true)} className='flex flex-col rounded-lg items-center justify-center w-[18rem] h-[12rem] border-2 border-dashed border-teal-500 bg-white/85 cursor-pointer hover:border-teal-300'>
-            <div className='p-2 bg-teal-100 rounded-full text-teal-600 inline-block'>
-              <Plus size={60} strokeWidth={1.4} />
-            </div>
-          <p className='text-2xl font-bold mt-1'>{t('createResumeButton')}</p>
-          <p className='text-gray-400 text-sm'>{t('startWithBlankResume')}</p>
+      {/* Create & Upload Cards */}
+      <div className="mb-8 flex flex-col items-center gap-5 sm:flex-row">
+        <button
+          type="button"
+          onClick={() => setShowCreateResume(true)}
+          className={`flex h-48 w-full max-w-[18.5rem] cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed p-5 text-center transition-all duration-200 hover:-translate-y-0.5 ${
+            isDark
+              ? "border-blue-500/40 bg-[#0f1628] shadow-md hover:border-[#60a5fa] hover:bg-[#131d33]"
+              : "border-blue-400/80 bg-white shadow-xs hover:border-[#1d55e5] hover:bg-blue-50/40"
+          }`}
+        >
+          <div
+            className={`inline-flex h-14 w-14 items-center justify-center rounded-2xl border ${
+              isDark
+                ? "border-blue-500/30 bg-[#172544] text-[#60a5fa]"
+                : "border-blue-200/80 bg-[#edf3ff] text-[#1d55e5]"
+            }`}
+          >
+            <Plus size={32} strokeWidth={1.8} />
+          </div>
+          <p
+            className={`mt-3 text-lg font-bold ${
+              isDark ? "text-white" : "text-[#0f172a]"
+            }`}
+          >
+            {t("createResumeButton")}
+          </p>
+          <p
+            className={`mt-1 text-xs ${
+              isDark ? "text-slate-400" : "text-slate-500"
+            }`}
+          >
+            {t("startWithBlankResume")}
+          </p>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setShowUploadResume(true)}
+          className={`flex h-48 w-full max-w-[18.5rem] cursor-pointer flex-col items-center justify-center rounded-2xl border p-5 text-center transition-all duration-200 hover:-translate-y-0.5 ${
+            isDark
+              ? "border-slate-800/90 bg-[#0f1628] shadow-md hover:border-blue-500/50 hover:bg-[#131d33]"
+              : "border-slate-200/90 bg-white shadow-xs hover:border-blue-300 hover:shadow-md"
+          }`}
+        >
+          <div
+            className={`inline-flex h-14 w-14 items-center justify-center rounded-2xl border ${
+              isDark
+                ? "border-blue-500/30 bg-[#172544] text-[#60a5fa]"
+                : "border-blue-200/80 bg-[#edf3ff] text-[#1d55e5]"
+            }`}
+          >
+            <CloudUpload size={32} strokeWidth={1.8} />
+          </div>
+          <p
+            className={`mt-3 text-lg font-bold ${
+              isDark ? "text-white" : "text-[#0f172a]"
+            }`}
+          >
+            {t("uploadExisting")}
+          </p>
+          <p
+            className={`mt-1 text-xs ${
+              isDark ? "text-slate-400" : "text-slate-500"
+            }`}
+          >
+            {t("importYourResume")}
+          </p>
+        </button>
+      </div>
+
+      <hr
+        className={`mb-7 ${
+          isDark ? "border-slate-800/80" : "border-slate-200/80"
+        }`}
+      />
+
+      {/* Toolbar: Count & Search */}
+      <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
+        <div className="flex items-center gap-2.5">
+          <h2
+            className={`text-lg font-bold sm:text-xl ${
+              isDark ? "text-white" : "text-[#0f172a]"
+            }`}
+          >
+            {t("yourResumesTitle")}
+          </h2>
+          <span
+            className={`flex h-6 min-w-7 items-center justify-center rounded-full px-2 text-xs font-bold ${
+              isDark
+                ? "bg-[#172544] text-[#60a5fa]"
+                : "bg-[#edf3ff] text-[#1d55e5]"
+            }`}
+          >
+            {filteredResumes.length}
+          </span>
         </div>
 
-        <button type="button" onClick={() => setShowUploadResume(true)} className='flex flex-col rounded-lg items-center justify-center w-[18rem] h-[12rem] border-2 border-[#e3edfa] bg-white/85 cursor-pointer hover:border-blue-300 shadow-[0_3px_10px_rgba(31,52,85,0.07)]'>
-          <div className='p-2 bg-sky-100 rounded-full text-blue-500 inline-block'>
-            <CloudUpload size={60} strokeWidth={1.4}/>
-          </div>
-          <p className='text-2xl font-bold mt-1'>{t('uploadExisting')}</p>
-          <p className='text-gray-400 text-sm'>{t('importYourResume')}</p>
-        </button>
-      </div>      
-      <hr className='text-gray-300 mb-6'/>
-      <div className='flex flex-row  justify-between items-center mb-8'>
-        <div className='flex gap-2'>
-          <p className='sm:text-md lg:text-2xl font-bold '>{t('yourResumesTitle')}</p>
-          <p className='w-8 h-7 rounded-full lg:mt-1 font-bold flex items-center justify-center bg-gray-200'>{filteredResumes.length}</p>
-          </div>
-          <div className='relative'>
-            <Search aria-hidden="true" className="pointer-events-none absolute mr-2 ml-2 top-1/2 -translate-y-1/2 text-slate-400"  />
-            <input type="search"
-              value={search}
-              onChange={event => setSearch(event.target.value)}
-              aria-label={i18n.dir() === 'rtl' ? 'ابحث بعنوان السيرة أو الاسم' : 'Search by resume title or name'}
-              placeholder={t('searchResumePlaceholder')}
-            className='h-[40px] w-full rounded-2xl border border-slate-200 bg-white pl-11 pr-11 text-sm text-slate-700 outline-none transition focus:border-teal-400 focus:ring-2 focus:ring-teal-100 [&::-webkit-search-cancel-button]:appearance-none' />
-          </div>
+        <div className="relative w-full sm:w-72">
+          <Search
+            size={17}
+            aria-hidden="true"
+            className="pointer-events-none absolute start-3.5 top-1/2 -translate-y-1/2 text-slate-400"
+          />
+          <input
+            type="search"
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            aria-label={
+              isRtl
+                ? "ابحث بعنوان السيرة أو الاسم"
+                : "Search by resume title or name"
+            }
+            placeholder={t("searchResumePlaceholder")}
+            className={`h-11 w-full rounded-xl border ps-10 pe-4 text-sm outline-none transition focus:ring-4 [&::-webkit-search-cancel-button]:appearance-none ${
+              isDark
+                ? "border-slate-800 bg-[#0f1628] text-slate-100 placeholder:text-slate-500 focus:border-[#4f8ff7] focus:ring-blue-500/15"
+                : "border-slate-200/90 bg-white text-[#0f172a] placeholder:text-slate-400 focus:border-[#1d55e5] focus:ring-blue-500/10 shadow-xs"
+            }`}
+          />
+        </div>
       </div>
 
-      {showUploadResume && <ImportResumeDialog key={userId} userId={userId} onClose={() => setShowUploadResume(false)} onImported={resumeId => {
-        setShowUploadResume(false)
-        navigate(`/resume-builder/${resumeId}`)
-      }} />}
+      {showUploadResume && (
+        <ImportResumeDialog
+          key={userId}
+          userId={userId}
+          isDark={isDark}
+          onClose={() => setShowUploadResume(false)}
+          onImported={(resumeId) => {
+            setShowUploadResume(false);
+            navigate(`/resume-builder/${resumeId}`);
+          }}
+        />
+      )}
 
       {showCreateResume && (
-        <form onSubmit={createResume} className='fixed inset-0 bg-black/70 backdrop-blur bg-opacity-50 z-10 flex items-center justify-center'>
-            <div onClick={e => e.stopPropagation()} className=' relative border border-[#e3edfa] bg-white shadow-md rounded-lg w-full max-w-sm p-6'>
-              <h2 className='text-xl font-bold mb-4'>{t('createResumeButton')}</h2>
-              <input
-                  type="text"
-                  maxLength={120}
-                  placeholder= {t('enterResumeTitlePlaceholder')}
-                  value={title}
-                  onChange={(event) => setTitle(event.target.value)}
-                  required
-                  className="w-full rounded-lg border border-[#e3edfa] px-4 py-2 mb-4"
-                />
-              {error && (
-                <p role="alert" className="mb-3 text-sm text-red-600">
-                  {error}
-                </p>
-              )}
-              <button
-                type="submit"
-                disabled={creating}
-                className="w-full rounded bg-linear-to-l from-[#0874c9] to-[#0eb0b2] py-2 text-white disabled:opacity-50"
+        <form
+          onSubmit={createResume}
+          onClick={() => {
+            setShowCreateResume(false);
+            setTitle("");
+          }}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/65 p-4 backdrop-blur-xs"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className={`relative w-full max-w-sm rounded-2xl border p-6 shadow-2xl ${
+              isDark
+                ? "border-slate-800 bg-[#0f1628] text-slate-100"
+                : "border-slate-200 bg-white text-[#0f172a]"
+            }`}
+          >
+            <h2
+              className={`mb-4 text-xl font-extrabold tracking-tight ${
+                isDark ? "text-white" : "text-[#0f172a]"
+              }`}
+            >
+              {t("createResumeButton")}
+            </h2>
+            <input
+              type="text"
+              maxLength={120}
+              placeholder={t("enterResumeTitlePlaceholder")}
+              value={title}
+              onChange={(event) => setTitle(event.target.value)}
+              required
+              autoFocus
+              className={`mb-4 w-full rounded-xl border px-3.5 py-2.5 text-sm outline-none transition focus:ring-4 ${
+                isDark
+                  ? "border-slate-800 bg-[#0a101d] text-slate-100 placeholder:text-slate-500 focus:border-[#4f8ff7] focus:ring-blue-500/15"
+                  : "border-slate-200 bg-[#f8fbff] text-[#0f172a] placeholder:text-slate-400 focus:border-[#1d55e5] focus:bg-white focus:ring-blue-500/10"
+              }`}
+            />
+            {error && (
+              <p
+                role="alert"
+                className={`mb-3 rounded-xl border p-2.5 text-xs ${
+                  isDark
+                    ? "border-red-500/30 bg-red-950/50 text-red-300"
+                    : "border-red-200 bg-red-50 text-red-600"
+                }`}
               >
-                {creating ? `${t('creatingResumeLoading')}` : `${t('createResumeButton')}`}
-              </button>
-              <XIcon className={`absolute top-4 text-slate-400 hover:text-slate-600 cursor-pointer transition-colors ${i18n.dir() !== "rtl" ? "right-4" : "left-4"}`} onClick={() => {setShowCreateResume(false); setTitle("")}}/>
-            </div>
+                {error}
+              </p>
+            )}
+            <button
+              type="submit"
+              disabled={creating}
+              className="w-full cursor-pointer rounded-xl bg-[#1d55e5] py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#1746c4] disabled:opacity-50"
+            >
+              {creating ? t("creatingResumeLoading") : t("createResumeButton")}
+            </button>
+            <button
+              type="button"
+              aria-label="Close dialog"
+              onClick={() => {
+                setShowCreateResume(false);
+                setTitle("");
+              }}
+              className={`absolute end-4 top-4 cursor-pointer rounded-lg p-1 transition ${
+                isDark
+                  ? "text-slate-400 hover:bg-slate-800 hover:text-white"
+                  : "text-slate-400 hover:bg-slate-100 hover:text-slate-700"
+              }`}
+            >
+              <XIcon size={20} />
+            </button>
+          </div>
         </form>
       )}
 
       {resumeError && (
-      <p role="alert" className="mb-4 text-sm text-red-600">
-        {resumeError}
-      </p>
-    )}
+        <p
+          role="alert"
+          className={`mb-5 rounded-xl border p-3.5 text-sm ${
+            isDark
+              ? "border-red-500/30 bg-red-950/50 text-red-300"
+              : "border-red-200 bg-red-50 text-red-700"
+          }`}
+        >
+          {resumeError}
+        </p>
+      )}
 
-    <div className="flex flex-wrap justify-center gap-8">
-      {renderResumes()}
-    </div>
-    {query && filteredResumes.length === 0 && <p role="status" className="py-8 text-center text-slate-500">
-      {i18n.dir() === 'rtl' ? 'لا توجد سير ذاتية مطابقة للبحث.' : 'No resumes match your search.'}
-    </p>}
+      <div className="flex flex-wrap justify-center gap-8">
+        {renderResumes()}
+      </div>
+
+      {query && filteredResumes.length === 0 && (
+        <p
+          role="status"
+          className={`py-8 text-center text-sm ${
+            isDark ? "text-slate-400" : "text-slate-500"
+          }`}
+        >
+          {isRtl
+            ? "لا توجد سير ذاتية مطابقة للبحث."
+            : "No resumes match your search."}
+        </p>
+      )}
     </section>
-  )
-}
+  );
+};
 
-export default ResumeBuilder
+export default ResumeBuilder;
