@@ -102,7 +102,14 @@ const HERO_COPY = {
   },
 };
 
-const ACCENT_COLORS = ["#1d55e5", "#0f2942", "#0284c7", "#334155"];
+const ACCENT_COLORS = ["#3b82f6", "#8b5cf6", "#059669", "#f97316", "#0d9488"];
+
+const TRACKER_STAGE_COLORS = [
+  "#6b7280", // Wish List (Gray)
+  "#3b82f6", // Applied (Blue)
+  "#f97316", // Interview (Orange)
+  "#8b5cf6", // Offer (Purple)
+];
 
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 14 },
@@ -110,11 +117,7 @@ const fadeUp = (delay = 0) => ({
   transition: { duration: 0.45, delay, ease: "easeOut" },
 });
 
-function getEffectiveAccent(color, isDark) {
-  if (!isDark) return color;
-  if (color === "#1d55e5") return "#60a5fa";
-  if (color === "#0f2942") return "#93c5fd";
-  if (color === "#334155") return "#cbd5e1";
+function getEffectiveAccent(color) {
   return color;
 }
 
@@ -585,51 +588,51 @@ const Hero = ({ isDark = false, onToggleTheme }) => {
                     transition={{ duration: 0.2 }}
                     className="grid grid-cols-2 gap-3 text-start sm:grid-cols-4"
                   >
-                    {copy.trackerPanel.columns.map((col, idx) => (
-                      <div
-                        key={col.title}
-                        className={`rounded-xl border p-3 ${
-                          isDark
-                            ? "border-slate-800/90 bg-[#11192c]"
-                            : "border-slate-200/80 bg-white"
-                        }`}
-                      >
+                    {copy.trackerPanel.columns.map((col, idx) => {
+                      const stageColor = TRACKER_STAGE_COLORS[idx] || "#3b82f6";
+                      return (
                         <div
-                          className={`flex items-center justify-between text-[11px] font-bold ${
-                            isDark ? "text-slate-200" : "text-slate-700"
+                          key={col.title}
+                          style={{ borderTopColor: stageColor }}
+                          className={`rounded-xl border border-t-3 p-3 ${
+                            isDark
+                              ? "border-x-slate-800/90 border-b-slate-800/90 bg-[#11192c]"
+                              : "border-x-slate-200/80 border-b-slate-200/80 bg-white"
                           }`}
                         >
-                          <span>{col.title}</span>
-                          <span
-                            className={`rounded-full px-2 py-0.5 text-[10px] ${
-                              isDark
-                                ? "bg-[#182747] text-[#60a5fa]"
-                                : "bg-[#edf3ff] text-[#1d55e5]"
+                          <div
+                            className={`flex items-center justify-between text-[11px] font-bold ${
+                              isDark ? "text-slate-200" : "text-slate-700"
                             }`}
                           >
-                            {col.count}
-                          </span>
-                        </div>
-                        <div
-                          className={`mt-3 rounded-lg border p-2.5 ${
-                            idx === 3
-                              ? isDark
-                                ? "border-blue-500/40 bg-[#16223d]"
-                                : "border-blue-200 bg-[#f4f8ff]"
-                              : isDark
+                            <span style={{ color: stageColor }}>{col.title}</span>
+                            <span
+                              style={{
+                                backgroundColor: isDark ? `${stageColor}26` : `${stageColor}1a`,
+                                color: stageColor,
+                              }}
+                              className="rounded-full px-2 py-0.5 text-[10px] font-bold"
+                            >
+                              {col.count}
+                            </span>
+                          </div>
+                          <div
+                            className={`mt-3 rounded-lg border p-2.5 ${
+                              isDark
                                 ? "border-slate-800 bg-[#0d1424]"
                                 : "border-slate-100 bg-slate-50/70"
-                          }`}
-                        >
-                          <p className={`text-xs font-semibold ${isDark ? "text-slate-100" : "text-slate-800"}`}>
-                            {col.role}
-                          </p>
-                          <p className={`mt-0.5 text-[11px] ${isDark ? "text-slate-400" : "text-slate-500"}`}>
-                            {col.company}
-                          </p>
+                            }`}
+                          >
+                            <p className={`text-xs font-semibold ${isDark ? "text-slate-100" : "text-slate-800"}`}>
+                              {col.role}
+                            </p>
+                            <p className={`mt-0.5 text-[11px] ${isDark ? "text-slate-400" : "text-slate-500"}`}>
+                              {col.company}
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </motion.div>
                 )}
 

@@ -97,15 +97,13 @@ const FEATURE_COPY = {
   },
 };
 
-const LIGHT_KANBAN_SHADES = ["#e2e8f0", "#bfdbfe", "#93c5fd", "#60a5fa", "#1d55e5"];
-const DARK_KANBAN_SHADES = ["#1e293b", "#1e3a5f", "#1d4ed8", "#2563eb", "#3b82f6"];
+const KANBAN_STAGE_COLORS = ["#6b7280", "#3b82f6", "#f97316", "#8b5cf6", "#059669"];
 
 function ToolPreviewVisual({ tool, isRtl, isDark }) {
   if (tool.id === "kanban") {
-    const shades = isDark ? DARK_KANBAN_SHADES : LIGHT_KANBAN_SHADES;
     return (
       <div className="mb-5 grid grid-cols-5 gap-1.5">
-        {shades.map((shade) => (
+        {KANBAN_STAGE_COLORS.map((shade) => (
           <span key={shade} style={{ backgroundColor: shade }} className="h-8 rounded-md" />
         ))}
       </div>
