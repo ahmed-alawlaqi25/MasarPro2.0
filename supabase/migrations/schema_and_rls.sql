@@ -18,6 +18,7 @@ create table public.jobs (
   job_title text not null,
   job_url text null,
   location text null,
+  description text null,
   notes text null,
   status text not null default 'wishlist',
   created_at timestamptz not null default now(),

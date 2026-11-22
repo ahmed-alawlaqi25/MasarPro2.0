@@ -15,7 +15,7 @@ const JobApplicationForm = ({ onClose, isDark = false }) => {
     status: "wishlist",
     created_at: "",
     job_url: "",
-    notes: "",
+    description: "",
   });
 
   const handleChange = (event) => {
@@ -57,16 +57,29 @@ const JobApplicationForm = ({ onClose, isDark = false }) => {
       return;
     }
 
-    const { error } = await supabase.from("jobs").insert({
+    const descriptionText = formData.description.trim().slice(0, 5000);
+    const basePayload = {
       company_name: companyName,
       job_title: jobTitle,
       location: formData.location.trim().slice(0, 120),
       status: formData.status,
       created_at: formData.created_at,
       job_url: formData.job_url.trim().slice(0, 500),
-      notes: formData.notes.trim().slice(0, 5000),
       user_id: user.id,
+    };
+
+    let { error } = await supabase.from("jobs").insert({
+      ...basePayload,
+      description: descriptionText,
     });
+
+    if (error && /description/i.test(error.message || "")) {
+      const retry = await supabase.from("jobs").insert({
+        ...basePayload,
+        job_description: descriptionText,
+      });
+      error = retry.error;
+    }
 
     if (error) {
       alert(error.message);
@@ -233,16 +246,16 @@ const JobApplicationForm = ({ onClose, isDark = false }) => {
           </div>
 
           <div className="md:col-span-2">
-            <label htmlFor="notes" className={labelStyles}>
-              {t("notesTitle")}
+            <label htmlFor="description" className={labelStyles}>
+              {t("jobDescriptionLabel")}
             </label>
             <textarea
-              id="notes"
-              name="notes"
+              id="description"
+              name="description"
               maxLength={5000}
-              value={formData.notes}
+              value={formData.description}
               onChange={handleChange}
-              placeholder={t("addNotesLabel")}
+              placeholder={t("addJobDescriptionPlaceholder")}
               rows="5"
               className={`${inputStyles} resize-none`}
             />

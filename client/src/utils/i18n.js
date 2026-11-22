@@ -114,6 +114,7 @@ const resources = {
       statusLabel: "Status",
       locationPlaceholder: "Example: Riyadh", 
       addNotesLabel: "Add notes about the job",
+      addJobDescriptionPlaceholder: "Add description about the job",
       saveApplicationButton: "Save Application",
 
 
@@ -352,6 +353,7 @@ const resources = {
       locationPlaceholder: "مثال: الرياض",
       statusLabel: "الحالة",
       addNotesLabel: "أضف ملاحظات حول الوظيفة",
+      addJobDescriptionPlaceholder: "أضف وصفاً حول الوظيفة",
       saveApplicationButton: "حفظ الوظيفة",
 
       //Job Application
