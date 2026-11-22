@@ -1,4 +1,13 @@
 {
+  "name": "masarpro",
+  "private": true,
+  "scripts": {
+    "build": "npm --prefix client install --include=dev && npm --prefix client run build && npm --prefix server install",
+    "start": "node server/server.js"
+  },
+  "engines": {
+    "node": ">=22"
+  },
   "dependencies": {
     "helmet": "^8.3.0"
   }
