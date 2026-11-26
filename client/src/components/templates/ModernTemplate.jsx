@@ -43,10 +43,26 @@ export default function ModernTemplate({
             className="border-s-2 ps-3.5 py-0.5 text-xs text-slate-700 space-y-0.5 text-start shrink-0 max-w-full"
           >
             {personal.location.trim() && <p className="break-words">{personal.location.trim()}</p>}
-            {personal.phone.trim() && <p dir="ltr" className="break-words">{personal.phone.trim()}</p>}
-            {personal.email.trim() && <p dir="ltr" className="break-words">{personal.email.trim()}</p>}
-            {personal.website.trim() && <p dir="ltr" className="break-words break-all">{personal.website.trim()}</p>}
-            {personal.linkedin.trim() && <p dir="ltr" className="break-words break-all">{personal.linkedin.trim()}</p>}
+            {personal.phone.trim() && (
+              <p className="break-words">
+                <bdi dir="ltr">{personal.phone.trim()}</bdi>
+              </p>
+            )}
+            {personal.email.trim() && (
+              <p className="break-words">
+                <bdi dir="ltr">{personal.email.trim()}</bdi>
+              </p>
+            )}
+            {personal.website.trim() && (
+              <p className="break-words break-all">
+                <bdi dir="ltr">{personal.website.trim()}</bdi>
+              </p>
+            )}
+            {personal.linkedin.trim() && (
+              <p className="break-words break-all">
+                <bdi dir="ltr">{personal.linkedin.trim()}</bdi>
+              </p>
+            )}
           </div>
         )}
       </header>
@@ -207,7 +223,9 @@ export default function ModernTemplate({
                       {project.role}
                       {project.role && project.url.trim() && ' • '}
                       {project.url.trim() && (
-                        <span className="break-all text-teal-700">{project.url}</span>
+                        <span style={{ color: accentColor }} className="break-all">
+                          <bdi dir="ltr">{project.url}</bdi>
+                        </span>
                       )}
                     </p>
                   )}

@@ -86,7 +86,11 @@ export default function ClassicTemplate({
                     <p className="text-xs text-slate-500">{[entry.startDate, entry.isCurrent ? presentLabel : entry.endDate].filter(Boolean).join(' – ')}</p>
                   </div>
                   {(education ? entry.location || (entry.qualification && entry.institution) : entry.role) && <p className="mt-0.5 text-xs text-slate-600">{education ? [entry.qualification ? entry.institution : '', entry.location].filter(Boolean).join(' | ') : entry.role}</p>}
-                  {!education && entry.url.trim() && <p className="mt-1 break-all text-xs text-slate-500">{entry.url}</p>}
+                  {!education && entry.url.trim() && (
+                    <p style={{ color: accentColor }} className="mt-1 break-all text-xs">
+                      <bdi dir="ltr">{entry.url}</bdi>
+                    </p>
+                  )}
                   {entry.description.trim() && (
                     <ul className="mt-1 list-disc space-y-0.5 ps-4 text-xs leading-[1.45] text-slate-700">
                       {entry.description

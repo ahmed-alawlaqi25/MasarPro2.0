@@ -131,7 +131,9 @@ export default function ExecutiveTemplate({
                       </div>
 
                       {project.url.trim() && (
-                        <p className="mt-0.5 break-all text-[11px] text-teal-700">{project.url}</p>
+                        <p style={{ color: accentColor }} className="mt-0.5 break-all text-[11px]">
+                          <bdi dir="ltr">{project.url}</bdi>
+                        </p>
                       )}
 
                       {project.description.trim() && (
